@@ -1,0 +1,160 @@
+{
+  "title": "NEON CLASH",
+  "createdAt": "2026-09-30T08:38:31.616396-03:00",
+  "entrypoint": "index.html",
+  "offline": true,
+  "vendor": {
+    "three": "0.160.1",
+    "license": "MIT"
+  },
+  "validation": {
+    "integrationChecksPassed": 28,
+    "combatTestsPassed": 16,
+    "javascriptErrors": [],
+    "externalRequests": [],
+    "report": "evidencias/browser-results.json",
+    "mobile": "Chromium emulation; not physical-device verification"
+  },
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 81,
+      "sha256": "700bfa916e322cdd0fdee9b2dd70ec8e4aff0da30366a96d52ee039e944e909f"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 27,
+      "sha256": "6e0f36cfeafafc04e578691e57342189c7ba2fdbdbd797de2e5dab39f34935d3"
+    },
+    {
+      "path": "Abrir jogo.cmd",
+      "bytes": 37,
+      "sha256": "c369a077a253e26e89b85071fb50bb426ab159e49027572d5f1f18497386f266"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3865,
+      "sha256": "82c49d880f0c69576b4ef65d3f86011c9083f512ba60e8e5971f9375bc00c7da"
+    },
+    {
+      "path": "combat.js",
+      "bytes": 18273,
+      "sha256": "86192dab15ecf343db59a16ec38edbb97c6fce1e2c3accd19329aa925edb9453"
+    },
+    {
+      "path": "evidencias/browser-results.json",
+      "bytes": 4507,
+      "sha256": "30afb50bf849892063f2d9840e90e89c469c13060c84e3fd963e32804ec07e48"
+    },
+    {
+      "path": "evidencias/combat-results.json",
+      "bytes": 1766,
+      "sha256": "2f5d4f374ef0234548b56b7e8e306be23aab8550c408c832498fff6f15cc47ec"
+    },
+    {
+      "path": "evidencias/desktop-action-hq.png",
+      "bytes": 634291,
+      "sha256": "d4b25be28fc39f03f8d8fe7e1cdde04e50296abaf0271e5fdf6820940f2d8917"
+    },
+    {
+      "path": "evidencias/desktop-fight.png",
+      "bytes": 439170,
+      "sha256": "10426a6981ac64697e7ea3f5afe760e5359cc567215a6afcf7949222be3ffeef"
+    },
+    {
+      "path": "evidencias/desktop-menu.png",
+      "bytes": 827941,
+      "sha256": "d4384b972482bb0055532e1efded2ad850ce76a7ddb6d3e92a016a13770a1177"
+    },
+    {
+      "path": "evidencias/desktop-victory.png",
+      "bytes": 205264,
+      "sha256": "1a749ae6a8b4a877148bd442af825315fd63a4759505998519dddd573eb7fe51"
+    },
+    {
+      "path": "evidencias/mobile-boundaries-landscape.png",
+      "bytes": 97846,
+      "sha256": "104fe56c8db04095dfc0689155072042f2a873f3de1dac349a93d77286ddfb64"
+    },
+    {
+      "path": "evidencias/mobile-boundaries-portrait.png",
+      "bytes": 46175,
+      "sha256": "54678637f80ea7280e6e1e131e07750a176919347bc26606f478eb22ab746a7e"
+    },
+    {
+      "path": "evidencias/mobile-fight.png",
+      "bytes": 156650,
+      "sha256": "ad000d07db8e2e2554bd51e4abb543efd4407694ff29c23447c5d6ee60f2a2f8"
+    },
+    {
+      "path": "evidencias/mobile-portrait.png",
+      "bytes": 130211,
+      "sha256": "80a6bc31ee490f58a4cb6059e4609e582cae4d11999fefe3a1bc21d20b1a5488"
+    },
+    {
+      "path": "evidencias/performance-high.png",
+      "bytes": 539574,
+      "sha256": "4a12b9c1c05c118dbfa4e11c18c38d5e39fa829d89d3cab02801a89ebb205c30"
+    },
+    {
+      "path": "evidencias/performance-low.png",
+      "bytes": 353486,
+      "sha256": "4755225238d0ca24f4fd187911a8291dcbd4a75c74fe1523f5d55986cb2e7075"
+    },
+    {
+      "path": "evidencias/scene-preview.png",
+      "bytes": 473194,
+      "sha256": "20aa40a8cd849cf6c7d879e4f767978959582fd1482a898042e0aeae4c9d9402"
+    },
+    {
+      "path": "game.js",
+      "bytes": 18779,
+      "sha256": "58351abf15fcab875dd39865cc7ca7c91a7ef2b395f80083f703a38c1969be7e"
+    },
+    {
+      "path": "index.html",
+      "bytes": 8762,
+      "sha256": "41f43ba8ea15297a024bb44bc574b88f8a4bc25bdf16216e3043856c022bbd7c"
+    },
+    {
+      "path": "scene.js",
+      "bytes": 38027,
+      "sha256": "4962437f3c3afb1e53a4cda88478a9847ebf367b8ea68fa887a28aad8d6f33ff"
+    },
+    {
+      "path": "style.css",
+      "bytes": 17464,
+      "sha256": "738ac1da13579f67931211368b433d4c76b4cb00f284bca414ee5ccd494505b4"
+    },
+    {
+      "path": "tests/browser_check.py",
+      "bytes": 15083,
+      "sha256": "6e97ff0b05306ce2cb6a8165a0ba6071a5daba0f3690f3c07a40428feb929b8e"
+    },
+    {
+      "path": "tests/combat-tests.html",
+      "bytes": 991,
+      "sha256": "e24ee19a6158d70939ad3bcaab684af1e069db8cb1c06b27c676dc4b7e54269f"
+    },
+    {
+      "path": "tests/combat-tests.js",
+      "bytes": 9904,
+      "sha256": "a0259780cf8ac7c428946c0685840e518d6392970b63fc0e64aaec27e2ecbfd5"
+    },
+    {
+      "path": "vendor/README.txt",
+      "bytes": 550,
+      "sha256": "bbd733cc3b151a1406fd8b9b54b669e32f435dc922c81ff4ee20d6f76b40c464"
+    },
+    {
+      "path": "vendor/THREE-LICENSE.txt",
+      "bytes": 1081,
+      "sha256": "852e0e8699169bf9f6fdc6bda3e682d078dcbc738b5d33e74df594721bff271d"
+    },
+    {
+      "path": "vendor/three.min.js",
+      "bytes": 669884,
+      "sha256": "170c6789f43217c96b3170f4b42fafe135de7f7cd48497a4218f9757ee1d49fa"
+    }
+  ]
+}

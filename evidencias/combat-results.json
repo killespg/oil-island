@@ -1,0 +1,70 @@
+{
+  "passed": 16,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "Intro gates attacks, then starts fighting",
+      "passed": true
+    },
+    {
+      "name": "Movement is bounded and diagonal speed is normalized",
+      "passed": true
+    },
+    {
+      "name": "Punch connects once during its active window",
+      "passed": true
+    },
+    {
+      "name": "Attacks must reach both distance and lane",
+      "passed": true
+    },
+    {
+      "name": "Special meter is charged atomically and rejects insufficient energy",
+      "passed": true
+    },
+    {
+      "name": "Dodge avoids an active hit and cannot repeat during cooldown",
+      "passed": true
+    },
+    {
+      "name": "Jump rises, can attack in air, and lands",
+      "passed": true
+    },
+    {
+      "name": "Blocking reduces damage and depleted guard breaks",
+      "passed": true
+    },
+    {
+      "name": "Buffered J J K chains without an infinite stun lock",
+      "passed": true
+    },
+    {
+      "name": "Simultaneous lethal attacks resolve as one drawn round",
+      "passed": true
+    },
+    {
+      "name": "Best of three resets fighters and ends exactly once",
+      "passed": true
+    },
+    {
+      "name": "Timeout compares health, including ties",
+      "passed": true
+    },
+    {
+      "name": "Training revives opponent and never ends the match",
+      "passed": true
+    },
+    {
+      "name": "Airborne knockout lands during the round result",
+      "passed": true
+    },
+    {
+      "name": "Hard rival spends dodge meter to escape a completed pressure string",
+      "passed": true
+    },
+    {
+      "name": "Seeded AI is reproducible and a long match keeps valid numbers",
+      "passed": true
+    }
+  ]
+}

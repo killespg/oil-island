@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<title>NEON CLASH · testes de combate</title>
+<style>body{background:#10101b;color:#def;font:15px/1.6 monospace;padding:32px}h1{color:#33e5ff}.pass{color:#88eeaa}.fail{color:#ff6677}li{margin:12px 0}</style>
+<h1>Testes da simulação</h1><p id="summary">Executando…</p><ol id="results"></ol>
+<script src="../combat.js"></script><script src="combat-tests.js"></script>
+<script>
+const report = window.COMBAT_TEST_RESULTS;
+document.getElementById('summary').textContent = report.passed + ' aprovados · ' + report.failed + ' falharam';
+for (const result of report.tests) {
+  const item = document.createElement('li');
+  item.className = result.passed ? 'pass' : 'fail';
+  item.textContent = (result.passed ? '✓ ' : '✕ ') + result.name + (result.error ? ': ' + result.error : '');
+  document.getElementById('results').appendChild(item);
+}
+document.title = report.failed ? 'FAIL · combate' : 'PASS · combate';
+</script>
+</html>
