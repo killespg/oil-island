@@ -1,0 +1,19 @@
+{
+  "status": "diagnostic_only",
+  "fullGameHardwareSmokeCompleted": false,
+  "note": "A execução completa do jogo na RX 7600 não foi concluída nesta correção. O usuário pediu commit/push e fará o teste em outro computador. Nenhuma janela do jogo foi aberta após essa orientação.",
+  "observedEarlier": {
+    "existingChromeRenderNode": "/dev/dri/renderD129",
+    "existingChromeGPU": "AMD Raven Ridge / Vega integrada",
+    "isolatedSandboxedCanvasRenderer": "ANGLE (AMD, AMD Radeon RX 7600 (radeonsi navi33 ACO), OpenGL ES 3.2)",
+    "isolatedCanvasFrames": 30,
+    "isolatedCanvasContextLosses": 0,
+    "gpuSelection": {
+      "renderNodeOverride": "/dev/dri/renderD128",
+      "DRI_PRIME": "pci-0000_03_00_0"
+    },
+    "scope": "Teste curto de um canvas WebGL2 isolado, sem validar carga prolongada do jogo."
+  },
+  "portableLauncher": "Descobre Navi 33 pelo vendor/device PCI; não fixa o número do render node. Se não houver RX 7600, preserva a seleção padrão.",
+  "recoveryRegressionReport": "v2-context-results.json"
+}

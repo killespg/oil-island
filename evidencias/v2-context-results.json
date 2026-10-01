@@ -1,0 +1,1191 @@
+{
+  "passed": 101,
+  "checks": [
+    "Game starts in low quality before context loss",
+    "Offline menu initializes",
+    "Recovery test uses a live ascent stage with a selected upgrade",
+    "HQ creates post-processing targets before the first context loss",
+    "HQ uses unsigned-byte targets without framebuffer multisampling",
+    "HQ fight loss: real WEBGL_lose_context extension is available",
+    "HQ fight loss: loss is counted once",
+    "HQ fight loss: render loop stops while context is lost",
+    "HQ fight loss: simulation and health freeze during recovery",
+    "HQ fight loss: ascent progression freezes during recovery",
+    "Fight recovery: native restoration is counted once",
+    "Fight recovery: restoration uses low graphics quality",
+    "Fight recovery: restoration releases post-processing targets",
+    "Fight recovery: restoration returns to paused",
+    "Fight recovery: original match and ascent objects survive",
+    "Fight recovery: health, round, arena and upgrades survive restoration",
+    "Fight recovery: recovery dismisses the graphics overlay",
+    "Fight recovery: explicit resume is required",
+    "Fight recovery: restored fight does not resume automatically",
+    "Fight recovery: resume restarts rendering and simulation",
+    "4K low: drawing-buffer dimensions are bounded at 2048",
+    "4K low: drawing-buffer pixel count respects its budget",
+    "HQ can be enabled again after native restoration",
+    "Restored HQ retains safe framebuffer settings",
+    "4K HQ: drawing-buffer dimensions are bounded at 2048",
+    "4K HQ: drawing-buffer pixel count respects its budget",
+    "Returning from restored HQ to low disposes post-processing targets",
+    "4K low after HQ: drawing-buffer dimensions are bounded at 2048",
+    "4K low after HQ: drawing-buffer pixel count respects its budget",
+    "Repeated loss 1: real WEBGL_lose_context extension is available",
+    "Repeated loss 1: loss is counted once",
+    "Repeated loss 1: render loop stops while context is lost",
+    "Repeated loss 1: simulation and health freeze during recovery",
+    "Repeated loss 1: ascent progression freezes during recovery",
+    "Repeated recovery 1: native restoration is counted once",
+    "Repeated recovery 1: restoration uses low graphics quality",
+    "Repeated recovery 1: restoration releases post-processing targets",
+    "Repeated recovery 1: restoration returns to paused",
+    "Repeated recovery 1: original match and ascent objects survive",
+    "Repeated recovery 1: health, round, arena and upgrades survive restoration",
+    "Repeated recovery 1: recovery dismisses the graphics overlay",
+    "Repeated recovery 1: explicit resume is required",
+    "Repeated recovery 1: restored fight does not resume automatically",
+    "Repeated recovery 1: resume restarts rendering and simulation",
+    "Repeated loss 2: real WEBGL_lose_context extension is available",
+    "Repeated loss 2: loss is counted once",
+    "Repeated loss 2: render loop stops while context is lost",
+    "Repeated loss 2: simulation and health freeze during recovery",
+    "Repeated loss 2: ascent progression freezes during recovery",
+    "Repeated recovery 2: native restoration is counted once",
+    "Repeated recovery 2: restoration uses low graphics quality",
+    "Repeated recovery 2: restoration releases post-processing targets",
+    "Repeated recovery 2: restoration returns to paused",
+    "Repeated recovery 2: original match and ascent objects survive",
+    "Repeated recovery 2: health, round, arena and upgrades survive restoration",
+    "Repeated recovery 2: recovery dismisses the graphics overlay",
+    "Repeated recovery 2: explicit resume is required",
+    "Repeated recovery 2: restored fight does not resume automatically",
+    "Repeated recovery 2: resume restarts rendering and simulation",
+    "Menu loss: real WEBGL_lose_context extension is available",
+    "Menu loss: loss is counted once",
+    "Menu loss: render loop stops while context is lost",
+    "Menu loss: simulation and health freeze during recovery",
+    "Menu loss: ascent progression freezes during recovery",
+    "Menu recovery: native restoration is counted once",
+    "Menu recovery: restoration uses low graphics quality",
+    "Menu recovery: restoration releases post-processing targets",
+    "Menu recovery: restoration returns to menu",
+    "Menu recovery: original match and ascent objects survive",
+    "Menu recovery: health, round, arena and upgrades survive restoration",
+    "Menu recovery: recovery dismisses the graphics overlay",
+    "Menu restoration preserves menu controls without a fight pause",
+    "Result loss: real WEBGL_lose_context extension is available",
+    "Result loss: loss is counted once",
+    "Result loss: render loop stops while context is lost",
+    "Result loss: simulation and health freeze during recovery",
+    "Result loss: ascent progression freezes during recovery",
+    "Result recovery: native restoration is counted once",
+    "Result recovery: restoration uses low graphics quality",
+    "Result recovery: restoration releases post-processing targets",
+    "Result recovery: restoration returns to result",
+    "Result recovery: original match and ascent objects survive",
+    "Result recovery: health, round, arena and upgrades survive restoration",
+    "Result recovery: recovery dismisses the graphics overlay",
+    "Result restoration preserves the pending upgrade decision",
+    "Result restoration does not resolve or count the match again",
+    "RAF regression instrumentation observes the application frame callback",
+    "Repeated context restoration maintains exactly one animation-frame chain",
+    "Unrestored loss: real WEBGL_lose_context extension is available",
+    "Unrestored loss: loss is counted once",
+    "Unrestored loss: render loop stops while context is lost",
+    "Unrestored loss: simulation and health freeze during recovery",
+    "Unrestored loss: ascent progression freezes during recovery",
+    "Recovery timeout leaves simulation and renderer stopped",
+    "Recovery timeout displays a persistent graphics error",
+    "Recovery timeout explains the failure",
+    "Recovery timeout offers a reload action",
+    "Fallback reload creates a healthy graphics session",
+    "No uncaught JavaScript errors ()",
+    "No unexpected console errors ()",
+    "Context recovery and fallback require no network requests"
+  ],
+  "samples": [
+    {
+      "label": "Initial HQ before loss",
+      "snapshot": {
+        "graphics": {
+          "status": "ready",
+          "losses": 0,
+          "recoveries": 0,
+          "renderer": {
+            "quality": "high",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": true,
+            "postTargetType": "UnsignedByteType",
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "fight",
+        "quality": "high",
+        "frames": 70,
+        "elapsed": 1.6166666666666634,
+        "timeLeft": 57.56666666666675,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "HQ fight loss",
+      "before": {
+        "graphics": {
+          "status": "ready",
+          "losses": 0,
+          "recoveries": 0,
+          "renderer": {
+            "quality": "high",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": true,
+            "postTargetType": "UnsignedByteType",
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "fight",
+        "quality": "high",
+        "frames": 71,
+        "elapsed": 1.716666666666663,
+        "timeLeft": 57.466666666666754,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      },
+      "frozen": {
+        "graphics": {
+          "status": "recovering",
+          "losses": 1,
+          "recoveries": 0,
+          "renderer": {
+            "quality": "low",
+            "recovering": true,
+            "contextLost": true,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": true,
+            "postTargetType": "UnsignedByteType",
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "paused",
+        "quality": "low",
+        "frames": 72,
+        "elapsed": 1.8166666666666627,
+        "timeLeft": 57.36666666666676,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Fight recovery restored",
+      "snapshot": {
+        "graphics": {
+          "status": "ready",
+          "losses": 1,
+          "recoveries": 1,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "paused",
+        "quality": "low",
+        "frames": 74,
+        "elapsed": 1.8166666666666627,
+        "timeLeft": 57.36666666666676,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "4K allocation limits after recovery",
+      "low": {
+        "quality": "low",
+        "recovering": false,
+        "contextLost": false,
+        "pixelWidth": 1115,
+        "pixelHeight": 627,
+        "postProcessing": false,
+        "postTargetType": null,
+        "samples": 0,
+        "shadowMapSize": 1024,
+        "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "cachedArenas": 2
+      },
+      "high": {
+        "quality": "high",
+        "recovering": false,
+        "contextLost": false,
+        "pixelWidth": 1788,
+        "pixelHeight": 1006,
+        "postProcessing": true,
+        "postTargetType": "UnsignedByteType",
+        "samples": 0,
+        "shadowMapSize": 1024,
+        "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "cachedArenas": 2
+      },
+      "lowAgain": {
+        "quality": "low",
+        "recovering": false,
+        "contextLost": false,
+        "pixelWidth": 1115,
+        "pixelHeight": 627,
+        "postProcessing": false,
+        "postTargetType": null,
+        "samples": 0,
+        "shadowMapSize": 1024,
+        "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+        "cachedArenas": 2
+      }
+    },
+    {
+      "label": "Repeated loss 1",
+      "before": {
+        "graphics": {
+          "status": "ready",
+          "losses": 1,
+          "recoveries": 1,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "fight",
+        "quality": "low",
+        "frames": 124,
+        "elapsed": 5.450000000000061,
+        "timeLeft": 53.73333333333363,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      },
+      "frozen": {
+        "graphics": {
+          "status": "recovering",
+          "losses": 2,
+          "recoveries": 1,
+          "renderer": {
+            "quality": "low",
+            "recovering": true,
+            "contextLost": true,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "paused",
+        "quality": "low",
+        "frames": 125,
+        "elapsed": 5.5500000000000655,
+        "timeLeft": 53.63333333333364,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Repeated recovery 1 restored",
+      "snapshot": {
+        "graphics": {
+          "status": "ready",
+          "losses": 2,
+          "recoveries": 2,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "paused",
+        "quality": "low",
+        "frames": 127,
+        "elapsed": 5.5500000000000655,
+        "timeLeft": 53.63333333333364,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Repeated loss 2",
+      "before": {
+        "graphics": {
+          "status": "ready",
+          "losses": 2,
+          "recoveries": 2,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "fight",
+        "quality": "low",
+        "frames": 148,
+        "elapsed": 5.966666666666753,
+        "timeLeft": 53.216666666666995,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      },
+      "frozen": {
+        "graphics": {
+          "status": "recovering",
+          "losses": 3,
+          "recoveries": 2,
+          "renderer": {
+            "quality": "low",
+            "recovering": true,
+            "contextLost": true,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "paused",
+        "quality": "low",
+        "frames": 149,
+        "elapsed": 6.066666666666758,
+        "timeLeft": 53.116666666667,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Repeated recovery 2 restored",
+      "snapshot": {
+        "graphics": {
+          "status": "ready",
+          "losses": 3,
+          "recoveries": 3,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "paused",
+        "quality": "low",
+        "frames": 151,
+        "elapsed": 6.066666666666758,
+        "timeLeft": 53.116666666667,
+        "hp": [
+          61,
+          73
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "fight",
+        "arena": "reactor",
+        "round": 1,
+        "run": {
+          "stage": 1,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 1,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": false,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Menu loss",
+      "before": {
+        "graphics": {
+          "status": "ready",
+          "losses": 3,
+          "recoveries": 3,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "menu",
+        "quality": "low",
+        "frames": 172,
+        "elapsed": 0,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "menu",
+        "arena": "skyline",
+        "round": 1,
+        "run": null,
+        "sameMatch": true,
+        "sameRun": true
+      },
+      "frozen": {
+        "graphics": {
+          "status": "recovering",
+          "losses": 4,
+          "recoveries": 3,
+          "renderer": {
+            "quality": "low",
+            "recovering": true,
+            "contextLost": true,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "menu",
+        "quality": "low",
+        "frames": 173,
+        "elapsed": 0,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "menu",
+        "arena": "skyline",
+        "round": 1,
+        "run": null,
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Menu recovery restored",
+      "snapshot": {
+        "graphics": {
+          "status": "ready",
+          "losses": 4,
+          "recoveries": 4,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "menu",
+        "quality": "low",
+        "frames": 175,
+        "elapsed": 0,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "menu",
+        "arena": "skyline",
+        "round": 1,
+        "run": null,
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Result loss",
+      "before": {
+        "graphics": {
+          "status": "ready",
+          "losses": 4,
+          "recoveries": 4,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "result",
+        "quality": "low",
+        "frames": 195,
+        "elapsed": 0.19999999999999998,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          2,
+          0
+        ],
+        "phase": "matchOver",
+        "arena": "skyline",
+        "round": 1,
+        "run": {
+          "stage": 0,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 0,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": true,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      },
+      "frozen": {
+        "graphics": {
+          "status": "recovering",
+          "losses": 5,
+          "recoveries": 4,
+          "renderer": {
+            "quality": "low",
+            "recovering": true,
+            "contextLost": true,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "result",
+        "quality": "low",
+        "frames": 196,
+        "elapsed": 0.19999999999999998,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          2,
+          0
+        ],
+        "phase": "matchOver",
+        "arena": "skyline",
+        "round": 1,
+        "run": {
+          "stage": 0,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 0,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": true,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Result recovery restored",
+      "snapshot": {
+        "graphics": {
+          "status": "ready",
+          "losses": 5,
+          "recoveries": 5,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "result",
+        "quality": "low",
+        "frames": 198,
+        "elapsed": 0.19999999999999998,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          2,
+          0
+        ],
+        "phase": "matchOver",
+        "arena": "skyline",
+        "round": 1,
+        "run": {
+          "stage": 0,
+          "cleared": 1,
+          "arena": "skyline",
+          "difficulty": "easy",
+          "upgrades": {
+            "power": 0,
+            "flow": 0,
+            "guard": 0
+          },
+          "damage": 0,
+          "taken": 0,
+          "parries": 0,
+          "combo": 0,
+          "score": 1000,
+          "pendingUpgrade": true,
+          "ended": false
+        },
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "RAF audit after five real recovery cycles",
+      "audit": {
+        "requests": 213,
+        "callbacks": 207,
+        "cancellations": 5,
+        "maxPending": 1,
+        "duplicateTimestamps": 0,
+        "previousTimestamp": 44734.6
+      }
+    },
+    {
+      "label": "Unrestored loss",
+      "before": {
+        "graphics": {
+          "status": "ready",
+          "losses": 5,
+          "recoveries": 5,
+          "renderer": {
+            "quality": "low",
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "menu",
+        "quality": "low",
+        "frames": 206,
+        "elapsed": 0,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "menu",
+        "arena": "skyline",
+        "round": 1,
+        "run": null,
+        "sameMatch": true,
+        "sameRun": true
+      },
+      "frozen": {
+        "graphics": {
+          "status": "recovering",
+          "losses": 6,
+          "recoveries": 5,
+          "renderer": {
+            "quality": "low",
+            "recovering": true,
+            "contextLost": true,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "menu",
+        "quality": "low",
+        "frames": 206,
+        "elapsed": 0,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "menu",
+        "arena": "skyline",
+        "round": 1,
+        "run": null,
+        "sameMatch": true,
+        "sameRun": true
+      }
+    },
+    {
+      "label": "Timed-out context",
+      "snapshot": {
+        "graphics": {
+          "status": "failed",
+          "losses": 6,
+          "recoveries": 5,
+          "renderer": {
+            "quality": "low",
+            "recovering": true,
+            "contextLost": true,
+            "pixelWidth": 960,
+            "pixelHeight": 640,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+            "cachedArenas": 2
+          }
+        },
+        "mode": "menu",
+        "quality": "low",
+        "frames": 206,
+        "elapsed": 0,
+        "timeLeft": 75,
+        "hp": [
+          100,
+          100
+        ],
+        "wins": [
+          0,
+          0
+        ],
+        "phase": "menu",
+        "arena": "skyline",
+        "round": 1,
+        "run": null,
+        "sameMatch": true,
+        "sameRun": true
+      },
+      "message": "O navegador ainda não restaurou o 3D. Reabra no modo compatível. No Linux, o iniciador Abrir jogo.sh também seleciona a RX 7600 quando disponível."
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [],
+  "benignConsole": [],
+  "requests": [],
+  "failure": null,
+  "testedAt": "2026-09-30T19:30:20.595Z"
+}

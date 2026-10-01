@@ -1,0 +1,14 @@
+{
+  "name": "neon-clash",
+  "version": "2.0.1",
+  "private": true,
+  "description": "Offline third-person neon arena fighting game",
+  "scripts": {
+    "test": "node tests/combat-tests.js && node tests/run-tests.cjs",
+    "test:browser": "node tests/browser-v2.cjs",
+    "test:graphics": "node tests/context-recovery.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.57.0"
+  }
+}

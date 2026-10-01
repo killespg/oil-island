@@ -1,0 +1,6 @@
+PASS Ascent has five stages and ends at nightmare
+PASS Upgrade is applied once and only after a victory
+PASS A loss ends the run without offering an upgrade
+PASS Higher starting difficulty is respected; stage rotation is deterministic
+PASS Rank rewards mastery and damage avoidance
+5 progression tests passed.

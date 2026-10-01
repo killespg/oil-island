@@ -1,0 +1,35 @@
+# Neon Clash transforma impacto em domínio
+
+NEON CLASH ganha identidade quando câmera, regras e espetáculo ajudam o jogador a perceber uma abertura, decidir e sentir o resultado. A direção adotada combina **duelos em terceira pessoa, três arenas e quatro dificuldades**, com uma campanha curta de cinco confrontos. O desafio aumenta pela qualidade das decisões da CPU, preservando as regras de vida, dano e recursos. A evolução entre confrontos permite construir um estilo próprio, enquanto som, animação e sinais no chão tornam as ameaças reconhecíveis. Esta síntese cruza fontes primárias com inspeção de `combat.js`, `scene.js`, `audio.js`, `run.js` e `game.js`; descreve uma implementação procedural estilizada para navegador, sem equipará-la a uma produção AAA. Recomendações futuras e pontos ainda dependentes de avaliação humana estão identificados abaixo.
+
+## A câmera precisa devolver controle e confiança
+
+Na apresentação sobre God of War, Mihir Sheth relaciona dificuldades dos protótipos à câmera próxima e a ameaças que o jogador não acompanhava; reduzir atrito entre controle, câmera e combate foi parte da evolução do sistema. A implicação para um duelo é direta: o adversário precisa continuar legível enquanto o jogador aprende distância e defesa ([Santa Monica, GDC 2019](https://media.gdcvault.com/gdc2019/presentations/Sheth_Mihir_EvolvingCombat.pdf)).
+
+**Implementado:** câmera atrás do jogador com deslocamento lateral, órbita por mouse ou teclado, aproximação, centralização e acompanhamento opcional do rival. O movimento usa a orientação da câmera. Uma rotação manual suspende temporariamente a assistência, evitando que ela dispute imediatamente o enquadramento. A sensibilidade é ajustável e existe controle por toque. Isso segue a recomendação de permitir ajustes de movimento e sensibilidade, além de desligar tremor ([Microsoft, XAG 117](https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/117)). **Próximo ajuste recomendado:** validar enquadramento nos cantos e em telas estreitas com jogadores; amortecimento e distância não têm valores universais garantidos pelas fontes.
+
+## O Pesadelo exige decisões melhores, mantendo regras comuns
+
+A Sucker Punch relata que aumentar a vida dos adversários prejudicava a sensação de eficácia da arma; também descreve como defesas excessivas incentivavam passividade. A alternativa discutida envolve agressividade, padrões, defesa e oportunidades de recuperar iniciativa ([PlayStation, Honoring the blade](https://blog.playstation.com/2020/11/25/honoring-the-blade-the-lethality-contract-and-combat-balance-in-ghost-of-tsushima/)). Outra reflexão da equipe liga a precisão do aparo a uma abertura real para contra-atacar ([PlayStation, Mastering the katana](https://blog.playstation.com/2020/06/23/ghost-of-tsushima-mastering-the-katana/)).
+
+**Implementado:** Recruta, Combatente, Lenda e Pesadelo compartilham vida, dano, alcance e custos básicos. Mudam latência de reação, pressão, defesa, espaçamento e confirmação de combos. A CPU reage a ataques já iniciados, com espera explícita; não consulta teclas futuras. Ataques fixam a direção no início, golpes no vazio precisam completar a recuperação e sequências têm limite. O jogador dispõe de esquiva, corrida, salto, quebra de guarda e aparo com janela curta, custo e recarga. O Reactor acrescenta uma descarga que marca uma posição antes de ativar, criando uma decisão espacial para ambos os lutadores.
+
+As quatro opções têm descrições concretas, coerentes com a orientação de oferecer vários níveis e evitar nomes depreciativos ([Microsoft, XAG 108](https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/108)). Os pesquisadores do projeto reportaram que uma estratégia automatizada de perseguir e repetir socos perdeu muito mais nos níveis altos. Isso demonstra resistência a essa estratégia específica; **a dificuldade percebida e a justiça das janelas ainda exigem testes humanos**. O próximo balanceamento deve observar por que o jogador perdeu e se reconheceu sua chance de resposta.
+
+## O espetáculo deve explicar quem atingiu quem
+
+A Riot descreve efeitos visuais como comunicação de ação, origem e estado, com contenção suficiente para preservar compreensão. Também relata preservar informações relevantes nos níveis gráficos mais baixos ([Riot, Visual Effects](https://www.riotgames.com/en/artedu/visual-effects); [Riot, Gameplay Clarity](https://www.riotgames.com/en/news/valorant-shaders-and-gameplay-clarity)). Essa hierarquia fundamenta uma estética intensa em que o aviso antecede o impacto e o efeito não permanece cobrindo o rival.
+
+**Implementado:** cenários com composições próprias — cidade chuvosa, instalação industrial e plataforma no vazio —, texturas geradas localmente, luzes, partículas, rastros e ondas de impacto. Uma trilha sintetizada varia com a arena e com a situação da luta; ataque, acerto, bloqueio e aparo têm sons distintos. Alertas críticos combinam sinais visuais, texto e áudio, seguindo o princípio de não depender somente da cor ou de um canal sensorial ([Microsoft, XAG 103](https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/103)).
+
+Há qualidade gráfica reduzida, volume, controle de música e redução de movimento. A cena reutiliza recursos e mantém a execução local. Essas medidas favorecem consistência, mas não constituem certificação de acessibilidade nem garantia de desempenho em todo aparelho. **Recomendação:** priorizar testes de legibilidade e tempo de resposta antes de ampliar a quantidade de efeitos.
+
+## A Ascensão transforma repetição em escolha
+
+A Supergiant associa o interesse de Hades à combinação de desafios, aprendizado e novas configurações de habilidades entre tentativas. Seu FAQ também separa a ambição de desafiar de uma dificuldade única para todos ([Supergiant, Hades FAQ](https://www.supergiantgames.com/blog/hades-faq/)). A adaptação original para NEON CLASH é uma estrutura enxuta, compatível com jogo offline.
+
+**Implementado:** Duelo livre, laboratório de treino e **Ascensão de cinco etapas**, alternando arenas e elevando a dificuldade até o Pesadelo final. Entre vitórias, o jogador escolhe dano adicional, regeneração de energia ou resistência da guarda. A tentativa termina ao perder ou concluir as cinco etapas; a tela apresenta estatísticas e classificação do combate, enquanto o recorde de etapas e pontos fica salvo no navegador. Melhorias valem para a tentativa; mapas e dificuldades permanecem disponíveis desde o início. Há apenas um rival humanoide por luta, sem elenco de chefes ou campanha narrativa extensa.
+
+## O próximo salto depende de observar jogadores
+
+O investimento seguinte deve aprofundar variedade comportamental e ensinar leitura das ameaças. Um novo rival só acrescentará domínio se exigir decisões reconhecíveis; uma nova arena só justificará o custo se alterar posicionamento ou ritmo. A base implementada permite investigar isso em partidas curtas: observar erros, ajustar sinais e janelas, e repetir o teste. Esse processo dará evidência para calibrar a experiência entre acessível, exigente e verdadeiramente dominável.

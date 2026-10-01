@@ -1,6 +1,7 @@
 {
-  "title": "NEON CLASH",
-  "createdAt": "2026-09-30T08:38:31.616396-03:00",
+  "title": "NEON CLASH / ASCENSÃO",
+  "version": "2.0.1",
+  "createdAt": "2026-10-01T01:19:58.054233+00:00",
   "entrypoint": "index.html",
   "offline": true,
   "vendor": {
@@ -8,11 +9,16 @@
     "license": "MIT"
   },
   "validation": {
-    "integrationChecksPassed": 28,
-    "combatTestsPassed": 16,
+    "combatTestsPassed": 28,
+    "progressionTestsPassed": 5,
+    "integrationChecksPassed": 41,
+    "contextRecoveryChecksPassed": 101,
+    "contextReport": "evidencias/v2-context-results.json",
+    "linuxGpuReport": "evidencias/v2-linux-gpu-results.json",
+    "fullGameHardwareSmokeCompleted": false,
     "javascriptErrors": [],
     "externalRequests": [],
-    "report": "evidencias/browser-results.json",
+    "report": "evidencias/v2-browser-results.json",
     "mobile": "Chromium emulation; not physical-device verification"
   },
   "files": [
@@ -23,8 +29,8 @@
     },
     {
       "path": ".gitignore",
-      "bytes": 27,
-      "sha256": "6e0f36cfeafafc04e578691e57342189c7ba2fdbdbd797de2e5dab39f34935d3"
+      "bytes": 41,
+      "sha256": "9d95cae116999202c00daf6da42d58b029cfba9edaf23a4ab5b6e73d66cf6444"
     },
     {
       "path": "Abrir jogo.cmd",
@@ -32,99 +38,124 @@
       "sha256": "c369a077a253e26e89b85071fb50bb426ab159e49027572d5f1f18497386f266"
     },
     {
+      "path": "Abrir jogo.sh",
+      "bytes": 2038,
+      "sha256": "f86884ba44af882f5ade9cb56491596d4614a779ac53627507f5ffa3d30fd9ee"
+    },
+    {
+      "path": "DESIGN.md",
+      "bytes": 7355,
+      "sha256": "735564b8c2293bda327f2e068f2a521dd49e506e29fbecba612a51daf66072ba"
+    },
+    {
       "path": "README.md",
-      "bytes": 3865,
-      "sha256": "82c49d880f0c69576b4ef65d3f86011c9083f512ba60e8e5971f9375bc00c7da"
+      "bytes": 11897,
+      "sha256": "ae045b711ce105a7ed8018fec395b915e1e6a776ff2d694d821ce686d4b573cd"
+    },
+    {
+      "path": "audio.js",
+      "bytes": 8002,
+      "sha256": "fee49ce186d47f294935c72036f4a2458df8c9b21a245dad837f1eb43eb8ee45"
     },
     {
       "path": "combat.js",
-      "bytes": 18273,
-      "sha256": "86192dab15ecf343db59a16ec38edbb97c6fce1e2c3accd19329aa925edb9453"
+      "bytes": 25256,
+      "sha256": "af193dae2b68c3f0122a1549ab74267b5c3ed2177d0226fce3f6178596c4eac1"
     },
     {
-      "path": "evidencias/browser-results.json",
-      "bytes": 4507,
-      "sha256": "30afb50bf849892063f2d9840e90e89c469c13060c84e3fd963e32804ec07e48"
+      "path": "evidencias/v2-browser-results.json",
+      "bytes": 1729,
+      "sha256": "ad64f11ac8ce7c44f3f7b0eaaabbb39ee8226bb3df390aa45d3e59cfdebee643"
     },
     {
-      "path": "evidencias/combat-results.json",
-      "bytes": 1766,
-      "sha256": "2f5d4f374ef0234548b56b7e8e306be23aab8550c408c832498fff6f15cc47ec"
+      "path": "evidencias/v2-combat-results.json",
+      "bytes": 3133,
+      "sha256": "d44868eb699f4d232463a24a05ccafc9c010b516eb9508627047405e0ca1a603"
     },
     {
-      "path": "evidencias/desktop-action-hq.png",
-      "bytes": 634291,
-      "sha256": "d4b25be28fc39f03f8d8fe7e1cdde04e50296abaf0271e5fdf6820940f2d8917"
+      "path": "evidencias/v2-context-results.json",
+      "bytes": 34948,
+      "sha256": "612057bca34ba0db3abadaf3142a6fc2ad5fb7af676b4690e0962c592ab07773"
     },
     {
-      "path": "evidencias/desktop-fight.png",
-      "bytes": 439170,
-      "sha256": "10426a6981ac64697e7ea3f5afe760e5359cc567215a6afcf7949222be3ffeef"
+      "path": "evidencias/v2-linux-gpu-results.json",
+      "bytes": 1044,
+      "sha256": "b1de84c5b01a0119cff8b022d09a9a4eed2aa8352ee9a8831897c4f4af703a21"
     },
     {
-      "path": "evidencias/desktop-menu.png",
-      "bytes": 827941,
-      "sha256": "d4384b972482bb0055532e1efded2ad850ce76a7ddb6d3e92a016a13770a1177"
+      "path": "evidencias/v2-menu.png",
+      "bytes": 845589,
+      "sha256": "f9cd5bf52384bfa41e3ae63eec3f79ae1a792ebf9bea6228a1853a5e6ff9614c"
     },
     {
-      "path": "evidencias/desktop-victory.png",
-      "bytes": 205264,
-      "sha256": "1a749ae6a8b4a877148bd442af825315fd63a4759505998519dddd573eb7fe51"
+      "path": "evidencias/v2-mobile-fight.png",
+      "bytes": 181728,
+      "sha256": "4891b0089362e61c1e14d42a90dda2a46382fc6ac01f155ad56a63d3af446112"
     },
     {
-      "path": "evidencias/mobile-boundaries-landscape.png",
-      "bytes": 97846,
-      "sha256": "104fe56c8db04095dfc0689155072042f2a873f3de1dac349a93d77286ddfb64"
+      "path": "evidencias/v2-mobile-menu.png",
+      "bytes": 214499,
+      "sha256": "c7a30d2e76efc144ba114959f452e0f857b77dfdd13f92dec1248f14c8583ba7"
     },
     {
-      "path": "evidencias/mobile-boundaries-portrait.png",
-      "bytes": 46175,
-      "sha256": "54678637f80ea7280e6e1e131e07750a176919347bc26606f478eb22ab746a7e"
+      "path": "evidencias/v2-progression-results.txt",
+      "bytes": 310,
+      "sha256": "ed5080f665418c4acfc7e42d2ea4fa0b7cc07569f2efb7c53f1a10fba1cf6918"
     },
     {
-      "path": "evidencias/mobile-fight.png",
-      "bytes": 156650,
-      "sha256": "ad000d07db8e2e2554bd51e4abb543efd4407694ff29c23447c5d6ee60f2a2f8"
+      "path": "evidencias/v2-reactor-fight.png",
+      "bytes": 689937,
+      "sha256": "7a7650acb7a76642b6bec56414a7a4fba19e18a0b76bd3f4022b3999dcfa0ca3"
     },
     {
-      "path": "evidencias/mobile-portrait.png",
-      "bytes": 130211,
-      "sha256": "80a6bc31ee490f58a4cb6059e4609e582cae4d11999fefe3a1bc21d20b1a5488"
+      "path": "evidencias/v2-skyline-fight.png",
+      "bytes": 556233,
+      "sha256": "1ae8489e02a19f836e095569499a786374b4c72fbc64d3bc233183c0c78d078e"
     },
     {
-      "path": "evidencias/performance-high.png",
-      "bytes": 539574,
-      "sha256": "4a12b9c1c05c118dbfa4e11c18c38d5e39fa829d89d3cab02801a89ebb205c30"
+      "path": "evidencias/v2-upgrades.png",
+      "bytes": 262634,
+      "sha256": "3a6b44ccd62d3309c289abca829ac241adaa0ea944434441ae3cfa383f282924"
     },
     {
-      "path": "evidencias/performance-low.png",
-      "bytes": 353486,
-      "sha256": "4755225238d0ca24f4fd187911a8291dcbd4a75c74fe1523f5d55986cb2e7075"
-    },
-    {
-      "path": "evidencias/scene-preview.png",
-      "bytes": 473194,
-      "sha256": "20aa40a8cd849cf6c7d879e4f767978959582fd1482a898042e0aeae4c9d9402"
+      "path": "evidencias/v2-void-fight.png",
+      "bytes": 578945,
+      "sha256": "1923af1b0ef0df2eda1af6b4d7f853285e024b2ef8c51238422f70a8bf57e94f"
     },
     {
       "path": "game.js",
-      "bytes": 18779,
-      "sha256": "58351abf15fcab875dd39865cc7ca7c91a7ef2b395f80083f703a38c1969be7e"
+      "bytes": 31031,
+      "sha256": "0b980b4885e4c9d6cc868f2b82c9112fbbb212acc195528ef6f50aa0b8c7ea3e"
     },
     {
       "path": "index.html",
-      "bytes": 8762,
-      "sha256": "41f43ba8ea15297a024bb44bc574b88f8a4bc25bdf16216e3043856c022bbd7c"
+      "bytes": 14262,
+      "sha256": "82aed45eb2ddda5246da096f679fba98edf76effaf71cec694a3960cb7cc66c5"
+    },
+    {
+      "path": "package.json",
+      "bytes": 383,
+      "sha256": "bc4d97e65c5a36b6b574eafd9fb8aa2d36d5a1362f3a7780519698f791edae20"
+    },
+    {
+      "path": "run.js",
+      "bytes": 2569,
+      "sha256": "ba2900a4ab0cc412e5a024f006ccc8bf00607bf55c0d5a7fc75a40b76488ae40"
     },
     {
       "path": "scene.js",
-      "bytes": 38027,
-      "sha256": "4962437f3c3afb1e53a4cda88478a9847ebf367b8ea68fa887a28aad8d6f33ff"
+      "bytes": 58091,
+      "sha256": "6e1d04ab6cbf36c23b4af285a90a98e8235ece8edd13156de055980a2161a474"
     },
     {
       "path": "style.css",
-      "bytes": 17464,
-      "sha256": "738ac1da13579f67931211368b433d4c76b4cb00f284bca414ee5ccd494505b4"
+      "bytes": 30682,
+      "sha256": "84bfe3917de135490c84f124084d8a6109dc422f01a1b706e2306114924f1520"
+    },
+    {
+      "path": "tests/browser-v2.cjs",
+      "bytes": 10526,
+      "sha256": "973b3b6e3ace651e886b652b72a735de37a9b4dcbe8829f2998537a3c5a18a17"
     },
     {
       "path": "tests/browser_check.py",
@@ -138,8 +169,18 @@
     },
     {
       "path": "tests/combat-tests.js",
-      "bytes": 9904,
-      "sha256": "a0259780cf8ac7c428946c0685840e518d6392970b63fc0e64aaec27e2ecbfd5"
+      "bytes": 19716,
+      "sha256": "c52570bb6163d9c780361f1a2e4abd498675a5789c5331cc9f6a48c37a42ea92"
+    },
+    {
+      "path": "tests/context-recovery.cjs",
+      "bytes": 15231,
+      "sha256": "a4aecde304fcd392872af6a5c5a3c545b71a1ab8d46f2b1a667d68a52ad8f83a"
+    },
+    {
+      "path": "tests/run-tests.cjs",
+      "bytes": 2130,
+      "sha256": "29c4c8b43c7e0a064db8cfc61ec1add50d9fdf9cfab2b05e6e91b884a8bd6ef9"
     },
     {
       "path": "vendor/README.txt",
