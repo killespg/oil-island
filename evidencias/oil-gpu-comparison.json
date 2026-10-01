@@ -1,0 +1,386 @@
+{
+  "testedAt": "2026-10-01T04:46:43.341629+00:00",
+  "baselineSnapshotTime": "2026-10-01T01:32:00.6096722-03:00",
+  "observations": {
+    "baselineInitial": {
+      "variant": "baseline",
+      "results": [
+        {
+          "arena": "nightclub",
+          "quality": "low",
+          "frames": 1811,
+          "seconds": 12.011699999999653,
+          "averageFps": 150.76966624208498,
+          "frameMsMedian": 5.599999999976717,
+          "frameMsP95": 11.100000000034925,
+          "frameMsP99": 11.200000000011642,
+          "drawCallsMean": 122.89232468249585,
+          "trianglesMean": 231341.39591385974,
+          "maxTextures": 20,
+          "graphics": {
+            "quality": "low",
+            "resolutionScale": 1,
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 1235,
+            "pixelHeight": 566,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (AMD, AMD Radeon RX 7600 (0x00007480) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "cachedArenas": 2,
+            "cachedFighters": 4,
+            "characters": [
+              "titan",
+              "orelha"
+            ],
+            "drawCalls": 127,
+            "triangles": 232640,
+            "geometries": 103,
+            "textures": 20,
+            "beachActive": false
+          }
+        },
+        {
+          "arena": "seaside",
+          "quality": "low",
+          "frames": 1732,
+          "seconds": 12.006099999999616,
+          "averageFps": 144.26000116607852,
+          "frameMsMedian": 5.599999999976717,
+          "frameMsP95": 11.199999999953434,
+          "frameMsP99": 11.200000000011642,
+          "drawCallsMean": 189.08718244803694,
+          "trianglesMean": 215221.0854503464,
+          "maxTextures": 25,
+          "graphics": {
+            "quality": "low",
+            "resolutionScale": 1,
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 1235,
+            "pixelHeight": 566,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (AMD, AMD Radeon RX 7600 (0x00007480) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "cachedArenas": 3,
+            "cachedFighters": 4,
+            "characters": [
+              "titan",
+              "orelha"
+            ],
+            "drawCalls": 193,
+            "triangles": 216466,
+            "geometries": 193,
+            "textures": 25,
+            "beachActive": false
+          }
+        }
+      ]
+    },
+    "currentInitialConcurrentCpuTests": {
+      "variant": "current",
+      "results": [
+        {
+          "arena": "nightclub",
+          "quality": "low",
+          "frames": 1600,
+          "seconds": 12.011600000000056,
+          "averageFps": 133.2045689167132,
+          "frameMsMedian": 5.600000000000364,
+          "frameMsP95": 11.200000000000728,
+          "frameMsP99": 16.600000000002183,
+          "drawCallsMean": 107.705625,
+          "trianglesMean": 231010.8475,
+          "maxTextures": 20,
+          "graphics": {
+            "quality": "low",
+            "resolutionScale": 1,
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 1235,
+            "pixelHeight": 566,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (AMD, AMD Radeon RX 7600 (0x00007480) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "cachedArenas": 2,
+            "cachedFighters": 4,
+            "characters": [
+              "titan",
+              "orelha"
+            ],
+            "drawCalls": 113,
+            "triangles": 232448,
+            "sceneAndShadowDrawCalls": 113,
+            "postProcessDrawCalls": 0,
+            "geometries": 106,
+            "textures": 20,
+            "beachActive": false
+          }
+        },
+        {
+          "arena": "seaside",
+          "quality": "low",
+          "frames": 1700,
+          "seconds": 12.005999999999993,
+          "averageFps": 141.5958687323006,
+          "frameMsMedian": 5.599999999998545,
+          "frameMsP95": 11.19999999999709,
+          "frameMsP99": 11.200000000004366,
+          "drawCallsMean": 186.27705882352942,
+          "trianglesMean": 214971.30588235293,
+          "maxTextures": 25,
+          "graphics": {
+            "quality": "low",
+            "resolutionScale": 1,
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 1235,
+            "pixelHeight": 566,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (AMD, AMD Radeon RX 7600 (0x00007480) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "cachedArenas": 3,
+            "cachedFighters": 4,
+            "characters": [
+              "titan",
+              "orelha"
+            ],
+            "drawCalls": 191,
+            "triangles": 216274,
+            "sceneAndShadowDrawCalls": 191,
+            "postProcessDrawCalls": 0,
+            "geometries": 196,
+            "textures": 25,
+            "beachActive": false
+          }
+        }
+      ]
+    },
+    "currentRepeatAfterCpuTests": {
+      "variant": "current",
+      "results": [
+        {
+          "arena": "nightclub",
+          "quality": "low",
+          "frames": 1795,
+          "seconds": 12.006199999999883,
+          "averageFps": 149.5060885209323,
+          "frameMsMedian": 5.599999999991269,
+          "frameMsP95": 11.10000000000582,
+          "frameMsP99": 11.200000000011642,
+          "drawCallsMean": 108.02674094707521,
+          "trianglesMean": 231082.93927576602,
+          "maxTextures": 25,
+          "graphics": {
+            "quality": "low",
+            "resolutionScale": 1,
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 1235,
+            "pixelHeight": 566,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (AMD, AMD Radeon RX 7600 (0x00007480) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "cachedArenas": 3,
+            "cachedFighters": 4,
+            "characters": [
+              "titan",
+              "orelha"
+            ],
+            "drawCalls": 113,
+            "triangles": 232448,
+            "sceneAndShadowDrawCalls": 113,
+            "postProcessDrawCalls": 0,
+            "geometries": 196,
+            "textures": 25,
+            "beachActive": false
+          }
+        },
+        {
+          "arena": "seaside",
+          "quality": "low",
+          "frames": 1741,
+          "seconds": 12.006199999999875,
+          "averageFps": 145.00841232030268,
+          "frameMsMedian": 5.599999999991269,
+          "frameMsP95": 11.19999999999709,
+          "frameMsP99": 11.200000000011642,
+          "drawCallsMean": 186.17863296955773,
+          "trianglesMean": 214943.87248707638,
+          "maxTextures": 25,
+          "graphics": {
+            "quality": "low",
+            "resolutionScale": 1,
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 1235,
+            "pixelHeight": 566,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (AMD, AMD Radeon RX 7600 (0x00007480) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "cachedArenas": 3,
+            "cachedFighters": 4,
+            "characters": [
+              "titan",
+              "orelha"
+            ],
+            "drawCalls": 191,
+            "triangles": 216274,
+            "sceneAndShadowDrawCalls": 191,
+            "postProcessDrawCalls": 0,
+            "geometries": 196,
+            "textures": 25,
+            "beachActive": false
+          }
+        }
+      ]
+    },
+    "baselineRepeat": {
+      "variant": "baseline",
+      "results": [
+        {
+          "arena": "nightclub",
+          "quality": "low",
+          "frames": 1854,
+          "seconds": 12.011700000000058,
+          "averageFps": 154.34950922850146,
+          "frameMsMedian": 5.599999999998545,
+          "frameMsP95": 11.100000000002183,
+          "frameMsP99": 11.200000000000728,
+          "drawCallsMean": 123.00970873786407,
+          "trianglesMean": 231368.99460625675,
+          "maxTextures": 20,
+          "graphics": {
+            "quality": "low",
+            "resolutionScale": 1,
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 1235,
+            "pixelHeight": 566,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (AMD, AMD Radeon RX 7600 (0x00007480) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "cachedArenas": 2,
+            "cachedFighters": 4,
+            "characters": [
+              "titan",
+              "orelha"
+            ],
+            "drawCalls": 127,
+            "triangles": 232640,
+            "geometries": 103,
+            "textures": 20,
+            "beachActive": false
+          }
+        },
+        {
+          "arena": "seaside",
+          "quality": "low",
+          "frames": 1794,
+          "seconds": 12.01170000000001,
+          "averageFps": 149.35437948000686,
+          "frameMsMedian": 5.599999999998545,
+          "frameMsP95": 11.19999999999709,
+          "frameMsP99": 11.200000000000728,
+          "drawCallsMean": 189.02452619843925,
+          "trianglesMean": 215202.3188405797,
+          "maxTextures": 25,
+          "graphics": {
+            "quality": "low",
+            "resolutionScale": 1,
+            "recovering": false,
+            "contextLost": false,
+            "pixelWidth": 1235,
+            "pixelHeight": 566,
+            "postProcessing": false,
+            "postTargetType": null,
+            "samples": 0,
+            "shadowMapSize": 1024,
+            "webglVersion": "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+            "renderer": "ANGLE (AMD, AMD Radeon RX 7600 (0x00007480) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+            "cachedArenas": 3,
+            "cachedFighters": 4,
+            "characters": [
+              "titan",
+              "orelha"
+            ],
+            "drawCalls": 193,
+            "triangles": 216466,
+            "geometries": 193,
+            "textures": 25,
+            "beachActive": false
+          }
+        }
+      ]
+    }
+  },
+  "sampling": "LQ at 1235x566; three-second warmup then twelve-second sample per arena; fixed-step combat; no artificial GPU throttling.",
+  "renderer": "AMD Radeon RX 7600 / ANGLE D3D11 / WebGL 2",
+  "drawCallAccounting": "Includes scene, shadow and post passes; renderer.info reset once per frame in both versions.",
+  "sourceHashes": [
+    {
+      "path": "scene.js",
+      "beforeSha256": "8fef9814df3aa9c3fd3c6800d7b5500175b98b112b85e7eedde76d812651d864",
+      "afterSha256": "90bbcb8c0fc59490cb12cc5525081cf9f47d8c01bf977394a0d196f9ab222f08"
+    },
+    {
+      "path": "fighters-human.js",
+      "beforeSha256": "1f2798cbc8500970fc94885e1a4814d0fa54450de0c1b88610619efb4a38f0be",
+      "afterSha256": "6350db33de6c803e1c29c6ee4f688ac4f71d1a2d9a56484f569e2aa68ad5552b"
+    },
+    {
+      "path": "arena-island.js",
+      "beforeSha256": "25840faca0f49daadaeddf031cef60fbc587537b4222643d47200f229d9a3554",
+      "afterSha256": "ad19c519801efe4e5a68975e2c8a70f0b94be95999e015d56e18dcf37feb28c1"
+    },
+    {
+      "path": "arena-nightclub.js",
+      "beforeSha256": "d88751b8e518cbf4086797950804790464e5a4eb61d139a890c263ff418e4400",
+      "afterSha256": "ebb478e4f73737306ceb3058be442c0873320f72b6a919f10de373916cbc244a"
+    },
+    {
+      "path": "arena-seaside.js",
+      "beforeSha256": "e52af66227ce14edb98e818efffd45415781397c4c91da9aeabc6e3663b91b57",
+      "afterSha256": "d6d7c13e3c0af0bd35758bd3f54bb0c6ad49e3e7b107ac9b3109836cd3a86904"
+    },
+    {
+      "path": "arena-helipad.js",
+      "beforeSha256": "ecc87e1e925c36c6a83af4d53d6daaa827051c289f6e3a3ad0b954ca56a23c70",
+      "afterSha256": "b5667197e4270ca5fa3fc98ed673a16a79cfa01ac888445186a8e0c3270177cc"
+    },
+    {
+      "path": "performance.js",
+      "beforeSha256": "322c7ba3121f9e054c419f686cb969c35e2e2975db25a040f9011b5d6fc9ee6f",
+      "afterSha256": "7815f4964010a380086fba681c85dd04b4105866097269c5858e7a4e848cd8bd"
+    }
+  ],
+  "conclusion": "Buffer sizes and draw submissions decreased. Short RX7600 samples did not establish an FPS gain: current repeat was 149.51/145.01 FPS vs baseline repeat154.35/149.35, with 5.6ms median in every arena/sample. Do not infer weak-GPU frame rates.",
+  "limitations": [
+    "Other user game tabs remained open; workload was not exclusive.",
+    "First current measurement overlapped CPU test suites and is recorded separately.",
+    "Current repeat reused the scene cache; baseline repeat reloaded the page. Texture-count comparisons must use equivalent cache states.",
+    "Snapshot sources were collected during the task, not from a published release.",
+    "Not a prolonged thermal test or physical weak-GPU test."
+  ]
+}

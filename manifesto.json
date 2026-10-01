@@ -1,13 +1,13 @@
 {
-  "title": "NEON CLASH / ASCENSÃO ONLINE",
-  "version": "3.0.0",
-  "createdAt": "2026-10-01T01:37:07.662689+00:00",
+  "title": "Oil Island (Orelha Edition)",
+  "version": "4.2.0",
+  "createdAt": "2026-10-01T04:46:43.341629+00:00",
   "entrypoint": "index.html",
   "offline": true,
   "online": {
     "server": "server/index.ts",
     "start": "npm ci && npm start",
-    "node": "24 LTS",
+    "node": ">=24 <27",
     "instructions": "ONLINE.md",
     "publicDeploymentConfigured": false
   },
@@ -16,9 +16,11 @@
     "license": "MIT"
   },
   "validation": {
-    "report": "evidencias/v3-validation.json",
-    "totalLeafScenarios": 103,
-    "browserAndGpuTestedThisVersion": false
+    "report": "evidencias/oil-island-validation.json",
+    "totalLeafScenarios": 285,
+    "browserVisuallyInspected": true,
+    "gpuBenchmarkCompleted": true,
+    "weakGpuHardwareTested": false
   },
   "files": [
     {
@@ -48,33 +50,128 @@
     },
     {
       "path": "DESIGN.md",
-      "bytes": 7355,
-      "sha256": "735564b8c2293bda327f2e068f2a521dd49e506e29fbecba612a51daf66072ba"
+      "bytes": 19311,
+      "sha256": "1810d636dab2df05d56ad561f7bbc6a64966d07427db1250ad63468891f688fe"
     },
     {
       "path": "Dockerfile",
-      "bytes": 819,
-      "sha256": "d7ea97ae3b9cb7ad17b70a796500842b1b10556599f0236b6a801057f11acbcb"
+      "bytes": 1011,
+      "sha256": "5b5e76b3222fac9ffe1f10f067c33f18c3391e7870817a3b9d086e972f93f00d"
     },
     {
       "path": "ONLINE.md",
-      "bytes": 6920,
-      "sha256": "e2f764b8eded49eac6a160e6713308890f149d9e0853d7ace172fbed1f33e0d7"
+      "bytes": 8998,
+      "sha256": "46358ee3d80e031647f864982424b64057cf5757a8cf7749369ced486f0dccb4"
     },
     {
       "path": "README.md",
-      "bytes": 14709,
-      "sha256": "b1e7d627d9993cc2228cacf4df52535f0aff607ee6ebf2619843a215a2423afa"
+      "bytes": 24225,
+      "sha256": "a293e3bcf647a9416fca08cf1256354b646f206df1e8426661e5fb3197c93f0d"
+    },
+    {
+      "path": "arena-helipad.js",
+      "bytes": 24198,
+      "sha256": "b5667197e4270ca5fa3fc98ed673a16a79cfa01ac888445186a8e0c3270177cc"
+    },
+    {
+      "path": "arena-island.js",
+      "bytes": 20718,
+      "sha256": "ad19c519801efe4e5a68975e2c8a70f0b94be95999e015d56e18dcf37feb28c1"
+    },
+    {
+      "path": "arena-nightclub.js",
+      "bytes": 20034,
+      "sha256": "ebb478e4f73737306ceb3058be442c0873320f72b6a919f10de373916cbc244a"
+    },
+    {
+      "path": "arena-seaside.js",
+      "bytes": 29401,
+      "sha256": "d6d7c13e3c0af0bd35758bd3f54bb0c6ad49e3e7b107ac9b3109836cd3a86904"
+    },
+    {
+      "path": "assets/README.md",
+      "bytes": 2371,
+      "sha256": "e3491b05542ebca38139b91275686dbdf2f42ae2405be8b559fb0cffa554b15e"
+    },
+    {
+      "path": "assets/faces-v5.js",
+      "bytes": 3179450,
+      "sha256": "900e150ff8b1759862fc04003dfb7b6751b4fcc7bba0a547530a417995cbc2be"
+    },
+    {
+      "path": "assets/materials-v5.js",
+      "bytes": 14729462,
+      "sha256": "68c7c8d22ba0579f478b52aea327c550ccf7279d72da31da16d99277fc0a3480"
+    },
+    {
+      "path": "assets/orelha-face.js",
+      "bytes": 2989554,
+      "sha256": "dcad37e05731ea5d05202259d70af6bf8542c7d1198d7b5a8053b49c30490cdc"
+    },
+    {
+      "path": "assets/titan-shirt.js",
+      "bytes": 2550859,
+      "sha256": "1083ed093f872eaeadac42e51a1eefd2d94d5edb9525837c76c2082a74c5f692"
     },
     {
       "path": "audio.js",
-      "bytes": 8002,
-      "sha256": "fee49ce186d47f294935c72036f4a2458df8c9b21a245dad837f1eb43eb8ee45"
+      "bytes": 16192,
+      "sha256": "972e56f14a590826810e6617e5a6c5b4f0f4e5a21e67ac80d840160e3a058d25"
+    },
+    {
+      "path": "combat-feedback.js",
+      "bytes": 1496,
+      "sha256": "a313ffb8b7eddd7e34ed280a34dddceb933d690a403e3e046f8c1572a47e5876"
     },
     {
       "path": "combat.js",
-      "bytes": 26518,
-      "sha256": "dd44b65186742ef6d7b2f5884b4cb0b2b6d182dc98647ff756d7e21f0c07b784"
+      "bytes": 42742,
+      "sha256": "20ba9b86540fe1eb403af20b43c121c0340b3f1bb93aa69c38153bad42d46472"
+    },
+    {
+      "path": "docs/performance.md",
+      "bytes": 5589,
+      "sha256": "90eaa0a569a57236d9fb9a0961ac64ffa99b99ba974400b8662df2190be932ce"
+    },
+    {
+      "path": "docs/research/README.md",
+      "bytes": 7572,
+      "sha256": "0931a57f0b1a5ff43142546a5fe9a38ea1e076ba32f621c6e5891adcf8b150f8"
+    },
+    {
+      "path": "docs/research/research-agile-controls.md",
+      "bytes": 7198,
+      "sha256": "d488520b183850d111a696637c48affb69713ddd4004d56844aba4f7dba73518"
+    },
+    {
+      "path": "docs/research/research-combo-animation.md",
+      "bytes": 8067,
+      "sha256": "9ab6f014d37e3219f660822ae9b1e61ca157b573f3a30533cc3799580ec81f6a"
+    },
+    {
+      "path": "docs/research/research-defense-mobility.md",
+      "bytes": 12649,
+      "sha256": "488ba6f366ab6ad207c7a580a7716d0eed82c8081c37e8442c123187a45db2da"
+    },
+    {
+      "path": "docs/research/research-fast-combat.md",
+      "bytes": 11223,
+      "sha256": "3dccb8500227612b92c68f8033f992da2c045ba750d8f0fee32d5428a1ae85b7"
+    },
+    {
+      "path": "docs/research/research-souls-camera.md",
+      "bytes": 6339,
+      "sha256": "09f3ee1c80b80b43c0cc51508ed0c2a523842e9638914b8b827695977da8971b"
+    },
+    {
+      "path": "evidencias/arena-performance-after.json",
+      "bytes": 10247,
+      "sha256": "6aa929009268cd00207a27cdf081712e204a534e0b6a3b9ce14b43dce47ff07d"
+    },
+    {
+      "path": "evidencias/arena-performance-before.json",
+      "bytes": 10174,
+      "sha256": "634f7bdff96b6a1cae0796e698b4c215ba39bf36d5530a386a4980bd8c333d0e"
     },
     {
       "path": "evidencias/browser-results.json",
@@ -125,6 +222,91 @@
       "path": "evidencias/mobile-portrait.png",
       "bytes": 130211,
       "sha256": "80a6bc31ee490f58a4cb6059e4609e582cae4d11999fefe3a1bc21d20b1a5488"
+    },
+    {
+      "path": "evidencias/oil-assets-http.json",
+      "bytes": 1735,
+      "sha256": "7c2f922c2edcc55e9162ed97e595dd3feef1fd46b75376b9d77e7f94731a4e94"
+    },
+    {
+      "path": "evidencias/oil-combo-hud.png",
+      "bytes": 82078,
+      "sha256": "ce1e54fcf8921fc833507cef94c66d246a617a6e4acdd500ad002466e79be956"
+    },
+    {
+      "path": "evidencias/oil-gpu-comparison.json",
+      "bytes": 13792,
+      "sha256": "cc151defb175640ec40ac35a695aef274645bd68d20c2479c1961f3a064060bd"
+    },
+    {
+      "path": "evidencias/oil-helipad-audit.json",
+      "bytes": 344,
+      "sha256": "e1ab327d7520b20de92a857e825c11b58050e419bc802f2b27a56633942c50d5"
+    },
+    {
+      "path": "evidencias/oil-helipad-cinematic.png",
+      "bytes": 56058,
+      "sha256": "6aee45fa2663c935230c24879c730f428bdf810750fca205858eef629d15ff09"
+    },
+    {
+      "path": "evidencias/oil-island-validation.json",
+      "bytes": 4764,
+      "sha256": "ccd853eed1f9642d30238088c7f68a385245d2347179a8646846e1ecd435c476"
+    },
+    {
+      "path": "evidencias/oil-logic-results.txt",
+      "bytes": 25267,
+      "sha256": "cfb12d0565ab7339183d322de36a10a7b781893bb485ea335605f42efd4b065a"
+    },
+    {
+      "path": "evidencias/oil-online-guest.png",
+      "bytes": 78758,
+      "sha256": "d4b312f989333e5ecd11350b04334f7e310c32f109846b9dc36c9219ad69df3a"
+    },
+    {
+      "path": "evidencias/oil-online-host.png",
+      "bytes": 78751,
+      "sha256": "0371a4762ab5ec01c4e13cc4103ab9b24d62bb50811cb3799c5b68fc24c500ad"
+    },
+    {
+      "path": "evidencias/oil-online-leave-fixed.png",
+      "bytes": 79745,
+      "sha256": "b746977b3fe9a06655c5db5e4f8cc1551222c5102ebd2d63669b3e7416f68561"
+    },
+    {
+      "path": "evidencias/oil-online-results.txt",
+      "bytes": 4312,
+      "sha256": "899c829a3f460030e7e678bd17f2cf1d03705b2950c49dba8f5a45c07c70819f"
+    },
+    {
+      "path": "evidencias/oil-orla-chase.png",
+      "bytes": 78098,
+      "sha256": "e18aa33fbaa2ba0df6717a60d47c053eadb10ffd3969d25093d1256e0e5c6e73"
+    },
+    {
+      "path": "evidencias/oil-orla-fight.png",
+      "bytes": 82573,
+      "sha256": "8b3851dbaf5fe36d744a5123939dc59b359e4a165f7cbba3c5e7cb8585f8887e"
+    },
+    {
+      "path": "evidencias/oil-pixel-proportions.png",
+      "bytes": 82806,
+      "sha256": "b17819d5415da8342616f74d38dfc65809f568e0302afad7117f9a3273fc32d6"
+    },
+    {
+      "path": "evidencias/oil-pose-audit.json",
+      "bytes": 1077,
+      "sha256": "1a6b9ccb71fa38b7615f64b04db0f88c164334c8a9b30f9ad6bb0b02b7616bdf"
+    },
+    {
+      "path": "evidencias/oil-renamed-menu.png",
+      "bytes": 85901,
+      "sha256": "0ed3efc8d87f414308a9aa9aa93bdbd0f473e48853d3ad4a55c5e6be07b1dbc9"
+    },
+    {
+      "path": "evidencias/oil-veterano-jeans.png",
+      "bytes": 88604,
+      "sha256": "30c05f60df5321a37a07161a93b8e1a3d81b21523050b5bb4c2d5faec1e45b1f"
     },
     {
       "path": "evidencias/performance-high.png",
@@ -222,69 +404,144 @@
       "sha256": "8e5684bcaec5f7549ad3720c9c383dbeccb82dc6e6ea580f85760238af722605"
     },
     {
+      "path": "evidencias/v4-logic-results.txt",
+      "bytes": 9799,
+      "sha256": "034562c889458a7432867d34858a3717e4f87b3a0df9f571b51e8efc02906efd"
+    },
+    {
+      "path": "evidencias/v4-online-results.txt",
+      "bytes": 3636,
+      "sha256": "b596ded98e1f1098525de6fa11ca0d7d4e5b2df99bc6f51422786eeb0916b3ac"
+    },
+    {
+      "path": "evidencias/v4-validation.json",
+      "bytes": 1764,
+      "sha256": "2798df07be08e2ef399441e4254e4dda6693bee7b3171bcae94d25ab728c71a4"
+    },
+    {
+      "path": "evidencias/v5-logic-results.txt",
+      "bytes": 10184,
+      "sha256": "c1d6c5b5cee6dca3256c6cfde350bf8caef059a1d10f6ab01006b1b91db97b17"
+    },
+    {
+      "path": "evidencias/v5-online-results.txt",
+      "bytes": 3632,
+      "sha256": "babddcf8d80c9f4612da178c149794a92e6347589e6e1fdbd1a93f4eb96571fe"
+    },
+    {
+      "path": "evidencias/v5-validation.json",
+      "bytes": 2597,
+      "sha256": "a6a75ec3ff01adab1496fa98e70c097effdd3c69f6101352dad2cf6eae2b9095"
+    },
+    {
+      "path": "fighter-faces.js",
+      "bytes": 21001,
+      "sha256": "d8af855ba9f2dd6d93aedf6bce13382c6fa7cbf04cd33d710a2d51138f6aa747"
+    },
+    {
+      "path": "fighters-dog.js",
+      "bytes": 25965,
+      "sha256": "d3d8889f80dec05eace5b97e95dd1aa283dc5a383baaf6a20d2ff9c7e2460e54"
+    },
+    {
+      "path": "fighters-human.js",
+      "bytes": 45489,
+      "sha256": "6350db33de6c803e1c29c6ee4f688ac4f71d1a2d9a56484f569e2aa68ad5552b"
+    },
+    {
       "path": "game.js",
-      "bytes": 39048,
-      "sha256": "15d8c93626666bac21a579662d1cc4ee377217601b3352fc7e903c8b43c8187d"
+      "bytes": 50546,
+      "sha256": "ef9801b8c0a88a067596fd9051bd8b423601da32a078ab4b7048a2261415ccd3"
     },
     {
       "path": "index.html",
-      "bytes": 15714,
-      "sha256": "043839a0c12635333b14c5e73a516ac7e4b6e50f145705eaf5c48bb7663d994c"
+      "bytes": 21563,
+      "sha256": "634a35d6b63206e721c64549939dec12d28016a02b449200dc4cae9db2bf8237"
     },
     {
       "path": "network.js",
-      "bytes": 13413,
-      "sha256": "ed87d141fd539d540bad2dcc69ed3e8c2aae98e028dfbbed304b9c1886096d7c"
+      "bytes": 14128,
+      "sha256": "b543a6b424c005f0c01cfcd09a4497ba31d801684cd387cf6d08ebda144bd5aa"
+    },
+    {
+      "path": "organic-mesh.js",
+      "bytes": 6970,
+      "sha256": "4fb10e1850817981f0ea9ab31426616052e854dc2ff39200808412647f242082"
     },
     {
       "path": "package-lock.json",
       "bytes": 15836,
-      "sha256": "3887780416aae2e31c3f79e6ecebc557bdb281627496825c075d1f136e040256"
+      "sha256": "eb446c53abe18fb55f4f72295c99fc1a035bd9e2d9f0e0a961717c2cd3e2a3ce"
     },
     {
       "path": "package.json",
-      "bytes": 1238,
-      "sha256": "525d94cfb1b9709675a6abc3aa84487cd9713959f78ea77d08a4036ab97bdb90"
+      "bytes": 1829,
+      "sha256": "5a4b304cbed950567810794a83ead60c7062f05901f97cd6f70048d495ee1be9"
     },
     {
       "path": "performance.js",
-      "bytes": 2676,
-      "sha256": "322c7ba3121f9e054c419f686cb969c35e2e2975db25a040f9011b5d6fc9ee6f"
+      "bytes": 3275,
+      "sha256": "7815f4964010a380086fba681c85dd04b4105866097269c5858e7a4e848cd8bd"
     },
     {
       "path": "run.js",
-      "bytes": 2569,
-      "sha256": "ba2900a4ab0cc412e5a024f006ccc8bf00607bf55c0d5a7fc75a40b76488ae40"
+      "bytes": 2642,
+      "sha256": "d3ed33580324c83ff2d608fc8d182264d56466ec17dcc5bc2ee8f2b021452776"
     },
     {
       "path": "scene.js",
-      "bytes": 59418,
-      "sha256": "7ae994f09e3563c094081f196120f858ccba5549e0040e0d048698ae2baaced1"
+      "bytes": 82468,
+      "sha256": "90bbcb8c0fc59490cb12cc5525081cf9f47d8c01bf977394a0d196f9ab222f08"
     },
     {
       "path": "server/combat-types.ts",
-      "bytes": 743,
-      "sha256": "f2947cecebfd1e260e3864b8ba2d563310470010c2f9ea3c08b05ec2a3c143ab"
+      "bytes": 825,
+      "sha256": "28795e6b596f68386160f3f792193e05f96649c51c98fb867997cebd03a9b835"
     },
     {
       "path": "server/index.ts",
-      "bytes": 20086,
-      "sha256": "91ea2426e42b268e407852403acc91b0b19835bef2e9260cb642fa88f5e28a36"
+      "bytes": 21438,
+      "sha256": "545e57b031adb9ddb85277dd33daa611042b2d1937a8b5ee90f8474f9f631f96"
     },
     {
       "path": "style.css",
-      "bytes": 32768,
-      "sha256": "9c31f507868e2ad5beac1de77db8876383f4573718a755a152516d1e78940db6"
+      "bytes": 49615,
+      "sha256": "960674f72fe3919dbdf5497088d176e8b1db4a76560dfe8697f9177b256e3b4a"
+    },
+    {
+      "path": "tests/arena-performance-audit.cjs",
+      "bytes": 6034,
+      "sha256": "eee20ade38b0f79533449db4a1f482a0c8ee0e7b23a6f2834b828bfa952ac8d6"
+    },
+    {
+      "path": "tests/arena-performance-tests.cjs",
+      "bytes": 5239,
+      "sha256": "ec7327e9dd4ad2ee2f8f00531848e332166bb4fba1fd3a35b150294271dcf410"
+    },
+    {
+      "path": "tests/audio-tests.cjs",
+      "bytes": 8348,
+      "sha256": "c6cc97c7740e7a0bb08236aaf090a1e907c791c9d588bc5189e1986d73d10414"
     },
     {
       "path": "tests/browser-v2.cjs",
-      "bytes": 10526,
-      "sha256": "973b3b6e3ace651e886b652b72a735de37a9b4dcbe8829f2998537a3c5a18a17"
+      "bytes": 10635,
+      "sha256": "ca6eb0bd7def85c6db2a4ab02fcae3732cdc8e11575899234517a9017e7b030a"
     },
     {
       "path": "tests/browser_check.py",
       "bytes": 15083,
       "sha256": "6e97ff0b05306ce2cb6a8165a0ba6071a5daba0f3690f3c07a40428feb929b8e"
+    },
+    {
+      "path": "tests/camera-tests.cjs",
+      "bytes": 13258,
+      "sha256": "7cd35d0295bba97c02962ca8610a1784223b5a9dadf535e67709ef62b52a3dc9"
+    },
+    {
+      "path": "tests/combat-feedback-tests.cjs",
+      "bytes": 1853,
+      "sha256": "fda8a15dfeb5f43f85c3472698a6924e1eccdce8918d96355d8187dee110ed1e"
     },
     {
       "path": "tests/combat-tests.html",
@@ -293,8 +550,8 @@
     },
     {
       "path": "tests/combat-tests.js",
-      "bytes": 19716,
-      "sha256": "c52570bb6163d9c780361f1a2e4abd498675a5789c5331cc9f6a48c37a42ea92"
+      "bytes": 23352,
+      "sha256": "0923a51732f0b134a3023c4624a03f8e270bb8c72660af5fe70667f5f933ee0f"
     },
     {
       "path": "tests/context-recovery.cjs",
@@ -302,34 +559,89 @@
       "sha256": "a4aecde304fcd392872af6a5c5a3c545b71a1ab8d46f2b1a667d68a52ad8f83a"
     },
     {
+      "path": "tests/defense-mobility-tests.cjs",
+      "bytes": 12800,
+      "sha256": "6248b4f0093181a728b36404bc1ff2cf425d26f4b511c409cd4315404eac1c6a"
+    },
+    {
+      "path": "tests/fast-combat-tests.cjs",
+      "bytes": 6784,
+      "sha256": "6a5bad57c3d6439d653d3b492c85c0807608902196991ab35ecb6458d4c20522"
+    },
+    {
       "path": "tests/game-integration-tests.cjs",
-      "bytes": 14870,
-      "sha256": "62f97768e63f8349a060415c4f914bd8500ce00ced126236e091e5be482a1baf"
+      "bytes": 33417,
+      "sha256": "46c312665c72b9e02afe3e46be2cd89851caafda61501eb0be9ddbcaefbdc465"
+    },
+    {
+      "path": "tests/gpu-benchmark-server.cjs",
+      "bytes": 1747,
+      "sha256": "7bf71648f25dca6455d219b750c31ccd4c0dafb5b5feda2f5ef60d64e255f080"
+    },
+    {
+      "path": "tests/gpu-benchmark.html",
+      "bytes": 1251,
+      "sha256": "20904e1300306420f88de4ec27006ae9290e7a31734b0e24b94a166f42c73374"
+    },
+    {
+      "path": "tests/gpu-benchmark.js",
+      "bytes": 4625,
+      "sha256": "b0c9c4c50dc115591181af7f441061c8e9f38d779b623ca9f91f7e7f158b2e9f"
+    },
+    {
+      "path": "tests/gpu-texture-tests.cjs",
+      "bytes": 4898,
+      "sha256": "6b57db17d747ebe4bb5bdb69cd62ae4c038f555ea132da776e414d4c0eda8d9d"
     },
     {
       "path": "tests/netcode-tests.cjs",
-      "bytes": 13878,
-      "sha256": "90ab456bb57e54a2e3050f6b9fd69976003c74a6b20400561efdcef7ab4d9ecb"
+      "bytes": 15173,
+      "sha256": "04e9f438544abcb95a4563c2a2b2e72578f5985c54fe6af5b5e2db33954bd356"
     },
     {
       "path": "tests/online-client-tests.cjs",
-      "bytes": 8904,
-      "sha256": "679e015cf38f242d48c5513db2c7050e85669e8a014e331bcb83157fef47f63f"
+      "bytes": 16828,
+      "sha256": "931fc873e3e490f81baa7802e7f91a36d691b6914100316e6aa1b37c66614435"
     },
     {
       "path": "tests/online-tests.cjs",
-      "bytes": 18082,
-      "sha256": "d32c4073660ffedb427624e03eb1069c7ce12150152021336a06399d0dea74ce"
+      "bytes": 24179,
+      "sha256": "82502c7d76d735e4126bbce598997f72b613ef8beed725770e4d2668f9dafa47"
+    },
+    {
+      "path": "tests/organic-mesh-tests.cjs",
+      "bytes": 3414,
+      "sha256": "5c45aee55994ddd6cc521a7ffacab80d4ed3967edf1fe76074a0805438b9f46a"
     },
     {
       "path": "tests/performance-tests.cjs",
-      "bytes": 1715,
-      "sha256": "ddf66fbba90223cff1e22924cb7b5cd93c65e7d06899105d7ced339f536dee79"
+      "bytes": 5450,
+      "sha256": "85f9183bf1877da8f8b0e62565e55debef970da41ceda200b4284cf99356dad4"
+    },
+    {
+      "path": "tests/reach-intro-tests.cjs",
+      "bytes": 7766,
+      "sha256": "13d58820359e92ae58b32987c8074737f4fe07b494f6bfc96bbea8607a5534fa"
+    },
+    {
+      "path": "tests/render-performance-tests.cjs",
+      "bytes": 6373,
+      "sha256": "354a87754694249d3599eebff739719815d9015c0a5807b85a775b2740340c83"
+    },
+    {
+      "path": "tests/roster-combat-tests.cjs",
+      "bytes": 21615,
+      "sha256": "8b1de909bb0eab0f0ad4e809a609ce557addb51cabb7cf47bc7674590d102447"
     },
     {
       "path": "tests/run-tests.cjs",
-      "bytes": 2130,
-      "sha256": "29c4c8b43c7e0a064db8cfc61ec1add50d9fdf9cfab2b05e6e91b884a8bd6ef9"
+      "bytes": 3060,
+      "sha256": "ec061636df7a0d6a9deb6480efc289bbf5ae3a7d938f711a8c1a38a1d5821afc"
+    },
+    {
+      "path": "tests/seaside-cinematic-tests.cjs",
+      "bytes": 8485,
+      "sha256": "ca4b79780ff5006d88d4542389ef719fbe28c8a0e115a17da5d05f47c6230a51"
     },
     {
       "path": "tsconfig.server.json",

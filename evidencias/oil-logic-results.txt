@@ -1,0 +1,366 @@
+
+> oil-island@4.2.0 test
+> node tests/combat-tests.js && node tests/run-tests.cjs && node --test tests/performance-tests.cjs tests/netcode-tests.cjs tests/game-integration-tests.cjs tests/roster-combat-tests.cjs tests/organic-mesh-tests.cjs tests/audio-tests.cjs tests/fast-combat-tests.cjs tests/defense-mobility-tests.cjs tests/camera-tests.cjs tests/combat-feedback-tests.cjs tests/reach-intro-tests.cjs tests/seaside-cinematic-tests.cjs tests/render-performance-tests.cjs tests/gpu-texture-tests.cjs tests/arena-performance-tests.cjs
+
+{
+  "passed": 31,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "Intro gates attacks, then starts fighting",
+      "passed": true
+    },
+    {
+      "name": "Helipad first-round cinematic gates combat for 6.2 seconds and survives snapshot replay",
+      "passed": true
+    },
+    {
+      "name": "Movement is bounded and diagonal speed is normalized",
+      "passed": true
+    },
+    {
+      "name": "Punch connects once during its active window",
+      "passed": true
+    },
+    {
+      "name": "Attacks use true radial reach across the entire arena",
+      "passed": true
+    },
+    {
+      "name": "Special meter is charged atomically and rejects insufficient energy",
+      "passed": true
+    },
+    {
+      "name": "Dodge avoids an active hit and cannot repeat during cooldown",
+      "passed": true
+    },
+    {
+      "name": "Jump rises, can attack in air, and lands",
+      "passed": true
+    },
+    {
+      "name": "Blocking reduces damage and depleted guard breaks",
+      "passed": true
+    },
+    {
+      "name": "Buffered J J K chains without an infinite stun lock",
+      "passed": true
+    },
+    {
+      "name": "Simultaneous lethal attacks resolve as one drawn round",
+      "passed": true
+    },
+    {
+      "name": "Best of three resets fighters and ends exactly once",
+      "passed": true
+    },
+    {
+      "name": "Timeout compares health, including ties",
+      "passed": true
+    },
+    {
+      "name": "Training revives opponent and never ends the match",
+      "passed": true
+    },
+    {
+      "name": "Airborne knockout lands during the round result",
+      "passed": true
+    },
+    {
+      "name": "Hard rival spends dodge meter to escape a completed pressure string",
+      "passed": true
+    },
+    {
+      "name": "Seeded AI is reproducible and a long match keeps valid numbers",
+      "passed": true
+    },
+    {
+      "name": "Every arena has full planar movement and safe fallback metadata",
+      "passed": true
+    },
+    {
+      "name": "island: snapshots retain the arena, all corners constrain movement, and decoration causes no damage",
+      "passed": true
+    },
+    {
+      "name": "nightclub: snapshots retain the arena, all corners constrain movement, and decoration causes no damage",
+      "passed": true
+    },
+    {
+      "name": "seaside: snapshots retain the arena, all corners constrain movement, and decoration causes no damage",
+      "passed": true
+    },
+    {
+      "name": "helipad: snapshots retain the arena, all corners constrain movement, and decoration causes no damage",
+      "passed": true
+    },
+    {
+      "name": "Attacks hit at all eight headings and knockback follows the impact",
+      "passed": true
+    },
+    {
+      "name": "Committed strike cannot magnetically rotate to follow a sidestep",
+      "passed": true
+    },
+    {
+      "name": "Timed guard parries for no chip and opens a counter window",
+      "passed": true
+    },
+    {
+      "name": "Holding or repeatedly tapping guard cannot perpetually parry",
+      "passed": true
+    },
+    {
+      "name": "Sprint is isotropic, drains energy and cannot bypass attack commitment",
+      "passed": true
+    },
+    {
+      "name": "CPU reacts to a visible attack only after its difficulty latency",
+      "passed": true
+    },
+    {
+      "name": "Ascension upgrades apply only to the player and survive round resets",
+      "passed": true
+    },
+    {
+      "name": "Invalid timing and non-finite movement input cannot poison the simulation",
+      "passed": true
+    },
+    {
+      "name": "Difficulty defeats repeated button spam with better decisions, not hidden stats",
+      "passed": true
+    }
+  ]
+}
+PASS Ascent has five stages and ends at nightmare
+PASS Upgrade is applied once and only after a victory
+PASS A loss ends the run without offering an upgrade
+PASS Higher starting difficulty is respected; stage rotation is deterministic
+PASS Rank rewards mastery and damage avoidance
+PASS Ascent visits all four venues and returns to the selected starting arena for its final
+6 progression tests passed.
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+✔ island: production batching preserves all geometry, materials and animated silhouettes (846.7776ms)
+✔ nightclub: production batching preserves all geometry, materials and animated silhouettes (444.8289ms)
+✔ seaside: production batching preserves all geometry, materials and animated silhouettes (269.8534ms)
+✔ helipad: production batching preserves all geometry, materials and animated silhouettes (204.5795ms)
+✔ rigid moving scenery keeps its pivots while reducing submission count (327.3744ms)
+✔ thin ocean foam uses a single transparent pass while nightclub beams retain both sides (313.5072ms)
+✔ runner and helicopter rigid batches retain vertex reuse through indices (146.9984ms)
+✔ all four arenas produce finite, distinct arrangements and release every voice (267.4292ms)
+✔ arena switch fades old music while preserving a combat effect (53.834ms)
+✔ sound/music switches and pause clear sustained music without muting effects (109.0574ms)
+✔ music reserves effects capacity; hard voice limit is exactly eighty (49.0648ms)
+✔ return after two hidden minutes schedules one fresh beat without catch-up (78.0369ms)
+✔ arena IDs are validated, muted boot is silent and unavailable audio is optional (42.3018ms)
+✔ Orelha chase footsteps follow phase time, pause and never catch up missed steps (59.2787ms)
+✔ chase intro is silent when muted or not eligible (30.5001ms)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+✔ free orbit responds on the next rendered frame and movement follows the rendered yaw (11.4463ms)
+✔ manual orbit while locked keeps the opponent framed at wide separation (14.3981ms)
+✔ near-plane safety cannot interpolate through a newly encountered obstacle (4.6758ms)
+✔ locked duel frames human and dog bodies in portrait and short landscape, for either local player (230.2643ms)
+✔ free camera damping has equivalent results at 30, 60 and 120 Hz (11.856ms)
+✔ invalid input never poisons the camera and all four arenas remain finite (11.5168ms)
+✔ locked camera keeps both bodies visible at arena corners across manual orbit limits (156.386ms)
+✔ free orbit has full rotation while a locked rival continues being tracked during input grace (4.861ms)
+✔ collision exits smoothly and reduced motion suppresses shake without disabling tracking (2.6124ms)
+✔ camera volumes reuse authored proxies across frames and independent arena switches (19.8022ms)
+✔ camera volume cache follows collider replacement, in-place edits and arena bounds (2.3019ms)
+✔ beach and absent arena reuse empty camera volumes without discarding arena proxies (2.0535ms)
+✔ camera volume intersection matches the original slab solver over varied heights and directions (81.8954ms)
+✔ menu animates its visible fighter and defers rival selection until a visible phase (2.7838ms)
+✔ long combos widen the view with a strict cap and inactive combos release it (1.662ms)
+✔ combo impact grows but frequent strikes avoid repeated long freezes (0.5927ms)
+✔ oil cannot shake or freeze the view twenty times during the stream (0.2009ms)
+✔ reduced motion removes dynamic framing and all camera impact motion (0.1892ms)
+✔ a late defensive press replaces an old attack and waits for whiff recovery to begin (9.9267ms)
+✔ a defensive buffer waits past an offensive confirm until active frames end (2.2187ms)
+✔ a recent dodge escapes actual hitstun only after it ends (1.3272ms)
+✔ a buffered dodge preserves the direction pressed, even after movement changes (6.1814ms)
+✔ late cooldown buffering preserves the entire vulnerable gap and never repeats automatically (3.6626ms)
+✔ held guard cancels a pending dodge; insufficient meter never queues one (2.213ms)
+✔ super and long whiff commitments reject early dodge but allow their recovery to cancel (11.2555ms)
+✔ defensive buffer direction and remaining wait survive authoritative snapshot replay (28.4694ms)
+✔ a fresh guard press during the last recovery frames retains only its remaining parry window (30.3683ms)
+✔ guard held through a long commitment grants no delayed perfect defense (1.4214ms)
+✔ duels use 300 life, a 120s round and unchanged 100 energy (0.4269ms)
+✔ jump and held parry cancel recovery without interrupting startup or active frames (3.5215ms)
+✔ an attack buffered late in a dodge waits for its end and marks the entry once (3.9352ms)
+✔ perfect dodge requires a real overlapping attack and rewards at most once per serial (8.2571ms)
+✔ twenty oil drops cannot farm perfect-dodge rewards from the same channel (37.602ms)
+✔ mixed eight-hit routes reach the cap with real contacts and preserve a vulnerable recovery before the ninth (5.2907ms)
+✔ short varied routes start across the roster while the third hit still creates an escape gap (41.8312ms)
+✔ training regeneration reaches the new maximum instead of truncating healthy fighters to 100 (2.8971ms)
+✔ a real interrupt clears the queued defense rather than launching it after a later hitstun (4.462ms)
+✔ oil damage may continue a combo but rewards offensive posture once per channel (9.0955ms)
+✔ a defensive command accepted exactly 180ms before cooldown ends is not lost at its deadline (1.7013ms)
+✔ an early follow-up starts at the confirmed cancel window without another button press (8.0856ms)
+✔ one buffered slot uses the newest strike and consumes it exactly once (4.4084ms)
+✔ an obsolete strike expires after 180ms instead of firing after a later contact (2.0134ms)
+✔ a whiff cannot cancel but a recent follow-up starts after its full recovery (1.8777ms)
+✔ holding guard overrides a buffered strike when whiff recovery ends (1.4849ms)
+✔ holding guard overrides a buffered strike at the confirmed cancel window (0.7716ms)
+✔ blocked confirms stop cancelling after three attacks and reset after full recovery (2.7931ms)
+✔ being hit clears a waiting follow-up instead of creating a revenge attack (1.2208ms)
+✔ a pending confirmed follow-up survives an authoritative snapshot with identical replay (22.1632ms)
+✔ visible fast follow-ups do not restart the CPU reaction latency already in progress (1.9488ms)
+✔ an observed CPU response waits through hitstun without breaking it or forgetting the threat (26.9583ms)
+✔ a delayed CPU response is discarded if its visible threat leaves range (1.9828ms)
+✔ CPU integration: solo pauses simulation, resumes with cleared inputs, and menu releases pointer lock (68.6074ms)
+✔ keyboard-only fight starts locked with 300 health and renders a real mixed combo route (53.4408ms)
+✔ a new keyboard match restores automatic target lock after a free-camera session (10.6493ms)
+✔ Orla chase hides fight HUD until handoff, freezes on pause and rejects early attacks (8.9304ms)
+✔ online chase presentation also recognizes Orelha in the opponent slot (9.2434ms)
+✔ CPU integration: island selection survives reload, training and online hosting (24.9039ms)
+✔ CPU integration: nightclub selection survives reload, training and online hosting (11.9658ms)
+✔ CPU integration: seaside selection survives reload, training and online hosting (8.9621ms)
+✔ CPU integration: helipad selection survives reload, training and online hosting (11.3965ms)
+✔ CPU integration: retired arena saves migrate to the island without losing player preferences or records (12.4638ms)
+✔ CPU integration: player 2 owns HUD, score, combat feedback and camera identity (9.4441ms)
+✔ CPU integration: online pause sends neutral input while match and presentation keep running (5.0865ms)
+✔ CPU integration: online rematch resets state and either departure returns cleanly to solo menu (9.2015ms)
+✔ CPU integration: WebGL loss neutralizes online inputs and restores one RAF with the latest state (27.8172ms)
+✔ CPU integration: file mode refuses online without breaking the offline game (5.1431ms)
+✔ CPU integration: online result can finish while paused and a hidden-tab rematch remains neutral (5.7705ms)
+✔ CPU integration: restored graphics stay LOW until the user opts back into automatic quality (209.4671ms)
+✔ CPU integration: AUTO promotes only after visible combat, never from menu, intro or paused frames (117.8291ms)
+✔ CPU integration: manual LQ adapts resolution and AUTO inherits its safe scale (63.0502ms)
+✔ CPU integration: explicit HQ survives reload and does not degrade under low FPS (103.9856ms)
+✔ CPU integration: context recovery preserves reduced resolution and saves the safe LQ preference (40.398ms)
+✔ roster: choosing Orelha is preserved into training, HUD and the return to menu (6.9276ms)
+✔ agile controls: Q/E/R issue kick, special and super without restarting the match (4.4035ms)
+✔ mouse guard: right button defends while held and pause clears the held state (6.1585ms)
+✔ mouse buttons can be chorded without dropped attacks or a stuck guard (5.601ms)
+✔ solo dodge uses the direction held now, including changes between simulation frames (12.1323ms)
+✔ touch camera gestures suppress compatibility mouse attacks while retaining drag control (5.4498ms)
+✔ energy HUD updates immediately after a solo action and never rounds up super readiness (9.9723ms)
+✔ middle mouse can look while guarding and its release stops looking before guard is released (6.5096ms)
+✔ a middle click toggles target once while small hand jitter and mouse capture remain usable (5.7787ms)
+✔ touch guard tracks each contact and survives releasing only one finger (4.558ms)
+✔ resetting touch input ignores old contacts after resume and preserves a fresh guard (3.9538ms)
+✔ touch compatibility mouse movement cannot release a physical mouse guard (5.4797ms)
+✔ hybrid touch and mouse hardware keeps pointer capture available with accurate hints (9.923ms)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+✔ both player slots share the Titan artwork while their materials stay independent (580.563ms)
+✔ full human roster shares procedural surfaces and keeps the atlas stable during async image loading (5280.2384ms)
+✔ offline procedural fallbacks remain shared with their original dimensions (313.0903ms)
+✔ cloth fallback survives an unavailable source and a later skin image does not erase loaded cloth (172.244ms)
+PASS multiplayer controls both fighters and never invokes AI
+PASS online ignores asymmetric upgrades and training
+PASS snapshot is independent JSON data without events or closures
+PASS restored snapshot reproduces movement and combat bit for bit
+PASS offline AI remains deterministic after serialization
+PASS legacy step still drives offline AI
+PASS bad snapshot is rejected
+PASS host, welcome and first snapshot establish a match
+PASS join normalizes a room code and releases prior socket
+PASS client includes character selections in host and normalized join requests
+PASS client exposes waiting-room selections and clears them when leaving
+PASS client queues super once and retains character identity through prediction
+PASS prediction moves immediately before any server response
+PASS input clamp blocks NaN and out-of-range local controls
+PASS second player predicts fighter one while retaining native IDs
+PASS dodge prediction uses direction from current packet
+PASS reconciliation acknowledges prefix and deterministically replays remaining input
+PASS only authoritative events fire and stale snapshots never repeat effects
+PASS ack regressions and impossible future acknowledgments are ignored
+PASS a rematch clears pending actions and starts sequence from one
+PASS predicted matchOver cannot authorize the result screen
+PASS render correction is smooth and never modifies simulation state
+PASS remote presentation interpolates delayed snapshots instead of jumping
+PASS remote extrapolation has a two-tick bound through a network stall
+PASS latency and jitter reconcile to authoritative result without duplicate events
+PASS neutralize immediately sends a release and drops unsent attacks
+PASS actions are bounded and unknown actions rejected
+PASS backpressure stops prediction instead of growing an unbounded socket queue
+PASS unacknowledged inputs have a hard memory limit
+PASS lost server heartbeat stops the match after timeout
+PASS heartbeat pings report measured round-trip time
+PASS peer departure and explicit leave stop input and clear room state
+PASS malformed messages end connection with a visible error
+PASS socket failure and late callbacks cannot revive an old match
+PASS invalid authoritative data reports error rather than corrupting the simulation
+35 combat serialization and client network tests passed.
+✔ tests\netcode-tests.cjs (708.6355ms)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+✔ blended anatomy is one watertight surface with outward smooth normals and valid skin weights (327.8741ms)
+✔ separated limbs keep their negative space instead of acquiring joining membranes (211.0667ms)
+✔ invalid or clipped fields fail instead of delivering broken character geometry (1.1188ms)
+✔ surface intersections close to grid corners retain their tiny sealing triangles (46.9235ms)
+✔ Automatic quality warms up, adjusts HQ resolution, and avoids repeated failed promotions (10.5249ms)
+✔ 20 FPS in LQ reduces resolution in steps and keeps the floor while still slow (0.5655ms)
+✔ LQ reacts below 57 FPS but does not oscillate in the 57 FPS neutral band (0.5034ms)
+✔ 40 FPS in HQ falls back after two slow windows at minimum resolution (0.4412ms)
+✔ Resolution recovers gradually only after four consecutive windows at 58 FPS or better (0.381ms)
+✔ Menu and intro samples can lower resolution without restoring it or promoting HQ (0.5756ms)
+✔ A menu sample interrupts previously good fight windows (0.22ms)
+✔ Manual LQ can adapt and restore its scale but never promotes HQ (1.1905ms)
+✔ Pause, hidden-tab and loading gaps clear evidence without changing graphics (0.6459ms)
+✔ Reset follows actual renderer quality and scale while respecting manual LQ (1.7178ms)
+✔ Reset clamps renderer scale and discards invalid scale values (0.5616ms)
+✔ Small HQ framerate variations do not oscillate resolution (0.7231ms)
+✔ Interpolation wraps angles and never changes authoritative state or interpolates a new round (0.628ms)
+✔ veterano: melee contacts extend past their old limit and still miss outside the actual new range (21.5142ms)
+✔ titan: melee contacts extend past their old limit and still miss outside the actual new range (9.281ms)
+✔ mimico: melee contacts extend past their old limit and still miss outside the actual new range (29.0798ms)
+✔ orelha: melee contacts extend past their old limit and still miss outside the actual new range (5.0226ms)
+✔ pixel: melee contacts extend past their old limit and still miss outside the actual new range (2.7815ms)
+✔ Orelha and Mimico aerial kicks also expose their own extended range (1.219ms)
+✔ expanded melee still respects guard, timed parry and paid invulnerable dodge (5.444ms)
+✔ a larger directional melee cone remains committed and cannot home onto a sidestep (2.927ms)
+✔ oil and wind retain their complete distance budgets and projectile timing (12.6628ms)
+✔ Orla Brava cinematic triggers for orelha/veterano, locks controls and resumes deterministically (13.8325ms)
+✔ Orla Brava cinematic triggers for veterano/orelha, locks controls and resumes deterministically (4.6497ms)
+✔ Orla Brava cinematic triggers for orelha/orelha, locks controls and resumes deterministically (1.9171ms)
+✔ cinematic kinds honor arena, roster, training and round exclusions (1.3178ms)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+✔ frame metrics include shadows and all post passes without accumulating earlier frames (31.0341ms)
+✔ direct rendering reports only its current frame and no post passes (6.2347ms)
+✔ flat combat effects request one double-sided pass while keeping their geometry and alpha (33.7558ms)
+✔ batching keeps indexed vertices and identical world triangles, normals and UVs (5.496ms)
+✔ large batches retain valid indices beyond the 16-bit vertex range (25.9976ms)
+✔ character selection validates IDs, defaults each slot and supplies presentation metadata (4.3939ms)
+✔ chosen fighters survive serialization, new rounds and training revival (8.8634ms)
+✔ fast movement is normalized and each expanded arena has working collision bounds (28.8905ms)
+✔ roster differences affect actual movement, impact damage and special cost (46.1218ms)
+✔ directional roll moves quickly, never deals damage and cannot chain invulnerability (2.5387ms)
+✔ Orelha rolls forward from neutral and lateral input remains camera-independent (1.4158ms)
+✔ confirmed strike can cancel into a paid roll but whiff startup cannot (0.9145ms)
+✔ guard cancels confirmed recovery responsively while guard taps retain a parry cooldown (1.6074ms)
+✔ Orelha has a low sweep, a distinct air attack and a travelling short wind projectile (4.9707ms)
+✔ wind respects sidesteps and timed guard instead of homing or bypassing defense (2.322ms)
+✔ short wind cannot hit beyond its maximum range including its collision radius (2.0805ms)
+✔ timeout and knockout clear travelling projectiles before result snapshots are emitted (4.944ms)
+✔ a grounded sweep misses a real jump while the aerial strike can connect (1.5053ms)
+✔ Mimico rotor and Pixel rush provide different spacing and contact behavior (4.3942ms)
+✔ Titan spends energy once for a five-second oil stream with bounded travelling projectiles (10.1297ms)
+✔ Titan oil stream can be cancelled by guard or dodge and interrupted by an actual hit or knockout (9.0511ms)
+✔ Titan oil respects distance, sidesteps, sustained guard and a timed parry with moderate damage (24.5163ms)
+✔ Titan oil snapshots resume the remaining stream deterministically and cannot restart it through attack mashing (12.0765ms)
+✔ Helice Giratoria sweeps around the fighter twice with no homing or forward lunge (6.7638ms)
+✔ Chute Rotor has real bounded lift and Pouso de Impacto forces a descending air kick (2.266ms)
+✔ Decolagem Total makes exactly three radial hits with short bounded travel and no armor (4.8373ms)
+✔ rotor attacks respect a held guard, a timed parry and a real escape dodge (3.1784ms)
+✔ every super spends all 100 energy atomically and never starts below the threshold (0.2696ms)
+✔ Mare da Protecao rushes, lands three moderate hits and pushes toward arena center (1.2082ms)
+✔ a super remains interruptible by a real parry and cannot cancel into an invulnerable roll (0.7784ms)
+✔ three-hit strings grant escape protection and cannot be freely canceled into infinite chains (1.2506ms)
+✔ snapshot replay preserves active projectiles, supers and seeded fights for all characters (42.8202ms)
+Scripts "build/three.js" and "build/three.min.js" are deprecated with r150+, and will be removed with r160. Please use ES Modules or alternatives: https://threejs.org/docs/index.html#manual/en/introduction/Installation
+✔ Orla has five generic articulated background actors, each holding a shaped bat (5.5135ms)
+✔ cutscene is gated to first-round seaside Orelha and never mutates simulation state (0.8081ms)
+✔ either Orelha slot and two dogs run continuously to their exact spawn by 4.8 seconds (19.317ms)
+✔ pursuers stop outside bounds, replay from phaseTime, and never touch a running dog (32.281ms)
+✔ reduced motion uses a stable camera and deterministic pose sampling (1.2999ms)
+✔ intro camera keeps the dog readable and establishes all five pursuers before they stop (11.3802ms)
+✔ runner geometry is finite, shared where articulated, and rigid parts stay batched (6.3177ms)
+✔ opening formation separates the five silhouettes and each bat barrel from its owner (7.6634ms)
+ℹ tests 175
+ℹ suites 0
+ℹ pass 175
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6716.7092

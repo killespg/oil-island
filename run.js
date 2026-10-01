@@ -1,7 +1,8 @@
 /* Pure progression rules: a five-duel ascent, with one upgrade per victory. */
 (function (global) {
   'use strict';
-  const arenas = ['skyline', 'reactor', 'void'];
+  // Four venues, then a final duel at the starting arena.
+  const arenas = ['island', 'nightclub', 'seaside', 'helipad'];
   const difficulties = ['easy', 'normal', 'hard', 'nightmare'];
   const names = ['O chamado', 'Sob pressão', 'Ponto de ruptura', 'Sem retorno', 'O último sinal'];
   const upgrades = Object.freeze({
@@ -10,7 +11,7 @@
     guard: {name: 'Guarda reforçada', description: '12% menos desgaste da guarda por nível. Resista à pressão.'}
   });
   function create(arena, difficulty) {
-    return {stage: 0, cleared: 0, arena: arenas.includes(arena) ? arena : 'skyline',
+    return {stage: 0, cleared: 0, arena: arenas.includes(arena) ? arena : 'island',
       difficulty: difficulties.includes(difficulty) ? difficulty : 'normal',
       upgrades: {power: 0, flow: 0, guard: 0}, damage: 0, taken: 0, parries: 0, combo: 0,
       score: 0, pendingUpgrade: false, ended: false};

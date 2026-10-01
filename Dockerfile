@@ -12,7 +12,10 @@ ENV NODE_ENV=production HOST=0.0.0.0 PORT=3000
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
-COPY package.json index.html style.css combat.js scene.js audio.js run.js game.js network.js performance.js ./
+COPY package.json index.html style.css combat.js scene.js audio.js run.js game.js network.js performance.js combat-feedback.js ./
+COPY fighter-faces.js organic-mesh.js fighters-human.js fighters-dog.js ./
+COPY arena-island.js arena-nightclub.js arena-seaside.js arena-helipad.js ./
+COPY assets ./assets
 COPY vendor/three.min.js vendor/THREE-LICENSE.txt ./vendor/
 USER node
 EXPOSE 3000

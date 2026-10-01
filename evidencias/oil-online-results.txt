@@ -1,0 +1,65 @@
+
+> oil-island@4.2.0 test:online
+> npm run build:server && node tests/online-tests.cjs && node --test tests/online-client-tests.cjs
+
+
+> oil-island@4.2.0 build:server
+> tsc -p tsconfig.server.json
+
+✔ serves only the public game assets and safe health data (1341.109ms)
+✔ same-origin upgrades work, cross-origin and unexpected paths are rejected (41.4119ms)
+✔ CSP permits explicit same-host WebSocket URLs without trusting hostile Host values (15.3253ms)
+✔ HTTPS proxy CSP lists only explicitly configured secure WebSocket origins (1013.3355ms)
+✔ an explicit public HTTPS origin supports a reverse proxy and can disable no-origin clients (12.4798ms)
+✔ two peers share the same authoritative match, seed, player identities and snapshots (206.187ms)
+✔ helipad cinematic gates real peers until the authoritative 6.2-second entrance completes (6205.18ms)
+✔ seaside cinematic gates real peers until the authoritative 6.2-second entrance completes (6205.7184ms)
+✔ both selected characters persist from the waiting room into authoritative combat (106.4487ms)
+✔ invalid character IDs are rejected for host and guest without occupying a room slot (10.8285ms)
+✔ super is accepted as an authoritative action and cannot change the selected character (65.9891ms)
+✔ only each peer controls its own fighter and input cannot spoof HP, time, winner or upgrades (61.2298ms)
+✔ invalid numbers, types, actions and sequences are rejected without poisoning the next input (109.3325ms)
+✔ movement magnitude is clamped and stale movement/blocking is released automatically (617.2334ms)
+✔ queues consume at most one command per simulation tick and events are delivered exactly once (265.8403ms)
+✔ live simulation rejects premature rematches and rejects third players (9.1491ms)
+✔ rematch requires both peers, creates a new matchId and resets both sequence numbers (189.6628ms)
+✔ disconnect forfeits the room immediately and the remaining connection can host again (7.5814ms)
+✔ room and connection caps, arena validation and lobby membership are enforced (8.0398ms)
+✔ input queue floods are disconnected and remove their room (7.4802ms)
+✔ oversize messages, binary payloads and message floods are bounded (20.0137ms)
+✔ a peer that stops reading is removed when its send buffer exceeds the cap (204.3725ms)
+✔ waiting rooms and empty connections expire, while shutdown closes live sockets (262.1257ms)
+✔ environment configuration rejects invalid bounds and origin URLs (0.5394ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 24
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16996.5111
+✔ two real clients keep island through hosting, snapshots and prediction (134.8751ms)
+✔ two real clients keep nightclub through hosting, snapshots and prediction (87.0928ms)
+✔ two real clients keep seaside through hosting, snapshots and prediction (93.0398ms)
+✔ two real clients keep helipad through hosting, snapshots and prediction (92.8651ms)
+✔ Titan oil is predicted once and both real clients receive the complete authoritative stream (5064.9264ms)
+✔ two real clients preserve different character selections while super is predicted and acknowledged (89.8283ms)
+✔ a real client rematch retains both selections and clears the ready votes (61.6092ms)
+▶ two real browser-client instances stay synchronized with the authoritative WebSocket server
+  ✔ host and guest receive stable slots and a shared arena (27.8003ms)
+  ✔ fixed-rate packets are acknowledged during intro and enter a real fight (2041.2345ms)
+  ✔ player two predicts immediately and both players can move in opposite directions (404.1218ms)
+  ✔ clients approach each other without AI and retain the correct player identity (601.1818ms)
+  ✔ a guest attack is validated once and reaches both clients without duplicate FX (387.8696ms)
+  ✔ neutralize releases a moving player even when its tick loop stops (743.8524ms)
+  ✔ heartbeat returns measured latency and normal traffic stays connected (0.4789ms)
+  ✔ leaving ends the peer match and releases server resources (15.1189ms)
+✔ two real browser-client instances stay synchronized with the authoritative WebSocket server (4225.4322ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9983.1119

@@ -13,10 +13,16 @@ const ROOT = resolve(__dirname, '../..');
 const FightSim: Combat = require(resolve(ROOT, 'combat.js'));
 const STEP = 1 / 60;
 const NEUTRAL: Input = Object.freeze({ x: 0, z: 0, block: false, sprint: false });
-const ACTIONS = new Set(['punch', 'kick', 'special', 'dodge', 'jump']);
+const ACTIONS = new Set(['punch', 'kick', 'special', 'super', 'dodge', 'jump']);
 const ASSETS = new Map<string, string>([
   ['/', 'index.html'], ['/index.html', 'index.html'], ['/style.css', 'style.css'],
-  ...['combat', 'scene', 'audio', 'run', 'game', 'network', 'performance'].map(name => [`/${name}.js`, `${name}.js`] as [string, string]),
+  ...['fighter-faces','organic-mesh','fighters-human','fighters-dog'].map(name => [`/${name}.js`, `${name}.js`] as [string,string]),
+  ['/assets/faces-v5.js','assets/faces-v5.js'],
+  ['/assets/titan-shirt.js','assets/titan-shirt.js'],
+  ['/assets/materials-v5.js','assets/materials-v5.js'],
+  ['/assets/orelha-face.js','assets/orelha-face.js'],
+  ...['arena-island','arena-nightclub','arena-seaside','arena-helipad'].map(name => [`/${name}.js`, `${name}.js`] as [string,string]),
+  ...['combat', 'scene', 'audio', 'run', 'game', 'network', 'performance', 'combat-feedback'].map(name => [`/${name}.js`, `${name}.js`] as [string, string]),
   ['/vendor/three.min.js', 'vendor/three.min.js'], ['/vendor/THREE-LICENSE.txt', 'vendor/THREE-LICENSE.txt']
 ]);
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -41,6 +47,7 @@ interface Peer {
   ws: WebSocket;
   room: Room | null;
   playerId: number;
+  character: string;
   queue: Packet[];
   input: Input;
   ack: number;
@@ -215,7 +222,7 @@ export function createArenaServer(options: ServerOptions = {}, combat: Combat = 
   }
   function start(room: Room): void {
     room.matchId = randomUUID(); room.seed = randomBytes(4).readUInt32LE() || 1;
-    room.state = combat.createMatch({ multiplayer: true, seed: room.seed, arena: room.arena });
+    room.state = combat.createMatch({ multiplayer: true, seed: room.seed, arena: room.arena, characters: room.players.map(peer => peer.character) });
     room.tick = 0; room.eventId = 0; room.events = []; room.ready = [false, false];
     room.startedAt = performance.now(); room.finishedAt = 0;
     room.players.forEach(resetPeer);
@@ -228,26 +235,30 @@ export function createArenaServer(options: ServerOptions = {}, combat: Combat = 
     if (peer.lobbyAttempts.length > 10) { peer.ws.close(1008, 'Muitas tentativas de sala.'); leave(peer); return false; }
     return true;
   }
-  function host(peer: Peer, arena: unknown): void {
+  function host(peer: Peer, arena: unknown, selection: unknown): void {
     if (!lobbyAllowed(peer)) return;
     if (peer.room) return error(peer, 'Você já está em uma sala.');
     if (typeof arena !== 'string' || !Object.hasOwn(combat.arenas, arena)) return error(peer, 'Arena inválida.');
+    const character = selection === undefined ? 'veterano' : selection;
+    if (typeof character !== 'string' || !Object.hasOwn(combat.characters, character)) return error(peer, 'Personagem inválido. Escolha um personagem disponível.');
     if (rooms.size >= config.maxRooms) return error(peer, 'Servidor cheio. Tente novamente em instantes.');
     let code: string;
     do { code = [...randomBytes(6)].map(byte => CODE_ALPHABET[byte & 31]).join(''); } while (rooms.has(code));
     const room: Room = { code, arena, players: [peer], state: null, matchId: '', seed: 0, tick: 0, events: [], eventId: 0, ready: [false, false], createdAt: performance.now(), startedAt: 0, finishedAt: 0 };
-    rooms.set(code, room); peer.room = room; peer.playerId = 0;
-    send(peer, { type: 'welcome', code, playerId: 0 }); send(peer, { type: 'waiting', code });
+    rooms.set(code, room); peer.room = room; peer.playerId = 0; peer.character = character;
+    send(peer, { type: 'welcome', code, playerId: 0, characters: [character, null] }); send(peer, { type: 'waiting', code, characters: [character, null] });
   }
-  function join(peer: Peer, value: unknown): void {
+  function join(peer: Peer, value: unknown, selection: unknown): void {
     if (!lobbyAllowed(peer)) return;
     if (peer.room) return error(peer, 'Você já está em uma sala.');
+    const character = selection === undefined ? 'titan' : selection;
+    if (typeof character !== 'string' || !Object.hasOwn(combat.characters, character)) return error(peer, 'Personagem inválido. Escolha um personagem disponível.');
     const code = typeof value === 'string' ? value.toUpperCase() : '';
     if (!/^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/.test(code)) return error(peer, 'Código de sala inválido.');
     const room = rooms.get(code);
     if (!room || room.players.length !== 1) return error(peer, 'Sala indisponível. Confira o código.');
-    peer.room = room; peer.playerId = 1; room.players.push(peer);
-    send(peer, { type: 'welcome', code, playerId: 1 }); start(room);
+    peer.room = room; peer.playerId = 1; peer.character = character; room.players.push(peer);
+    send(peer, { type: 'welcome', code, playerId: 1, characters: room.players.map(player => player.character) }); start(room);
   }
   function inputPacket(peer: Peer, message: Record<string, unknown>): void {
     if (!peer.room?.state) return error(peer, 'Aguarde o segundo jogador.');
@@ -274,8 +285,8 @@ export function createArenaServer(options: ServerOptions = {}, combat: Combat = 
     catch { return error(peer, 'Mensagem inválida.'); }
     peer.lastActivity = now;
     switch (message.type) {
-      case 'host': host(peer, message.arena); break;
-      case 'join': join(peer, message.code); break;
+      case 'host': host(peer, message.arena, message.character); break;
+      case 'join': join(peer, message.code, message.character); break;
       case 'input': inputPacket(peer, message); break;
       case 'rematch': {
         const room = peer.room;
@@ -291,7 +302,7 @@ export function createArenaServer(options: ServerOptions = {}, combat: Combat = 
   }
   function accept(ws: WebSocket): void {
     const now = performance.now();
-    const peer: Peer = { ws, room: null, playerId: 0, queue: [], input: NEUTRAL, ack: 0, lastReceived: 0, lastInputAt: 0, lastActivity: now, alive: true, tokens: 150, tokenAt: now, lobbyAttempts: [] };
+    const peer: Peer = { ws, room: null, playerId: 0, character: 'veterano', queue: [], input: NEUTRAL, ack: 0, lastReceived: 0, lastInputAt: 0, lastActivity: now, alive: true, tokens: 150, tokenAt: now, lobbyAttempts: [] };
     peers.add(peer);
     ws.on('message', (data, binary) => receive(peer, data as Buffer, binary));
     ws.on('pong', () => { peer.alive = true; });
@@ -368,7 +379,7 @@ export function createArenaServer(options: ServerOptions = {}, combat: Combat = 
 
 if (require.main === module) {
   const server = createArenaServer(optionsFromEnvironment());
-  server.listen().then(address => console.log(`NEON CLASH online em http://${address.address}:${address.port} (60 Hz / 20 snapshots/s)`)).catch(error => { console.error(error); void server.close().then(() => { process.exitCode = 1; }); });
+  server.listen().then(address => console.log(`Oil Island (Orelha Edition) online em http://${address.address}:${address.port} (60 Hz / 20 snapshots/s)`)).catch(error => { console.error(error); void server.close().then(() => { process.exitCode = 1; }); });
   const shutdown = () => { void server.close().then(() => { process.exitCode = 0; }); };
   process.once('SIGINT', shutdown); process.once('SIGTERM', shutdown);
 }

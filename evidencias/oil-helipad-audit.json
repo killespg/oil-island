@@ -1,0 +1,18 @@
+{
+  "meshes": 407,
+  "triangles": 55582,
+  "materials": 27,
+  "geometry": 38,
+  "dynamicCalls": 39,
+  "instances": 2888,
+  "poses": 1200,
+  "bounds": 13,
+  "checks": [
+    "finite geometry",
+    "finite 1200 frame matrices",
+    "intro door origins",
+    "landing positions",
+    "nose-to-nose impact",
+    "reduced motion without flash"
+  ]
+}

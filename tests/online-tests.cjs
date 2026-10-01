@@ -44,11 +44,11 @@ function connect(url, options = {}) {
     }));
   });
 }
-async function pair(url, arena = 'skyline') {
+async function pair(url, arena = 'island', characters = []) {
   const a = await connect(url), b = await connect(url);
-  a.send({ type: 'host', arena });
+  a.send({ type: 'host', arena, character: characters[0] });
   const welcome = await a.wait(message => message.type === 'welcome');
-  b.send({ type: 'join', code: welcome.code });
+  b.send({ type: 'join', code: welcome.code, character: characters[1] });
   const initial = await a.wait(message => message.type === 'state');
   await b.wait(message => message.type === 'state');
   return { a, b, code: welcome.code, initial };
@@ -63,7 +63,19 @@ test('serves only the public game assets and safe health data', async t => {
   assert.equal(response.status, 200);
   assert.match(response.headers.get('content-type'), /text\/html/);
   assert.match(response.headers.get('content-security-policy'), /connect-src 'self'/);
-  assert.match(await response.text(), /NEON CLASH/);
+  const page = await response.text();
+  assert.match(page, /<title>Oil Island \(Orelha Edition\)<\/title>/);
+  for (const venue of ['island', 'nightclub', 'seaside', 'helipad']) {
+    assert.ok(page.includes(`src="arena-${venue}.js"`), `${venue} builder must be delivered in the page`);
+  }
+  // Every local script referenced by the delivered page must survive the exact
+  // public whitelist, including character builders and embedded art bundles.
+  for (const [, asset] of page.matchAll(/<script\b[^>]*\bsrc="([^"?#]+)"/g)) {
+    assert(!/^(?:[a-z]+:|\/\/)/i.test(asset), `game script remains offline: ${asset}`);
+    const script = await fetch(`${http}/${asset.replace(/^\//, '')}`, { method: 'HEAD' });
+    assert.equal(script.status, 200, `page script ${asset}`);
+    assert.match(script.headers.get('content-type'), /javascript/, `script MIME ${asset}`);
+  }
   for (const asset of ['combat.js', 'network.js', 'performance.js', 'vendor/three.min.js']) assert.equal((await fetch(`${http}/${asset}`)).status, 200);
   for (const path of ['server/index.ts', 'dist/server/index.js', 'package.json', 'package-lock.json', '.git/config', '.env', 'tests/online-tests.cjs', 'evidencias/v2-browser-results.json', '%2e%2e/.git/config', '%00', 'vendor/README.txt']) {
     assert.equal((await fetch(`${http}/${path}`)).status, 404, `private path ${path}`);
@@ -110,18 +122,19 @@ test('an explicit public HTTPS origin supports a reverse proxy and can disable n
   await assert.rejects(connect(url), /403/);
   await assert.rejects(connect(url, { origin: 'https://other.example' }), /403/);
   const good = await connect(url, { origin: 'https://arena.example' });
-  good.send({ type: 'host', arena: 'void' });
+  good.send({ type: 'host', arena: 'seaside' });
   assert.match((await good.wait(message => message.type === 'welcome')).code, /^[ABCDEFGHJKLMNPQRSTUVWXYZ23456789]{6}$/);
 });
 
 test('two peers share the same authoritative match, seed, player identities and snapshots', async t => {
   const { url } = await fixture(t);
-  const { a, b, initial, code } = await pair(url, 'reactor');
+  const { a, b, initial, code } = await pair(url, 'nightclub');
   assert.equal((await a.wait(message => message.type === 'welcome')).playerId, 0);
   assert.equal((await b.wait(message => message.type === 'welcome')).playerId, 1);
   assert.equal((await b.wait(message => message.type === 'welcome')).code, code);
-  assert.equal(initial.state.arena, 'reactor');
+  assert.equal(initial.state.arena, 'nightclub');
   assert.equal(initial.state.multiplayer, true);
+  assert.deepEqual(initial.state.fighters.map(fighter => fighter.character), ['veterano', 'titan']);
   assert.deepEqual(initial.ack, [0, 0]);
   assert.equal(initial.tick, 0);
   assert.equal(initial.seed, initial.state._rng);
@@ -134,6 +147,70 @@ test('two peers share the same authoritative match, seed, player identities and 
   assert.equal(new Set(ids).size, ids.length);
 });
 
+for (const [arena, characters] of [['helipad',['veterano','titan']],['seaside',['pixel','orelha']]]) test(arena + ' cinematic gates real peers until the authoritative 6.2-second entrance completes', async t => {
+  const { url } = await fixture(t);
+  const { a, b, initial } = await pair(url, arena, characters);
+  const positions = initial.state.fighters.map(f => [f.x, f.z]);
+  command(a, 1, { ...neutral, x: 1 }, ['punch']);
+  command(b, 1, { ...neutral, x: -1 }, ['special']);
+  const before = await a.wait(message => message.type === 'state' && message.state.phase === 'intro' && message.state.phaseTime >= 6, 7500);
+  assert.deepEqual(before.state.fighters.map(f => [f.x, f.z]), positions);
+  assert.deepEqual(before.state.fighters.map(f => f.hp), [300, 300]); assert.equal(before.state.timeLeft, 120);
+  assert.ok(before.ack.every(seq => seq >= 1), 'inputs are acknowledged without allowing early attacks');
+  const fight = await a.wait(message => message.type === 'state' && message.state.phase === 'fight', 1500);
+  assert.ok(fight.tick >= 372); assert.ok(fight.state.phaseTime < .1);
+  assert.deepEqual(fight.state, (await b.wait(message => message.type === 'state' && message.tick === fight.tick)).state);
+  assert.ok(!a.messages.flatMap(message => message.events || []).some(event => event.type === 'attack'));
+});
+
+test('both selected characters persist from the waiting room into authoritative combat', async t => {
+  const { url } = await fixture(t);
+  const { a, b, initial } = await pair(url, 'nightclub', ['pixel', 'orelha']);
+  assert.deepEqual((await a.wait(message => message.type === 'waiting')).characters, ['pixel', null]);
+  assert.deepEqual((await b.wait(message => message.type === 'welcome')).characters, ['pixel', 'orelha']);
+  assert.deepEqual(initial.state.fighters.map(fighter => fighter.character), ['pixel', 'orelha']);
+  const later = await a.wait(message => message.type === 'state' && message.tick >= 6);
+  assert.deepEqual(later.state.fighters.map(fighter => fighter.character), ['pixel', 'orelha']);
+  assert.deepEqual(later.state, (await b.wait(message => message.type === 'state' && message.tick === later.tick)).state);
+});
+
+test('invalid character IDs are rejected for host and guest without occupying a room slot', async t => {
+  const { url, server } = await fixture(t);
+  const host = await connect(url), guest = await connect(url);
+  const invalid = [null, '', 'constructor', '__proto__', 'unknown', 42, [], {}];
+  for (const character of invalid) {
+    const before = host.messages.filter(message => message.type === 'error').length;
+    host.send({ type: 'host', arena: 'island', character });
+    await host.wait(message => message.type === 'error' && host.messages.filter(item => item.type === 'error').length > before);
+    assert.match(host.messages.at(-1).message, /Personagem inválido/);
+    assert.equal(server.stats().rooms, 0);
+  }
+  host.send({ type: 'host', arena: 'island', character: 'mimico' });
+  const { code } = await host.wait(message => message.type === 'welcome');
+  for (const character of invalid) {
+    const before = guest.messages.filter(message => message.type === 'error').length;
+    guest.send({ type: 'join', code, character });
+    await guest.wait(message => message.type === 'error' && guest.messages.filter(item => item.type === 'error').length > before);
+    assert.match(guest.messages.at(-1).message, /Personagem inválido/);
+    assert.equal(host.messages.some(message => message.type === 'state'), false);
+  }
+  guest.send({ type: 'join', code, character: 'titan' });
+  const state = await host.wait(message => message.type === 'state');
+  assert.deepEqual(state.state.fighters.map(fighter => fighter.character), ['mimico', 'titan']);
+});
+
+test('super is accepted as an authoritative action and cannot change the selected character', async t => {
+  const chargedCombat = { ...FightSim, createMatch(options) { const state = fastCombat.createMatch(options); state.fighters.forEach(fighter => { fighter.energy = 100; }); return state; } };
+  const { url } = await fixture(t, {}, chargedCombat);
+  const { a, b } = await pair(url, 'island', ['titan', 'mimico']);
+  command(a, 1, neutral, ['super'], { character: 'pixel' });
+  const result = await a.wait(message => message.type === 'state' && message.ack[0] === 1);
+  assert.deepEqual(result.state.fighters.map(fighter => fighter.character), ['titan', 'mimico']);
+  assert.equal(result.events.filter(event => event.type === 'attack' && event.move === 'super').length, 1);
+  assert.equal(a.messages.some(message => message.type === 'error'), false);
+  assert.deepEqual(result, await b.wait(message => message.type === 'state' && message.tick === result.tick));
+});
+
 test('only each peer controls its own fighter and input cannot spoof HP, time, winner or upgrades', async t => {
   const { url } = await fixture(t, {}, fastCombat);
   const { a, b, initial } = await pair(url);
@@ -144,11 +221,11 @@ test('only each peer controls its own fighter and input cannot spoof HP, time, w
   assert.equal(state.state.fighters[0].z, 0);
   assert(state.state.fighters[1].z > 0);
   assert.equal(state.state.fighters[1].x, initial.state.fighters[1].x);
-  assert.equal(state.state.fighters[0].hp, 100);
-  assert.equal(state.state.fighters[1].hp, 100);
+  assert.equal(state.state.fighters[0].hp, 300);
+  assert.equal(state.state.fighters[1].hp, 300);
   assert.equal(state.state.winner, null);
   assert.equal(state.state.phase, 'fight');
-  assert(state.state.timeLeft < 75 && state.state.timeLeft > 74);
+  assert(state.state.timeLeft < 120 && state.state.timeLeft > 119);
   assert.deepEqual(state.state.upgrades, { power: 0, flow: 0, guard: 0 });
 });
 
@@ -221,7 +298,7 @@ test('live simulation rejects premature rematches and rejects third players', as
 test('rematch requires both peers, creates a new matchId and resets both sequence numbers', async t => {
   const finishedCombat = { ...FightSim, createMatch(options) { const state = FightSim.createMatch(options); state.phase = 'matchOver'; state.winner = 0; return state; } };
   const { url } = await fixture(t, {}, finishedCombat);
-  const { a, b, initial } = await pair(url);
+  const { a, b, initial } = await pair(url, 'island', ['orelha', 'pixel']);
   command(a, 1); command(b, 1);
   await a.wait(message => message.type === 'state' && message.ack[0] === 1 && message.ack[1] === 1);
   a.send({ type: 'rematch' });
@@ -233,6 +310,7 @@ test('rematch requires both peers, creates a new matchId and resets both sequenc
   assert.equal(next.tick, 0);
   assert.deepEqual(next.ack, [0, 0]);
   assert.equal(next.events[0].id, 1);
+  assert.deepEqual(next.state.fighters.map(fighter => fighter.character), ['orelha', 'pixel']);
   command(a, 1); command(b, 1);
   await a.wait(message => message.type === 'state' && message.matchId === next.matchId && message.ack[0] === 1 && message.ack[1] === 1);
 });
@@ -244,22 +322,26 @@ test('disconnect forfeits the room immediately and the remaining connection can 
   const left = await a.wait(message => message.type === 'peerLeft');
   assert.equal(left.winner, 0);
   assert.equal(server.stats().rooms, 0);
-  a.send({ type: 'host', arena: 'void' });
+  a.send({ type: 'host', arena: 'seaside' });
   const next = await a.wait(message => message.type === 'welcome' && message.code !== code);
   assert.equal(next.playerId, 0);
   assert.equal(server.stats().rooms, 1);
 });
 
 test('room and connection caps, arena validation and lobby membership are enforced', async t => {
-  const { url } = await fixture(t, { maxRooms: 1, maxConnections: 2 });
+  const { url, server } = await fixture(t, { maxRooms: 1, maxConnections: 2 });
   const a = await connect(url), b = await connect(url);
-  a.send({ type: 'host', arena: '__proto__' });
-  assert.match((await a.wait(message => message.type === 'error')).message, /Arena inválida/);
-  a.send({ type: 'host', arena: 'skyline' });
+  for (const arena of ['__proto__', 'skyline', 'reactor', 'void']) {
+    const count = a.messages.filter(message => message.type === 'error').length;
+    a.send({ type: 'host', arena });
+    await a.wait(message => message.type === 'error' && a.messages.filter(item => item.type === 'error').length > count);
+    assert.match(a.messages.at(-1).message, /Arena inválida/); assert.equal(server.stats().rooms, 0);
+  }
+  a.send({ type: 'host', arena: 'island' });
   await a.wait(message => message.type === 'welcome');
-  b.send({ type: 'host', arena: 'reactor' });
+  b.send({ type: 'host', arena: 'nightclub' });
   assert.match((await b.wait(message => message.type === 'error')).message, /Servidor cheio/);
-  a.send({ type: 'host', arena: 'skyline' });
+  a.send({ type: 'host', arena: 'island' });
   await a.wait(message => message.type === 'error' && /já está/.test(message.message));
   await assert.rejects(connect(url), /503/);
 });
@@ -291,7 +373,7 @@ test('a peer that stops reading is removed when its send buffer exceeds the cap'
   const bulkyCombat = { ...FightSim, snapshot(state) { return { ...FightSim.snapshot(state), padding: 'x'.repeat(4 * 1024 * 1024) }; } };
   const { url, server } = await fixture(t, {}, bulkyCombat);
   const a = await connect(url), b = await connect(url);
-  a.send({ type: 'host', arena: 'skyline' });
+  a.send({ type: 'host', arena: 'island' });
   const { code } = await a.wait(message => message.type === 'welcome');
   a.ws._socket.pause();
   b.send({ type: 'join', code });
@@ -305,7 +387,7 @@ test('a peer that stops reading is removed when its send buffer exceeds the cap'
 test('waiting rooms and empty connections expire, while shutdown closes live sockets', async t => {
   const { url, server } = await fixture(t, { waitingIdleMs: 100, connectionIdleMs: 100 });
   const a = await connect(url), empty = await connect(url);
-  a.send({ type: 'host', arena: 'skyline' });
+  a.send({ type: 'host', arena: 'island' });
   await a.wait(message => message.type === 'welcome');
   await a.wait(message => message.type === 'error' && /tempo limite/.test(message.message));
   assert.equal(server.stats().rooms, 0);

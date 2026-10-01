@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080e17">
-  <meta name="description" content="NEON CLASH — combate 3D em terceira pessoa. Três arenas, quatro dificuldades e uma ascensão até o limite. Jogue solo ou em duelos online no navegador.">
-  <title>NEON CLASH — Ascensão</title>
+  <meta name="description" content="Oil Island (Orelha Edition) — cinco lutadores e quatro arenas de combate 3D: ilha, boate noturna, praia urbana e heliponto. Jogue solo ou em duelos online no navegador.">
+  <title>Oil Island (Orelha Edition)</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="in-menu">
@@ -13,12 +13,12 @@
   <div class="vignette" aria-hidden="true"></div>
   <div id="damage-flash" class="damage-flash" aria-hidden="true"></div>
   <header class="topbar">
-    <a class="wordmark" href="#" id="brand-link" aria-label="Neon Clash, voltar ao início"><span class="brand-icon" aria-hidden="true">N<span>↗</span></span><span>NEON<span class="thin">CLASH</span><small>UNDERGROUND COMBAT SYSTEM</small></span></a>
+    <a class="wordmark" href="#" id="brand-link" aria-label="Oil Island (Orelha Edition), voltar ao início"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M6 29c7-6 21-6 28 0M6 33c5 2 8-2 13 0s9 2 15 0" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M22 26c-1-7-1-12-5-17m0 0c-5-2-9 0-11 3 4-1 8-1 11-3Zm0 0c3-4 8-5 13-2-6 0-9 1-13 2Zm0 0c-5-4-6-7-5-9 3 3 4 6 5 9Zm0 0c3 1 7 4 8 8-4-2-6-4-8-8Z" fill="currentColor"/></svg></span><span>OIL<span class="thin">ISLAND</span><small>ORELHA EDITION</small></span></a>
     <div class="utilities">
       <span class="live-label"><i></i><span id="connection-label">SOLO · OFFLINE</span></span>
       <button class="camera-button" id="camera-button" hidden title="Capturar mouse para controlar a câmera">CAPTURAR MOUSE <span aria-hidden="true">↗</span></button>
       <button class="utility" id="sound-button" aria-label="Desligar som" title="Som · M" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M11 4 6 8H3v8h3l5 4zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg></button>
-      <button class="utility quality" id="quality-button" title="Qualidade: automática, alta ou leve" aria-label="Qualidade gráfica automática">AUTO</button>
+      <span class="performance-readout" id="performance-readout" aria-live="off" hidden>— FPS</span><button class="utility quality" id="quality-button" title="Qualidade: automática, alta ou leve" aria-label="Qualidade gráfica automática">AUTO</button>
       <button class="utility" id="fullscreen-button" title="Tela cheia" aria-label="Tela cheia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
       <button class="utility" id="pause-button" title="Pausar · Esc" aria-label="Pausar jogo" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button>
     </div>
@@ -26,19 +26,35 @@
 
   <main id="menu-screen" class="menu-screen">
     <div class="hero">
-      <div class="eyebrow"><span class="small-line"></span> FIGHT NIGHT <span class="muted">/</span> ASCENSÃO</div>
-      <h1>A NOITE<br><span>É SUA.</span></h1>
-      <p class="hero-description">Três arenas. Quatro níveis de brutalidade.<br>Câmera livre. Combate sem piedade.</p>
+      <div class="eyebrow"><span class="small-line"></span> ORELHA EDITION <span class="muted">/</span> 4 ARENAS</div>
+      <h1>OIL<br><span>ISLAND.</span></h1>
+      <p class="hero-description">Cinco lutadores. Da ilha à pista de dança.</p>
+      <section class="character-picker" aria-label="Escolher personagem">
+        <div class="section-label"><span>SEU LUTADOR</span><span>01 — 05</span></div>
+        <div class="character-options">
+          <button id="character-veterano" class="character-option selected" data-character="veterano" aria-label="Escolher Epstein" aria-pressed="true"><span class="character-portrait portrait-veterano" aria-hidden="true"></span><strong>EPSTEIN</strong><small>PRECISÃO</small></button>
+          <button id="character-titan" class="character-option" data-character="titan" aria-label="Escolher Diddy" aria-pressed="false"><span class="character-portrait portrait-titan" aria-hidden="true"></span><strong>DIDDY</strong><small>POTÊNCIA</small></button>
+          <button id="character-mimico" class="character-option" data-character="mimico" aria-label="Escolher Oliver Tree" aria-pressed="false"><span class="character-portrait portrait-mimico" aria-hidden="true"></span><strong>OLIVER TREE</strong><small>ROTOR</small></button>
+          <button id="character-orelha" class="character-option" data-character="orelha" aria-label="Escolher Orelha" aria-pressed="false"><span class="character-portrait portrait-orelha" aria-hidden="true"></span><strong>ORELHA</strong><small>AGILIDADE</small></button>
+          <button id="character-pixel" class="character-option" data-character="pixel" aria-label="Escolher Raulzito" aria-pressed="false"><span class="character-portrait portrait-pixel" aria-hidden="true"></span><strong>RAULZITO</strong><small>COMBOS</small></button>
+        </div>
+        <div class="character-heading"><h2 id="selected-character-name">EPSTEIN</h2><span id="character-style">PRECISÃO / CONTRA-ATAQUE</span></div>
+        <p id="character-description" class="character-description"></p>
+        <div class="character-moves"><span><kbd>E</kbd><b id="character-special"></b><small id="character-special-cost">40 ENERGIA</small></span><span><kbd>R</kbd><b id="character-super"></b><small>100 ENERGIA</small></span></div>
+        <p class="character-extra" id="character-extra"></p>
+        <div class="setting-field opponent-field"><label for="opponent-select">RIVAL NO SOLO / TREINO</label><select id="opponent-select"><option value="veterano">Epstein</option><option value="titan" selected>Diddy</option><option value="mimico">Oliver Tree</option><option value="orelha">Orelha</option><option value="pixel">Raulzito</option></select></div>
+      </section>
 
       <section class="arena-picker" aria-label="Escolher arena">
         <div class="section-label"><span><b>01</b> CAMPO DE BATALHA</span><span class="best-score" id="best-score">0 VITÓRIAS</span></div>
-        <input type="hidden" id="arena-select" value="skyline">
+        <input type="hidden" id="arena-select" value="island">
         <div class="arena-options">
-          <button class="arena-option selected" data-arena="skyline" aria-pressed="true"><span class="map-art map-skyline" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span><small>01 / NEO CITY</small><strong>SKYLINE</strong></span><span class="map-check" aria-hidden="true">↗</span></button>
-          <button class="arena-option" data-arena="reactor" aria-pressed="false"><span class="map-art map-reactor" aria-hidden="true"><i></i><i></i><i></i></span><span><small>02 / ZONA ZERO</small><strong>REACTOR</strong></span><span class="map-check" aria-hidden="true">↗</span></button>
-          <button class="arena-option" data-arena="void" aria-pressed="false"><span class="map-art map-void" aria-hidden="true"><i></i><i></i><i></i></span><span><small>03 / DIMENSÃO X</small><strong>THE VOID</strong></span><span class="map-check" aria-hidden="true">↗</span></button>
+          <button id="arena-island" class="arena-option selected" data-arena="island" aria-pressed="true"><span class="map-art map-island" aria-hidden="true"><i></i><i></i><i></i></span><span><small>01 / ILHA TROPICAL</small><strong>OIL ISLAND</strong></span><span class="map-check" aria-hidden="true">↗</span></button>
+          <button id="arena-nightclub" class="arena-option" data-arena="nightclub" aria-pressed="false"><span class="map-art map-nightclub" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span><small>02 / BOATE NOTURNA</small><strong>AFTER HOURS</strong></span><span class="map-check" aria-hidden="true">↗</span></button>
+          <button id="arena-seaside" class="arena-option" data-arena="seaside" aria-pressed="false"><span class="map-art map-seaside" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span><small>03 / PRAIA URBANA</small><strong>ORLA BRAVA</strong></span><span class="map-check" aria-hidden="true">↗</span></button>
+          <button id="arena-helipad" class="arena-option" data-arena="helipad" aria-pressed="false"><span class="map-art map-helipad" aria-hidden="true"><i></i><i></i><i></i></span><span><small>04 / COLISÃO NO CÉU</small><strong>HELIPONTO</strong></span><span class="map-check" aria-hidden="true">↗</span></button>
         </div>
-        <p class="selection-description" id="arena-description">Acima da cidade. Domine a distância e o centro da arena.</p>
+        <p class="selection-description" id="arena-description">Uma ilha cercada pelo mar. A arena entre rochas e palmeiras abre espaço para esquivas e avanços rápidos.</p>
       </section>
 
       <div class="match-settings">
@@ -47,8 +63,8 @@
       </div>
       <p class="selection-description difficulty-description" id="difficulty-description">Pressão equilibrada. Aprenda a ler e punir cada abertura.</p>
       <p class="selection-description mode-description" id="mode-description">Melhor de três. Uma arena. A noite inteira em jogo.</p>
-      <button class="primary-button" id="start-button"><span>ENTRAR NA ARENA</span><span class="button-arrow" aria-hidden="true">↗</span></button>
-      <button class="secondary-button" id="training-button"><span>LABORATÓRIO DE COMBATE</span><span>TREINAR <b aria-hidden="true">→</b></span></button>
+      <div class="launch-actions"><button class="primary-button" id="start-button"><span>ENTRAR NA ARENA</span><span class="button-arrow" aria-hidden="true">↗</span></button>
+      <button class="secondary-button" id="training-button"><span>TREINAR</span><b aria-hidden="true">→</b></button></div>
       <details class="online-panel" id="online-panel">
         <summary>DUELO ONLINE <span>1 × 1 ↗</span></summary>
         <p>Crie uma sala na arena escolhida e compartilhe o código com um amigo.</p>
@@ -62,50 +78,64 @@
         <button id="leave-room-button" class="text-button" hidden>CANCELAR SALA</button>
       </details>
       <div class="menu-tools">
-        <details class="controls-details"><summary>COMO JOGAR <span aria-hidden="true">+</span></summary><div class="control-list"><p><kbd>W A S D</kbd> Mover com a câmera</p><p><kbd>MOUSE</kbd> Arrastar para olhar</p><p><kbd>Q / E</kbd> Girar a câmera</p><p><kbd>SCROLL</kbd> Aproximar / afastar</p><p><kbd>C</kbd> Centralizar câmera</p><p><kbd>TAB</kbd> Travar / soltar alvo</p><p><kbd>J</kbd> Soco / combo</p><p><kbd>K</kbd> Chute</p><p><kbd>L</kbd> Especial · 40 energia</p><p><kbd>I</kbd> Defesa / aparar</p><p><kbd>SHIFT</kbd> Esquiva</p><p><kbd>ESPAÇO</kbd> Pular</p><p><kbd>F</kbd> Segurar para correr</p><p><kbd>ESC</kbd> Pausar / soltar mouse</p></div><p class="control-tip">Encadeie J → J → K. Toque I no instante do impacto para aparar. Com o mouse capturado, clique esquerdo dá soco e direito dá chute.</p><p class="control-tip touch-tip">NO CELULAR · Use os botões e deslize no lado direito da arena para olhar.</p></details>
-        <details class="controls-details settings-details"><summary>AJUSTES <span aria-hidden="true">+</span></summary><div class="settings-content"><label for="sensitivity">Sensibilidade da câmera <input id="sensitivity" type="range" min="0.4" max="2" step="0.1" value="1"></label><label for="volume">Volume geral <input id="volume" type="range" min="0" max="100" step="1" value="65"></label><label class="check-setting"><input type="checkbox" id="shake-toggle" checked><span>Impacto da câmera</span></label><label class="check-setting"><input type="checkbox" id="music-toggle" checked><span>Trilha sonora</span></label></div></details>
+        <details class="controls-details"><summary>COMO JOGAR <span aria-hidden="true">+</span></summary><div class="control-list"><p><kbd>W A S D</kbd> Mover com a câmera</p><p><kbd>MOUSE</kbd> Capturar para olhar</p><p><kbd>MEIO / Z X</kbd> Arrastar / girar câmera</p><p><kbd>SCROLL</kbd> Aproximar / afastar</p><p><kbd>C</kbd> Centralizar câmera</p><p><kbd>TAB / MEIO</kbd> Clique: travar / soltar alvo</p><p><kbd>CLIQUE / J</kbd> Golpe rápido / combo</p><p><kbd>Q / K</kbd> Chute / rasteira</p><p><kbd>E / L</kbd> Especial · custo por personagem</p><p><kbd>DIREITO / I</kbd> Segurar defesa / aparar</p><p><kbd>R</kbd> Super · 100 energia</p><p><kbd>SHIFT</kbd> Esquiva</p><p><kbd>ESPAÇO</kbd> Pular</p><p><kbd>F</kbd> Segurar para correr</p><p><kbd>ESC</kbd> Pausar / soltar mouse</p></div><p class="control-tip">A câmera acompanha o alvo automaticamente. Use WASD + J/K/L/I para lutar só no teclado. Encadeie até oito ações confirmadas; a postura quebrada abre espaço para a finalização. Pressione I perto do impacto para aparar; segure para defender. Shift esquiva na direção do movimento. Clique no botão do meio para travar ou soltar o alvo; arraste com ele para olhar.</p><div class="combo-guide"><b>ROTAS DE COMBO · AJUSTE A DISTÂNCIA</b><span>RAJADA · <kbd>J › J › J › K</kbd></span><span>PRESSÃO · <kbd>J › K › J › K</kbd></span><span>FINALIZAÇÃO · <kbd>J › J › K › L</kbd></span><span>CONTRA-ATAQUE · <kbd>I no impacto › J › K › L</kbd></span><span>300 de vida · 120 segundos · acertos e esquivas perfeitas recuperam recursos.</span></div><p class="control-tip touch-tip">NO CELULAR · Use os botões e deslize no lado direito da arena para olhar.</p></details>
+        <details class="controls-details settings-details"><summary>AJUSTES <span aria-hidden="true">+</span></summary><div class="settings-content"><label for="sensitivity">Sensibilidade da câmera <input id="sensitivity" type="range" min="0.4" max="2" step="0.1" value="1"></label><label for="volume">Volume geral <input id="volume" type="range" min="0" max="100" step="1" value="65"></label><label class="check-setting"><input type="checkbox" id="shake-toggle" checked><span>Impacto da câmera</span></label><label class="check-setting"><input type="checkbox" id="music-toggle" checked><span>Trilha sonora</span></label><label class="check-setting"><input type="checkbox" id="fps-toggle"><span>Mostrar FPS</span></label></div></details>
       </div>
       <div class="best-run" id="best-run">ASCENSÃO / ESTABELEÇA SEU PRIMEIRO RECORDE</div>
     </div>
-    <div class="arena-caption"><div class="caption-meta"><span class="location-icon" aria-hidden="true">⌖</span><span>LIVE ARENA PREVIEW <i></i></span></div><strong id="arena-name">SKYLINE ROOFTOP</strong><div class="caption-bottom"><span id="arena-caption-detail">NEO CITY · ACIMA DO CAOS</span><span class="arena-number" id="arena-number">01 / 03</span></div></div>
+    <div class="arena-caption"><div class="caption-meta"><span class="location-icon" aria-hidden="true">⌖</span><span>PRÉVIA DA ARENA <i></i></span></div><strong id="arena-name">OIL ISLAND / MAR ABERTO</strong><div class="caption-bottom"><span id="arena-caption-detail">ILHA TROPICAL · ENTRE ROCHAS E PALMEIRAS</span><span class="arena-number" id="arena-number">01 / 04</span></div></div>
+    <div class="preview-orbit" role="group" aria-label="Girar prévia do personagem"><button id="preview-left" aria-label="Girar personagem para a esquerda" title="Girar personagem para a esquerda">↶</button><button id="preview-right" aria-label="Girar personagem para a direita" title="Girar personagem para a direita">↷</button></div>
     <div class="menu-footer"><span>SEM MEDO. SEM LIMITES.</span><span>3RD PERSON <b aria-hidden="true">✦</b> PLAYER VS. CPU</span></div>
   </main>
 
   <section id="fight-hud" class="fight-hud" aria-label="Placar da luta" hidden>
-    <div class="fighter-hud player"><div class="fighter-heading"><span><i></i> <b id="player-name">AZURE</b> <small>VOCÊ</small></span><div class="round-pips" id="player-rounds"><b></b><b></b></div></div><div class="health-track"><div class="health-trail" id="player-trail"></div><div class="health-fill" id="player-health"></div></div><div class="meter-row"><div class="energy-track"><div id="player-energy"></div><span></span><span></span><span></span><span></span></div><small id="player-energy-label">ESPECIAL PRONTO</small><span class="hp-value" id="player-hp">100</span></div><div class="guard-track"><div id="player-guard"></div></div></div>
-    <div class="clock"><small id="round-label">ROUND 01</small><strong id="round-time">75</strong><span id="match-label">MELHOR DE 3</span></div>
-    <div class="fighter-hud enemy"><div class="fighter-heading"><div class="round-pips" id="enemy-rounds"><b></b><b></b></div><span><small>RIVAL</small> <b id="enemy-name">CRIMSON</b> <i></i></span></div><div class="health-track"><div class="health-trail" id="enemy-trail"></div><div class="health-fill" id="enemy-health"></div></div><div class="meter-row"><span class="hp-value" id="enemy-hp">100</span><small id="enemy-energy-label">COMBATENTE</small><div class="energy-track"><div id="enemy-energy"></div><span></span><span></span><span></span><span></span></div></div><div class="guard-track"><div id="enemy-guard"></div></div></div>
+    <div class="fighter-hud player"><div class="fighter-heading"><span><i></i> <b id="player-name">EPSTEIN</b> <small>VOCÊ</small></span><div class="round-pips" id="player-rounds"><b></b><b></b></div></div><div class="health-track"><div class="health-trail" id="player-trail"></div><div class="health-fill" id="player-health"></div></div><div class="meter-row"><div class="energy-track"><div id="player-energy"></div><span></span><span></span><span></span><span></span></div><small id="player-energy-label">ESPECIAL PRONTO</small><span class="hp-value" id="player-hp">300</span></div><div class="guard-track" role="progressbar" aria-label="Postura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div id="player-guard"></div></div></div>
+    <div class="clock"><small id="round-label">ROUND 01</small><strong id="round-time">120</strong><span id="match-label">MELHOR DE 3</span></div>
+    <div class="fighter-hud enemy"><div class="fighter-heading"><div class="round-pips" id="enemy-rounds"><b></b><b></b></div><span><small>RIVAL</small> <b id="enemy-name">DIDDY</b> <i></i></span></div><div class="health-track"><div class="health-trail" id="enemy-trail"></div><div class="health-fill" id="enemy-health"></div></div><div class="meter-row"><span class="hp-value" id="enemy-hp">300</span><small id="enemy-energy-label">COMBATENTE</small><div class="energy-track"><div id="enemy-energy"></div><span></span><span></span><span></span><span></span></div></div><div class="guard-track" role="progressbar" aria-label="Postura" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div id="enemy-guard"></div></div></div>
     <div class="run-progress" id="run-progress" hidden>ASCENSÃO · 01 / 05</div>
+    <div class="super-indicator" id="super-indicator">R · SUPER 100 / 100</div>
   </section>
   <div id="announcement" class="announcement" hidden><small id="announcement-overline"></small><strong id="announcement-title"></strong><span id="announcement-subtitle"></span></div>
   <div id="combat-toast" class="combat-toast" role="status" aria-live="polite"></div>
   <div id="network-indicator" class="network-indicator" hidden aria-label="Estado da conexão"></div>
-  <div id="combo-display" class="combo-display" hidden><strong id="combo-count">2</strong><span>HITS<br><b>COMBO</b></span></div>
+  <div id="combo-display" class="combo-display" hidden><strong id="combo-count">2</strong><div class="combo-details"><span>ACERTOS · <b id="combo-tier">RITMO</b></span><div id="combo-route" class="combo-route">J › J</div><div class="combo-window" aria-label="Tempo para manter o combo"><i id="combo-window-fill"></i></div><small id="combo-next">J / K · CONTINUE</small></div></div>
   <div id="fight-reticle" class="fight-reticle" aria-hidden="true" hidden><i></i><i></i><i></i><i></i></div>
   <div id="hazard-warning" class="hazard-warning" role="status" hidden>PERIGO NA ARENA</div>
   <div id="threat-indicator" class="threat-indicator" role="status" hidden>RIVAL PREPARANDO ATAQUE</div>
   <div id="fight-footer" class="fight-footer" hidden>
-    <div class="fight-context"><div class="arena-mini"><i></i><span id="fight-arena-name">SKYLINE ROOFTOP</span><span>/</span><span id="fight-mode">DUELO</span></div><span id="camera-hint" class="camera-hint">ARRASTE O MOUSE PARA OLHAR · Q / E GIRAR · SCROLL ZOOM</span></div>
-    <div class="keyboard-guide"><span><kbd>WASD</kbd> MOVER</span><span><kbd>J K L</kbd> ATACAR</span><span><kbd>I</kbd> DEFESA</span><span><kbd>SHIFT</kbd> ESQUIVA</span></div>
-    <button id="lock-status" class="lock-status" title="Travar ou soltar alvo · Tab" aria-pressed="true"><span aria-hidden="true">⊕</span> ALVO TRAVADO <kbd>TAB</kbd></button>
+    <div class="fight-context"><div class="arena-mini"><i></i><span id="fight-arena-name">OIL ISLAND / MAR ABERTO</span><span>/</span><span id="fight-mode">DUELO</span></div><span id="camera-hint" class="camera-hint">ESQUERDO GOLPE · DIREITO DEFESA · MEIO: CLIQUE ALVO / ARRASTE CÂMERA</span></div>
+    <div class="keyboard-guide"><span><kbd>WASD</kbd> MOVER</span><span><kbd>J</kbd> GOLPE</span><span><kbd>I</kbd> DEFESA</span><span><kbd>K</kbd> CHUTE</span><span><kbd>L</kbd> ESPECIAL</span><span><kbd>SHIFT</kbd> ESQUIVA</span></div>
+    <button id="lock-status" class="lock-status" title="Travar ou soltar alvo · Tab ou clique no botão do meio" aria-pressed="true"><span aria-hidden="true">⊕</span> ALVO TRAVADO <kbd>TAB</kbd></button>
   </div>
-
   <div class="touch-controls" id="touch-controls" hidden>
     <div class="dpad"><button data-control="up" class="up" aria-label="Mover para o fundo">▲</button><button data-control="left" class="left" aria-label="Mover para a esquerda">◀</button><button data-control="down" class="down" aria-label="Mover para a frente">▼</button><button data-control="right" class="right" aria-label="Mover para a direita">▶</button><button data-control="lock" class="touch-lock" aria-label="Travar ou soltar alvo">ALVO</button><button data-control="sprint" class="touch-sprint" aria-label="Segurar para correr">CORRER</button></div>
-    <div class="touch-actions"><button data-control="block" class="touch-small">DEFESA</button><button data-control="dodge" class="touch-small">ESQUIVA</button><button data-control="jump" class="touch-small">PULO</button><button data-control="punch">SOCO</button><button data-control="kick">CHUTE</button><button data-control="special" class="touch-special">ESPECIAL</button></div>
+    <div class="touch-actions"><button data-control="super" class="touch-super">SUPER</button><button data-control="block" class="touch-small">DEFESA</button><button data-control="dodge" class="touch-small">ESQUIVA</button><button data-control="jump" class="touch-small">PULO</button><button data-control="punch">GOLPE</button><button data-control="kick">CHUTE</button><button data-control="special" class="touch-special">ESPECIAL</button></div>
   </div>
 
-  <section class="overlay" id="pause-screen" hidden aria-label="Jogo pausado"><div class="modal"><span class="eyebrow">RESPIRE. VOLTE MAIS FORTE.</span><h2>INTERVALO<span aria-hidden="true">Ⅱ</span></h2><p id="pause-description">A cidade pode esperar um pouco.</p><button class="primary-button" id="resume-button">VOLTAR À LUTA <span aria-hidden="true">→</span></button><button class="secondary-button" id="restart-button">RECOMEÇAR PARTIDA <span aria-hidden="true">↻</span></button><button class="text-button" id="menu-button">VOLTAR AO INÍCIO</button><div class="pause-hint">J / K / L ATACAR · I DEFESA · SHIFT ESQUIVA<br>TAB TRAVAR ALVO · MOUSE / Q / E CÂMERA · F CORRER</div></div></section>
+  <section class="overlay" id="pause-screen" hidden aria-label="Jogo pausado"><div class="modal"><span class="eyebrow">RESPIRE. VOLTE MAIS FORTE.</span><h2>INTERVALO<span aria-hidden="true">Ⅱ</span></h2><p id="pause-description">A cidade pode esperar um pouco.</p><button class="primary-button" id="resume-button">VOLTAR À LUTA <span aria-hidden="true">→</span></button><button class="secondary-button" id="restart-button">RECOMEÇAR PARTIDA <span aria-hidden="true">↻</span></button><button class="text-button" id="menu-button">VOLTAR AO INÍCIO</button><div class="pause-hint">J GOLPE · K CHUTE · L ESPECIAL · I DEFESA<br>SHIFT ESQUIVA · ESPAÇO PULO · R SUPER · F CORRER</div></div></section>
   <section class="overlay" id="result-screen" hidden aria-label="Resultado da partida"><div class="modal result-modal"><span class="eyebrow" id="result-eyebrow">A ARENA TEM UM NOVO DONO.</span><div class="result-title-row"><h2 id="result-title">VITÓRIA.</h2><span id="result-rank" class="result-rank" hidden>S</span></div><p id="result-description">A noite é sua.</p><div class="result-stats"><div><strong id="result-score">2—0</strong><span>ROUNDS</span></div><div><strong id="result-combo">0</strong><span>MAIOR COMBO</span></div><div><strong id="result-damage">0</strong><span>DANO CAUSADO</span></div></div><div id="upgrade-choices" class="upgrade-choices" hidden><p>EVOLUA SEU ESTILO <span>ESCOLHA UMA MELHORIA</span></p><button data-upgrade="power"><strong>POTÊNCIA</strong><span>Mais dano em cada abertura.</span><small>NÍVEL 0 → 1</small></button><button data-upgrade="flow"><strong>FLUXO</strong><span>Energia para manter a pressão.</span><small>NÍVEL 0 → 1</small></button><button data-upgrade="guard"><strong>BASTIÃO</strong><span>Resista. Volte ainda mais forte.</span><small>NÍVEL 0 → 1</small></button></div><button class="primary-button" id="rematch-button">MAIS UMA LUTA <span aria-hidden="true">↗</span></button><button class="text-button" id="result-menu-button">VOLTAR AO INÍCIO</button></div></section>
   <div id="error-screen" class="overlay" hidden aria-live="polite"><div class="modal"><span class="eyebrow" id="error-eyebrow">FALHA AO INICIAR A ARENA</span><h2 id="error-title">OPS.</h2><p id="error-message">Não foi possível iniciar o gráfico 3D. Abra este arquivo no Chrome ou Edge com a aceleração gráfica ativada.</p><button class="primary-button" id="error-retry">TENTAR NOVAMENTE ↻</button></div></div>
   <noscript><div class="overlay"><div class="modal"><h2>ATIVA O JAVASCRIPT.</h2><p>O jogo precisa de JavaScript e WebGL para funcionar.</p></div></div></noscript>
   <script src="vendor/three.min.js"></script>
   <script src="combat.js"></script>
+<script src="assets/faces-v5.js"></script>
+<script src="assets/titan-shirt.js"></script>
+<script src="assets/materials-v5.js"></script>
+  <script src="fighter-faces.js"></script>
+  <script src="organic-mesh.js"></script>
+  <script src="fighters-human.js"></script>
+  <script src="assets/orelha-face.js"></script>
+  <script src="fighters-dog.js"></script>
+  <script src="arena-island.js"></script>
+  <script src="arena-nightclub.js"></script>
+  <script src="arena-seaside.js"></script>
+  <script src="arena-helipad.js"></script>
   <script src="scene.js"></script>
   <script src="audio.js"></script>
   <script src="run.js"></script>
   <script src="network.js"></script>
   <script src="performance.js"></script>
+  <script src="combat-feedback.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

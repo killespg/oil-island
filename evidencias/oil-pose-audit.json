@@ -1,0 +1,54 @@
+{
+  "frames": 587,
+  "skinVertices": 2752240,
+  "invalidVertices": 0,
+  "changedBoneLengths": 0,
+  "peakError": 0,
+  "characters": {
+    "veterano": {
+      "punchContacts": 8,
+      "kickContacts": 4,
+      "minimumLowTargetDrop": 0.352,
+      "transitions": {
+        "dodge": true,
+        "sprint": true
+      }
+    },
+    "pixel": {
+      "punchContacts": 8,
+      "kickContacts": 4,
+      "minimumLowTargetDrop": 0.342,
+      "transitions": {
+        "dodge": true,
+        "sprint": true
+      }
+    },
+    "titan": {
+      "punchContacts": 8,
+      "kickContacts": 4,
+      "minimumLowTargetDrop": 0.375,
+      "transitions": {
+        "dodge": true,
+        "sprint": true
+      }
+    },
+    "mimico": {
+      "punchContacts": 8,
+      "kickContacts": 4,
+      "minimumLowTargetDrop": 0.357,
+      "transitions": {
+        "dodge": true,
+        "sprint": true
+      }
+    },
+    "orelha": {
+      "punchContacts": 8,
+      "kickContacts": 4,
+      "minimumLowTargetDrop": null,
+      "transitions": {
+        "dodge": true,
+        "sprint": true
+      }
+    }
+  }
+}

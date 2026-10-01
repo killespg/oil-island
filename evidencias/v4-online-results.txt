@@ -1,0 +1,58 @@
+
+> neon-clash@4.0.0 test:online
+> npm run build:server && node tests/online-tests.cjs && node --test tests/online-client-tests.cjs
+
+
+> neon-clash@4.0.0 build:server
+> tsc -p tsconfig.server.json
+
+✔ serves only the public game assets and safe health data (1338.193ms)
+✔ same-origin upgrades work, cross-origin and unexpected paths are rejected (19.7505ms)
+✔ CSP permits explicit same-host WebSocket URLs without trusting hostile Host values (12.0129ms)
+✔ HTTPS proxy CSP lists only explicitly configured secure WebSocket origins (1019.412ms)
+✔ an explicit public HTTPS origin supports a reverse proxy and can disable no-origin clients (7.9933ms)
+✔ two peers share the same authoritative match, seed, player identities and snapshots (210.3352ms)
+✔ both selected characters persist from the waiting room into authoritative combat (108.5635ms)
+✔ invalid character IDs are rejected for host and guest without occupying a room slot (12.5227ms)
+✔ super is accepted as an authoritative action and cannot change the selected character (64.4461ms)
+✔ only each peer controls its own fighter and input cannot spoof HP, time, winner or upgrades (61.5968ms)
+✔ invalid numbers, types, actions and sequences are rejected without poisoning the next input (107.2704ms)
+✔ movement magnitude is clamped and stale movement/blocking is released automatically (604.3662ms)
+✔ queues consume at most one command per simulation tick and events are delivered exactly once (262.4321ms)
+✔ live simulation rejects premature rematches and rejects third players (12.225ms)
+✔ rematch requires both peers, creates a new matchId and resets both sequence numbers (187.4809ms)
+✔ disconnect forfeits the room immediately and the remaining connection can host again (7.9626ms)
+✔ room and connection caps, arena validation and lobby membership are enforced (7.7128ms)
+✔ input queue floods are disconnected and remove their room (10.6174ms)
+✔ oversize messages, binary payloads and message floods are bounded (20.8818ms)
+✔ a peer that stops reading is removed when its send buffer exceeds the cap (209.2246ms)
+✔ waiting rooms and empty connections expire, while shutdown closes live sockets (257.4357ms)
+✔ environment configuration rejects invalid bounds and origin URLs (0.9804ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4556.6311
+✔ two real clients preserve different character selections while super is predicted and acknowledged (124.6171ms)
+✔ a real client rematch retains both selections and clears the ready votes (74.7629ms)
+▶ two real browser-client instances stay synchronized with the authoritative WebSocket server
+  ✔ host and guest receive stable slots and a shared arena (26.6445ms)
+  ✔ fixed-rate packets are acknowledged during intro and enter a real fight (2039.9656ms)
+  ✔ player two predicts immediately and both players can move in opposite directions (402.1767ms)
+  ✔ clients approach each other without AI and retain the correct player identity (603.1595ms)
+  ✔ a guest attack is validated once and reaches both clients without duplicate FX (387.3752ms)
+  ✔ neutralize releases a moving player even when its tick loop stops (695.5905ms)
+  ✔ heartbeat returns measured latency and normal traffic stays connected (0.4208ms)
+  ✔ leaving ends the peer match and releases server resources (14.9219ms)
+✔ two real browser-client instances stay synchronized with the authoritative WebSocket server (4173.9476ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4497.9026

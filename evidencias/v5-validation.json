@@ -1,0 +1,73 @@
+{
+  "version": "4.1.0",
+  "testedAt": "2026-10-01T03:18:06.149613+00:00",
+  "runtime": "Node.js v26.4.0, Windows x64",
+  "checksPassed": {
+    "combat": 28,
+    "rosterAndFastCombat": 23,
+    "progression": 5,
+    "predictionAndSerialization": 35,
+    "framePacingAndInterpolation": 3,
+    "uiWithSimulatedDom": 15,
+    "httpAndWebSocketServer": 22,
+    "twoRealNetworkClients": 10
+  },
+  "totalLeafScenarios": 141,
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "report": "v5-logic-results.txt"
+    },
+    {
+      "command": "npm run test:online",
+      "exitCode": 0,
+      "report": "v5-online-results.txt"
+    }
+  ],
+  "typescriptCompilation": "passed",
+  "browser": "Codex in-app browser, http://127.0.0.1:3000/",
+  "visualChecks": [
+    "Five updated character models and portraits inspected in the actual game",
+    "Human proportions, continuous hips, matte indigo denim and head profiles inspected",
+    "Mimico helicopter special and super inspected in training, with physical lift and energy consumption",
+    "Titan reference shirt print, navy AS shorts, white socks and bucket inspected",
+    "Orelha head checked from the front and both sides after replacing the face projection with closed canine geometry and shared fur shading",
+    "Orelha jump, aerial kick, dodge roll and Mare da Protecao impact inspected in training",
+    "Menu preview rotation buttons used for profile inspection",
+    "All local model and image scripts returned HTTP 200"
+  ],
+  "observedFps": {
+    "menuSamples": [
+      129,
+      155,
+      175,
+      177,
+      179,
+      180
+    ],
+    "trainingSamples": [
+      110,
+      150,
+      147,
+      154,
+      174,
+      175,
+      159
+    ],
+    "startupSamples": [
+      17,
+      83
+    ],
+    "method": "Built-in HUD counter during interactive checks, including asset-loading samples. Not a sustained benchmark"
+  },
+  "gpuBenchmarkCompleted": false,
+  "containerBuilt": false,
+  "publicServerDeployed": false,
+  "limits": [
+    "Frame-rate samples apply only to this local session. The previous Chrome capture at roughly 1 FPS was not root-caused.",
+    "The three embedded art bundles total approximately 20.46 MB before transfer compression. Public-network loading was not benchmarked.",
+    "UI regression tests use simulated DOM/audio/renderer. Network integration uses actual client modules and WebSockets on localhost.",
+    "Historical mobile, browser automation and WebGL recovery suites were not rerun in this visual revision. No physical mobile device, WAN or prolonged multiplayer load validation."
+  ]
+}

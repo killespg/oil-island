@@ -1,0 +1,436 @@
+{
+  "scope": "CPU scene inventory; no culling, renderer, global lights, fighters, particles or GPU timing",
+  "arenas": {
+    "island": {
+      "bounds": 13.5,
+      "authored": {
+        "objects": 528,
+        "meshes": 497,
+        "staticMeshes": 432,
+        "dynamicMeshes": 65,
+        "instancedMeshes": 0,
+        "instances": 0,
+        "sprites": 1,
+        "lights": 0,
+        "transparentMeshes": 2,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 498,
+        "triangles": 52998,
+        "materials": 25,
+        "geometries": 359,
+        "geometryBytes": 1151356,
+        "texturePixels": 5652480
+      },
+      "batched": {
+        "objects": 99,
+        "meshes": 68,
+        "staticMeshes": 28,
+        "dynamicMeshes": 40,
+        "instancedMeshes": 0,
+        "instances": 0,
+        "sprites": 1,
+        "lights": 0,
+        "transparentMeshes": 2,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 69,
+        "triangles": 52998,
+        "materials": 25,
+        "geometries": 47,
+        "geometryBytes": 2374300,
+        "texturePixels": 5652480
+      },
+      "withoutOptionalDetail": {
+        "objects": 78,
+        "meshes": 56,
+        "staticMeshes": 21,
+        "dynamicMeshes": 35,
+        "instancedMeshes": 0,
+        "instances": 0,
+        "sprites": 1,
+        "lights": 0,
+        "transparentMeshes": 2,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 57,
+        "triangles": 36608,
+        "materials": 24,
+        "geometries": 39,
+        "geometryBytes": 1280420,
+        "texturePixels": 5652480
+      },
+      "dynamicRoots": [
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 6272
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 180
+        },
+        {
+          "name": "Swaying palm crown",
+          "meshes": 4,
+          "triangles": 780
+        },
+        {
+          "name": "Swaying palm crown",
+          "meshes": 4,
+          "triangles": 780
+        },
+        {
+          "name": "Swaying palm crown",
+          "meshes": 4,
+          "triangles": 780
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 1
+        },
+        {
+          "name": "Moored sailboat",
+          "meshes": 4,
+          "triangles": 565
+        }
+      ]
+    },
+    "nightclub": {
+      "bounds": 12,
+      "authored": {
+        "objects": 1509,
+        "meshes": 1388,
+        "staticMeshes": 1348,
+        "dynamicMeshes": 40,
+        "instancedMeshes": 1,
+        "instances": 176,
+        "sprites": 6,
+        "lights": 0,
+        "transparentMeshes": 8,
+        "transparentDoubleSidedMeshes": 4,
+        "drawCallsUpperBound": 1398,
+        "triangles": 78966,
+        "materials": 43,
+        "geometries": 73,
+        "geometryBytes": 71960,
+        "texturePixels": 1851392
+      },
+      "batched": {
+        "objects": 175,
+        "meshes": 54,
+        "staticMeshes": 38,
+        "dynamicMeshes": 16,
+        "instancedMeshes": 1,
+        "instances": 176,
+        "sprites": 6,
+        "lights": 0,
+        "transparentMeshes": 6,
+        "transparentDoubleSidedMeshes": 4,
+        "drawCallsUpperBound": 64,
+        "triangles": 78966,
+        "materials": 43,
+        "geometries": 49,
+        "geometryBytes": 3065000,
+        "texturePixels": 1851392
+      },
+      "withoutOptionalDetail": {
+        "objects": 168,
+        "meshes": 52,
+        "staticMeshes": 36,
+        "dynamicMeshes": 16,
+        "instancedMeshes": 1,
+        "instances": 176,
+        "sprites": 2,
+        "lights": 0,
+        "transparentMeshes": 4,
+        "transparentDoubleSidedMeshes": 4,
+        "drawCallsUpperBound": 58,
+        "triangles": 78958,
+        "materials": 37,
+        "geometries": 47,
+        "geometryBytes": 3064440,
+        "texturePixels": 1851392
+      },
+      "dynamicRoots": [
+        {
+          "name": "Swaying club guest 2",
+          "meshes": 5,
+          "triangles": 1248
+        },
+        {
+          "name": "Swaying club guest 11",
+          "meshes": 5,
+          "triangles": 1248
+        },
+        {
+          "name": "Group",
+          "meshes": 1,
+          "triangles": 24
+        },
+        {
+          "name": "Group",
+          "meshes": 1,
+          "triangles": 24
+        },
+        {
+          "name": "Group",
+          "meshes": 1,
+          "triangles": 24
+        },
+        {
+          "name": "Group",
+          "meshes": 1,
+          "triangles": 24
+        },
+        {
+          "name": "Group",
+          "meshes": 2,
+          "triangles": 792
+        }
+      ]
+    },
+    "seaside": {
+      "bounds": 14,
+      "authored": {
+        "objects": 1637,
+        "meshes": 1559,
+        "staticMeshes": 1458,
+        "dynamicMeshes": 101,
+        "instancedMeshes": 0,
+        "instances": 0,
+        "sprites": 3,
+        "lights": 0,
+        "transparentMeshes": 7,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 1562,
+        "triangles": 66646,
+        "materials": 53,
+        "geometries": 286,
+        "geometryBytes": 1294500,
+        "texturePixels": 3424256
+      },
+      "batched": {
+        "objects": 212,
+        "meshes": 134,
+        "staticMeshes": 33,
+        "dynamicMeshes": 101,
+        "instancedMeshes": 0,
+        "instances": 0,
+        "sprites": 3,
+        "lights": 0,
+        "transparentMeshes": 7,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 137,
+        "triangles": 66646,
+        "materials": 53,
+        "geometries": 99,
+        "geometryBytes": 2588116,
+        "texturePixels": 3424256
+      },
+      "withoutOptionalDetail": {
+        "objects": 207,
+        "meshes": 131,
+        "staticMeshes": 30,
+        "dynamicMeshes": 101,
+        "instancedMeshes": 0,
+        "instances": 0,
+        "sprites": 2,
+        "lights": 0,
+        "transparentMeshes": 7,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 133,
+        "triangles": 62356,
+        "materials": 51,
+        "geometries": 96,
+        "geometryBytes": 2370248,
+        "texturePixels": 3424256
+      },
+      "dynamicRoots": [
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 200
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 200
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 200
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 200
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 200
+        },
+        {
+          "name": "Mesh",
+          "meshes": 1,
+          "triangles": 32
+        },
+        {
+          "name": "Orla Brava / five background runners",
+          "meshes": 95,
+          "triangles": 38704
+        }
+      ]
+    },
+    "helipad": {
+      "bounds": 13,
+      "authored": {
+        "objects": 428,
+        "meshes": 407,
+        "staticMeshes": 368,
+        "dynamicMeshes": 39,
+        "instancedMeshes": 4,
+        "instances": 2888,
+        "sprites": 1,
+        "lights": 0,
+        "transparentMeshes": 8,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 408,
+        "triangles": 55582,
+        "materials": 27,
+        "geometries": 38,
+        "geometryBytes": 347916,
+        "texturePixels": 4210688
+      },
+      "batched": {
+        "objects": 79,
+        "meshes": 58,
+        "staticMeshes": 22,
+        "dynamicMeshes": 36,
+        "instancedMeshes": 4,
+        "instances": 2888,
+        "sprites": 1,
+        "lights": 0,
+        "transparentMeshes": 2,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 59,
+        "triangles": 55582,
+        "materials": 27,
+        "geometries": 50,
+        "geometryBytes": 715276,
+        "texturePixels": 4210688
+      },
+      "withoutOptionalDetail": {
+        "objects": 68,
+        "meshes": 48,
+        "staticMeshes": 14,
+        "dynamicMeshes": 34,
+        "instancedMeshes": 0,
+        "instances": 0,
+        "sprites": 1,
+        "lights": 0,
+        "transparentMeshes": 0,
+        "transparentDoubleSidedMeshes": 0,
+        "drawCallsUpperBound": 49,
+        "triangles": 17050,
+        "materials": 23,
+        "geometries": 40,
+        "geometryBytes": 563732,
+        "texturePixels": 4210688
+      },
+      "dynamicRoots": [
+        {
+          "name": "Windsock",
+          "meshes": 2,
+          "triangles": 120
+        },
+        {
+          "name": "Two helicopters / environmental collision",
+          "meshes": 34,
+          "triangles": 14240
+        }
+      ]
+    }
+  }
+}

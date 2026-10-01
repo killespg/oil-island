@@ -9,7 +9,7 @@ const evidence = path.join(root,'evidencias'); fs.mkdirSync(evidence,{recursive:
 const checks=[], errors=[], requests=[];
 function check(value,label) { if(!value) throw new Error(label); checks.push(label); console.log('PASS',label); }
 async function active(page) {
-  await page.evaluate(() => { const s=__NEON__.state; s.phase='fight';s.phaseTime=0;s.events=[];s.timeLeft=75; });
+  await page.evaluate(() => { const s=__NEON__.state; s.phase='fight';s.phaseTime=0;s.events=[];s.timeLeft=120; });
 }
 async function resolveMatch(page,won) {
   await page.evaluate(won => { const s=__NEON__.state;s.wins=won?[2,0]:[0,2];s.winner=won?0:1;s.phase='matchOver';s.events=[{type:'matchEnd',winner:s.winner}]; },won);
@@ -25,10 +25,10 @@ async function resolveMatch(page,won) {
   await page.waitForFunction(()=>!!window.__NEON__,{},{timeout:30000});
   check(await page.locator('#menu-screen').isVisible(),'Menu renders offline');
   check(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Desktop has no horizontal overflow');
-  check(await page.locator('[data-arena]').count()===3,'Three selectable arenas');
+  check(await page.locator('[data-arena]').count()===4,'Four selectable arenas');
   check(await page.locator('#difficulty option').count()===4,'Four difficulty tiers');
   await page.screenshot({path:path.join(evidence,'v2-menu.png')});
-  for(const arena of ['reactor','void','skyline']) {
+  for(const arena of ['island','nightclub','seaside','helipad']) {
     await page.locator(`[data-arena="${arena}"]`).click();
     await page.waitForTimeout(300);
     check(await page.evaluate(()=>__NEON__.state.arena)===arena,`Preview switches to ${arena}`);
@@ -38,9 +38,9 @@ async function resolveMatch(page,won) {
   check(await page.evaluate(()=>__NEON__.state.training),'Training is a passive practice mode');
   await page.waitForTimeout(700);
   const before=await page.evaluate(()=>({...__NEON__.camera}));
-  await page.keyboard.down('KeyE'); await page.waitForTimeout(500); await page.keyboard.up('KeyE');
+  await page.keyboard.down('KeyX'); await page.waitForTimeout(500); await page.keyboard.up('KeyX');
   const after=await page.evaluate(()=>({...__NEON__.camera}));
-  check(after.yaw-before.yaw<-.1,'E orbits camera naturally to the right');
+  check(after.yaw-before.yaw>.1,'X orbits camera naturally to the right');
   await page.keyboard.press('Tab');
   check(await page.evaluate(()=>!__NEON__.camera.locked),'Target lock toggles off');
   const lateralBefore=await page.evaluate(()=>({x:__NEON__.state.fighters[0].x,z:__NEON__.state.fighters[0].z,yaw:__NEON__.camera.yaw}));
@@ -54,7 +54,7 @@ async function resolveMatch(page,won) {
   const moved=await page.evaluate(()=>({x:__NEON__.state.fighters[0].x,z:__NEON__.state.fighters[0].z}));
   check(Math.hypot(moved.x-pos.x,moved.z-pos.z)>.7,'W moves player relative to the camera');
   const dragBefore=await page.evaluate(()=>__NEON__.camera.yaw);
-  await page.mouse.move(1000,550);await page.mouse.down();await page.mouse.move(1190,590,{steps:8});await page.mouse.up();
+  await page.mouse.move(1000,550);await page.mouse.down({button:'middle'});await page.mouse.move(1190,590,{steps:8});await page.mouse.up({button:'middle'});
   const dragged=await page.evaluate(()=>__NEON__.camera.yaw);
   check(dragged-dragBefore<-.15,'Dragging the canvas rotates camera');
   const zoomBefore=await page.evaluate(()=>__NEON__.camera.distance);
@@ -70,9 +70,9 @@ async function resolveMatch(page,won) {
   check(await page.evaluate(()=>__NEON__.audio.state)==='running','Audio context unlocks after gesture');
   await page.keyboard.press('KeyM');check(await page.locator('#sound-button').getAttribute('aria-pressed')==='false','Mute toggles');
   await page.keyboard.press('KeyM');
-  await page.screenshot({path:path.join(evidence,'v2-skyline-fight.png')});
+  await page.screenshot({path:path.join(evidence,'v2-island-fight.png')});
   await page.evaluate(()=>__NEON__.menu());
-  for(const arena of ['reactor','void']) {
+  for(const arena of ['nightclub','seaside','helipad']) {
     await page.locator(`[data-arena="${arena}"]`).click();await page.locator('#start-button').click();await active(page);
     await page.waitForTimeout(600);check(await page.evaluate(()=>__NEON__.state.arena)===arena,`Fight starts in ${arena}`);
     await page.screenshot({path:path.join(evidence,`v2-${arena}-fight.png`)});
@@ -89,7 +89,7 @@ async function resolveMatch(page,won) {
   await page.locator('[data-upgrade="flow"]').click();await page.locator('#rematch-button').click();await active(page);
   check(await page.evaluate(()=>__NEON__.run.stage===1 && __NEON__.run.upgrades.flow===1),'Chosen upgrade carries into the next stage');
   check(await page.evaluate(()=>__NEON__.state.upgrades.flow)===1,'Progression perk reaches combat simulation');
-  await page.keyboard.press('KeyR');await active(page);
+  await page.keyboard.press('Escape');await page.locator('#restart-button').click();await active(page);
   check(await page.evaluate(()=>__NEON__.run.stage===1 && __NEON__.state.upgrades.flow===1),'Restart preserves current ascent stage and perks');
   for(let i=1;i<5;i++) { await resolveMatch(page,true);if(i<4) {await page.locator('#rematch-button').click();await active(page);} }
   check(await page.evaluate(()=>__NEON__.run.ended && __NEON__.run.cleared===5),'Five victories finish the ascent');

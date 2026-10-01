@@ -3,6 +3,7 @@
   'use strict';
   const Sim = typeof module !== 'undefined' && module.exports ? require('./combat.js') : global.FightSim;
   const TICK = 1 / 60, DELAY_TICKS = 5, MAX_PENDING = 180, MAX_BUFFERED_BYTES = 65536;
+  const ACTIONS = new Set(['punch', 'kick', 'special', 'super', 'dodge', 'jump']);
   const neutral = () => ({ x: 0, z: 0, block: false, sprint: false });
   const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
   const cleanInput = input => ({ x: clamp(Number.isFinite(input && input.x) ? input.x : 0, -1, 1), z: clamp(Number.isFinite(input && input.z) ? input.z : 0, -1, 1), block: !!(input && input.block), sprint: !!(input && input.sprint) });
@@ -17,7 +18,7 @@
     let pending = [], actions = [], seq = 0, ack = 0, tick = -1, matchId = null, seenMatches = new Set();
     let snapshots = [], playback = null, previous = null, steppedAt = now(), lastReceived = now(), lastPing = 0;
     let correction = { x: 0, y: 0, z: 0 }, lastInput = neutral();
-    let status = { phase: 'closed', code: '', ping: null, message: '', rematchReady: [false, false] };
+    let status = { phase: 'closed', code: '', ping: null, message: '', rematchReady: [false, false], characters: [null, null] };
     const isOpen = () => !!socket && socket.readyState === 1;
     const isActive = () => isOpen() && !!state && (status.phase === 'playing' || status.phase === 'result');
     function updateStatus(patch) { status = Object.assign({}, status, patch); callback('onStatus', Object.assign({}, status)); }
@@ -36,7 +37,7 @@
     function fail(message) { stop(); updateStatus({ phase: 'error', message }); }
     function leave() {
       stop(); state = null; previous = null; playerId = null; snapshots = []; matchId = null; seenMatches.clear();
-      updateStatus({ phase: 'closed', code: '', ping: null, message: '', rematchReady: [false, false] });
+      updateStatus({ phase: 'closed', code: '', ping: null, message: '', rematchReady: [false, false], characters: [null, null] });
     }
     function endpoint() {
       if (options.url) return options.url;
@@ -85,9 +86,9 @@
       if (!packet || typeof packet !== 'object') return;
       if (packet.type === 'welcome') {
         if (packet.playerId !== 0 && packet.playerId !== 1) { fail('Identificação de jogador inválida.'); return; }
-        playerId = packet.playerId; updateStatus({ phase: 'waiting', code: String(packet.code || ''), message: 'Aguardando outro jogador…' });
+        playerId = packet.playerId; updateStatus({ phase: 'waiting', code: String(packet.code || ''), message: 'Aguardando outro jogador…', characters: roomCharacters(packet.characters) });
       } else if (packet.type === 'waiting') {
-        updateStatus({ phase: 'waiting', code: String(packet.code || status.code), message: 'Compartilhe o código da sala.' });
+        updateStatus({ phase: 'waiting', code: String(packet.code || status.code), message: 'Compartilhe o código da sala.', characters: roomCharacters(packet.characters) });
       } else if (packet.type === 'error') {
         fail(String(packet.message || 'Não foi possível entrar na sala.'));
       } else if (packet.type === 'peerLeft') {
@@ -126,10 +127,14 @@
           correction.x += old.x - local.x; correction.y += old.y - local.y; correction.z += old.z - local.z;
         } else correction = { x: 0, y: 0, z: 0 };
         previous = Sim.snapshot(state); steppedAt = now();
-        updateStatus({ phase: authoritativePhase === 'matchOver' ? 'result' : 'playing', message: '', rematchReady: fresh ? [false, false] : status.rematchReady });
+        updateStatus({ phase: authoritativePhase === 'matchOver' ? 'result' : 'playing', message: '', rematchReady: fresh ? [false, false] : status.rematchReady, characters: roomCharacters(state.fighters.map(fighter => fighter.character)) });
         if (fresh) callback('onMatch', state);
         if (Array.isArray(packet.events) && packet.events.length) callback('onEvents', packet.events);
       }
+    }
+    function roomCharacters(value) {
+      if (!Array.isArray(value)) return status.characters;
+      return [0, 1].map(index => typeof value[index] === 'string' && Object.prototype.hasOwnProperty.call(Sim.characters, value[index]) ? value[index] : null);
     }
     function step(input) {
       if (!isActive() || status.phase !== 'playing') return state;
@@ -141,7 +146,7 @@
       return state;
     }
     function action(name) {
-      if (!isActive() || status.phase !== 'playing' || !Object.prototype.hasOwnProperty.call(Sim.moves, name) || actions.length >= 8) return false;
+      if (!isActive() || status.phase !== 'playing' || !ACTIONS.has(name) || !Object.prototype.hasOwnProperty.call(Sim.moves, name) || actions.length >= 8) return false;
       actions.push(name); return true;
     }
     function neutralize() {
@@ -193,8 +198,8 @@
       return result;
     }
     return {
-      host(arena) { connect({ type: 'host', arena: Sim.arenas[arena] ? arena : 'skyline' }); },
-      join(code) { connect({ type: 'join', code: String(code || '').trim().toUpperCase() }); },
+      host(arena, character) { connect({ type: 'host', arena: Sim.arenas[arena] ? arena : 'skyline', ...(character === undefined ? {} : { character }) }); },
+      join(code, character) { connect({ type: 'join', code: String(code || '').trim().toUpperCase(), ...(character === undefined ? {} : { character }) }); },
       leave, step, action, neutralize, view,
       rematch() { return isActive() && status.phase === 'result' ? send({ type: 'rematch' }) : false; },
       get state() { return state; }, get status() { return Object.assign({}, status); },

@@ -1,10 +1,20 @@
-/* NEON CLASH — input, match flow, accessibility, feedback and progression. */
+/* Oil Island (Orelha Edition) — input, match flow, accessibility and progression. */
 (function () {
   'use strict';
   const $ = id => document.getElementById(id);
   const touchDevice = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+  const mouseDevice = matchMedia('(any-pointer: fine)').matches || !touchDevice;
   const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const keys = new Set(), touches = new Set();
+  const keys = new Set(), touches = new Map();
+  let mouseGuard = false, mouseLook = null;
+  const rosterIds = ['veterano','titan','mimico','orelha','pixel'];
+  const rosterNotes = {
+    veterano: {style:'PRECISÃO / CONTRA-ATAQUE',bio:'Casaco azul-marinho, jeans azul e uma postura firme. Ombros largos, guarda precisa e golpes calculados para abrir o combo.',special:'Quebra de protocolo',super:'Última palavra'},
+    titan: {style:'POTÊNCIA / PRESSÃO',bio:'Bucket branco, óculos escuros e camiseta ampla com estampa azul. Short acima do joelho e passos firmes para pressionar com impacto.',special:'Avanço dominante',super:'Domínio absoluto'},
+    mimico: {style:'GIROS / DECOLAGENS',bio:'Corte tigela alinhado, óculos alaranjados, jaqueta azul-arroxeada e vermelha e jeans muito largo. Braços em hélice e giros que dominam o espaço.',special:'Hélice Giratória',super:'Decolagem Total'},
+    orelha: {style:'MOBILIDADE / CONTROLE',bio:'O mascote da orla. Pelagem escura com marcas caramelo, focinho grisalho e orelhas caídas. Passos leves e a brisa da praia a seu favor.',special:'Brisa da Brava',super:'Maré da Proteção'},
+    pixel: {style:'VELOCIDADE / COMBOS',bio:'Cabelo azul preso no alto, barba rosa e roupa gamer com estampa de joystick. Mude de ângulo e conecte sequências rápidas e variadas.',special:'Salto de frame',super:'Overdrive'}
+  };
   const levelNames = {easy:'RECRUTA',normal:'COMBATENTE',hard:'LENDA',nightmare:'PESADELO'};
   const levelDescriptions = {
     easy:'Reações mais lentas e aberturas maiores. Aprenda distância, guarda e esquiva.',
@@ -12,11 +22,16 @@
     hard:'O rival pune golpes no vazio, varia combos e escapa da pressão. Domine sua energia.',
     nightmare:'Reações rápidas, pressão implacável e contra-ataques precisos. Mesma vida e mesmas regras.'
   };
-  const arenaNames = {skyline:'SKYLINE / CHUVA NEON',reactor:'REATOR / ZONA CRÍTICA',void:'VOID / ÚLTIMO SINAL'};
+  const arenaNames = {island:'OIL ISLAND / MAR ABERTO',nightclub:'AFTER HOURS / PISTA DE LUTA',seaside:'ORLA BRAVA / FIM DE TARDE',helipad:'HELIPONTO / COLISÃO NO CÉU'};
+  const arenaIds = Object.keys(arenaNames);
+  const arenaCaptions = {
+    island:'ILHA TROPICAL · ENTRE ROCHAS E PALMEIRAS',nightclub:'BOATE · O DUELO SEGUE O RITMO',seaside:'CIDADE LITORÂNEA · DA AREIA AO CALÇADÃO',helipad:'HELIPONTO · COLISÃO NO CÉU'
+  };
   const arenaDescriptions = {
-    skyline:'Um terraço sob a chuva. Espaço para circular, encurtar distância e dominar o duelo.',
-    reactor:'O núcleo descarrega energia no piso. Leia o aviso, saia da área ou pule no momento certo.',
-    void:'Uma plataforma suspensa no vazio. A arena mais ampla exige controle de distância.'
+    island:'Uma ilha cercada pelo mar. A arena entre rochas e palmeiras abre espaço para esquivas e avanços rápidos.',
+    nightclub:'A pista vira arena no meio da festa. Luzes, DJ e mezaninos cercam um espaço livre para manter a pressão.',
+    seaside:'Uma arena ampla na areia, entre o mar e o calçadão. Circule, mude de ângulo e controle a distância ao entardecer.',
+    helipad:'O duelo acontece em um heliponto elevado enquanto dois helicópteros colidem de frente no céu. Mantenha o foco e domine a plataforma.'
   };
   function load(key, fallback) { try { const value = JSON.parse(localStorage.getItem(key)); return value === null ? fallback : value; } catch (_) { return fallback; } }
   function save(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {} }
@@ -27,22 +42,28 @@
     shake: !prefersReduced && (!stored || stored.shake !== false),
     music: !stored || stored.music !== false,
     sound: !stored || stored.sound !== false,
-    arena: stored && arenaNames[stored.arena] ? stored.arena : 'skyline',
-    difficulty: stored && levelNames[stored.difficulty] ? stored.difficulty : 'normal'
+    showFps: !!(stored && stored.showFps),
+    quality: stored && ['auto','high','low'].includes(stored.quality) ? stored.quality : 'auto',
+    arena: stored && arenaIds.includes(stored.arena) ? stored.arena : 'island',
+    difficulty: stored && levelNames[stored.difficulty] ? stored.difficulty : 'normal',
+    character: stored && rosterIds.includes(stored.character) ? stored.character : 'veterano',
+    opponent: stored && rosterIds.includes(stored.opponent) ? stored.opponent : 'titan'
   };
   let mode = 'menu', scene, state, run = null, pendingUpgrade = 'power';
   let online = null, onlineEvents = [], playerId = 0, previousPose = null;
-  let qualityMode = 'auto';
-  const governor = NeonPerformance.createGovernor();
+  let qualityMode = settings.quality, quality = qualityMode === 'high' ? 'high' : 'low', resolutionScale = 1;
+  const governor = NeonPerformance.createGovernor({quality,scale:resolutionScale,allowHigh:qualityMode === 'auto'});
   let previous = performance.now(), accumulator = 0, hudTime = 0, toastTime = 0, comboTime = 0, hitStop = 0;
-  let lastAnnouncement = '', resultRecorded = false, quality = 'low';
-  let renderFrames = 0, qualityManual = false;
+  let lastAnnouncement = '', resultRecorded = false;
+  let renderFrames = 0;
+  let fpsElapsed = 0, fpsFrames = 0;
   const graphics = {status:'ready',losses:0,recoveries:0};
   let animationFrame = 0, recoveryTimer = 0, restoreTimer = 0;
   let best = Math.max(0, Number(load('neon-clash-wins', 0)) || 0);
   let bestRun = load('neon-clash-ascent-best', {cleared:0,score:0});
   if (!bestRun || !Number.isInteger(bestRun.cleared) || bestRun.cleared < 0 || bestRun.cleared > 5 || !Number.isFinite(bestRun.score) || bestRun.score < 0) bestRun = {cleared:0,score:0};
   let stats = freshStats(), drag = null, damageTime = 0, locked = true, footstep = 0;
+  const comboRoute = [];
   const sound = NeonAudio.create({enabled:settings.sound,music:settings.music,volume:settings.volume/100});
   function freshStats() { return {damage:0,taken:0,combo:0,parries:0}; }
   function show(id, visible) { if ($(id)) $(id).hidden = !visible; }
@@ -51,11 +72,12 @@
   function toast(message, duration) { text('combat-toast',message); $('combat-toast').classList.add('show'); toastTime = duration || 1.6; }
   function persist() { save('neon-clash-settings-v2',settings); }
   function resetInputs() {
-    keys.clear(); touches.clear(); drag = null;
+    keys.clear(); touches.clear(); drag = null; mouseGuard = false; mouseLook = null;
     document.querySelectorAll('.touch-controls .active').forEach(el => el.classList.remove('active'));
   }
   function releaseMouse() { if (document.pointerLockElement) document.exitPointerLock(); }
   function clearFeedback() {
+    comboRoute.length = 0;
     lastAnnouncement = ''; show('announcement',false); show('combo-display',false); show('hazard-warning',false);
     $('combat-toast').classList.remove('show'); toastTime = comboTime = hitStop = damageTime = 0;
     if ($('damage-flash')) $('damage-flash').style.opacity = '0';
@@ -64,14 +86,42 @@
     text('best-score',`${best} ${best === 1 ? 'VITÓRIA' : 'VITÓRIAS'}`);
     text('best-run',`ASCENSÃO ${bestRun.cleared || 0}/5 · ${(bestRun.score || 0).toLocaleString('pt-BR')} PTS`);
   }
-  function selectedArena() { return $('arena-select') && arenaNames[$('arena-select').value] ? $('arena-select').value : 'skyline'; }
+  function selectedArena() { return $('arena-select') && arenaIds.includes($('arena-select').value) ? $('arena-select').value : 'island'; }
+  function characterInfo(id) { return FightSim.characters && FightSim.characters[id] || {name:({veterano:'Epstein',titan:'Diddy',mimico:'Oliver Tree',orelha:'Orelha',pixel:'Raulzito'})[id] || 'Lutador'}; }
+  function fighterName(fighter) { return characterInfo(fighter.character).name.toUpperCase(); }
+  function selectedCharacters() {
+    const rival = run ? rosterIds[(rosterIds.indexOf(settings.opponent) + run.stage) % rosterIds.length] : settings.opponent;
+    return [settings.character,rival];
+  }
+  function updateCharacterSelection() {
+    const id=settings.character, info=characterInfo(id), note=rosterNotes[id];
+    document.querySelectorAll('[data-character]').forEach(button => {
+      const selected=button.dataset.character===id;
+      button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));
+      button.disabled=!!online;
+    });
+    text('selected-character-name',info.name.toUpperCase());text('character-style',note.style);
+    text('character-description',note.bio);
+    text('character-special',info.specialName || note.special);text('character-super',info.superName || note.super);
+    const specialMove=FightSim.getMove({id:0,character:id},'special');
+    text('character-special-cost',specialMove.cost+' ENERGIA');
+    text('character-extra',id==='orelha' ? 'Q · Giro da Orla   /   No ar + Q · Salto do Casamento   /   Shift · Esquiva do Mascote' : id==='mimico' ? 'Q · Chute Rotor / No ar + Q · Pouso de Impacto / E · Hélice em 360° / R · Decolagem Total' : 'J/K/L encadeiam golpes. I apara no impacto; Shift sai da pressão. Câmera automática no alvo.');
+    if ($('opponent-select')) $('opponent-select').value=settings.opponent;
+    if (mode==='menu' && state) {
+      state.fighters[0].character=id;state.fighters[1].character=settings.opponent;
+    }
+  }
   function disconnectOnline() {
     const client = online; online = null; onlineEvents = [];
-    if (client) client.leave();
+    if (client) {
+      client.leave();
+      text('online-status','Você saiu da sala. Crie outra ou entre com um código.');
+    }
     playerId = 0; document.body.classList.remove('local-crimson');
     ['host-button','join-button'].forEach(id => { $(id).disabled = false; });
     show('room-invite',false); show('leave-room-button',false); show('network-indicator',false);
     text('connection-label','SOLO · OFFLINE');
+    updateCharacterSelection();
   }
   function startOnlineMatch(next) {
     if (!online) return;
@@ -80,11 +130,11 @@
     stats = freshStats(); resultRecorded = false; mode = 'fight';
     document.body.classList.remove('in-menu');
     document.body.classList.toggle('local-crimson',playerId === 1);
-    scene.setArena(state.arena); scene.resetCamera(state); scene.setLockOn(locked); sound.setArena(state.arena);
+    locked = true; scene.setArena(state.arena); scene.resetCamera(state); scene.setLockOn(locked); sound.setArena(state.arena);
     ['menu-screen','pause-screen','result-screen','upgrade-choices','run-progress'].forEach(id => show(id,false));
     ['fight-hud','fight-footer','pause-button','lock-status','fight-reticle','camera-hint','network-indicator'].forEach(id => show(id,true));
-    show('camera-button',!touchDevice); show('touch-controls',touchDevice); show('restart-button',false);
-    text('player-name',playerId === 0 ? 'AZURE' : 'CRIMSON'); text('enemy-name',playerId === 0 ? 'CRIMSON' : 'AZURE');
+    show('camera-button',mouseDevice); show('touch-controls',touchDevice); show('restart-button',false);
+    text('player-name',fighterName(state.fighters[playerId])); text('enemy-name',fighterName(state.fighters[1-playerId]));
     text('fight-arena-name',arenaNames[state.arena]); text('fight-mode','ONLINE 1 × 1');
     text('match-label','MELHOR DE 3'); text('enemy-energy-label','JOGADOR ONLINE');
     text('pause-description','A partida online continua. Seus comandos ficam soltos enquanto este menu estiver aberto.');
@@ -107,7 +157,7 @@
         ['host-button','join-button'].forEach(id => { $(id).disabled = busy; });
         show('leave-room-button',busy); show('room-invite',info.phase === 'waiting' && !!info.code);
         text('invite-code',info.code || '');
-        text('online-status',info.message || (info.phase === 'connecting' ? 'Conectando…' : 'Sala conectada.'));
+        text('online-status',info.message || (info.phase === 'connecting' ? 'Conectando…' : busy ? 'Sala conectada.' : 'Você saiu da sala. Crie outra ou entre com um código.'));
         text('connection-label',info.phase === 'waiting' ? 'SALA · AGUARDANDO' : busy ? 'ONLINE · 1 × 1' : 'SOLO · OFFLINE');
         const ping = info.ping === null ? 'medindo ping…' : `${info.ping} ms`;
         text('network-indicator',`SALA ${info.code} · ${ping}`);
@@ -125,7 +175,8 @@
       onEvents(incoming) { if (online === client) onlineEvents.push(...incoming); }
     });
     online = client;
-    if (code) client.join(code); else client.host(selectedArena());
+    updateCharacterSelection();
+    if (code) client.join(code,settings.character); else client.host(selectedArena(),settings.character);
   }
   function updateSelection() {
     const arena = selectedArena(); settings.arena = arena; settings.difficulty = $('difficulty').value; persist();
@@ -133,11 +184,12 @@
       const selected = button.dataset.arena === arena; button.classList.toggle('selected',selected); button.setAttribute('aria-pressed',String(selected));
     });
     text('arena-name',arenaNames[arena]); text('arena-description',arenaDescriptions[arena]);
-    text('arena-caption-detail',{skyline:'NEO CITY · ACIMA DO CAOS',reactor:'ZONA ZERO · NÚCLEO INSTÁVEL',void:'DIMENSÃO X · ALÉM DO SINAL'}[arena]);
-    text('arena-number',`${String(['skyline','reactor','void'].indexOf(arena)+1).padStart(2,'0')} / 03`);
+    text('arena-caption-detail',arenaCaptions[arena]);
+    text('arena-number',`${String(arenaIds.indexOf(arena)+1).padStart(2,'0')} / ${String(arenaIds.length).padStart(2,'0')}`);
     text('difficulty-description',levelDescriptions[settings.difficulty]);
-    text('mode-description',$('mode-select') && $('mode-select').value === 'ascent' ? 'Cinco duelos. Uma melhoria por vitória. A última etapa exige vencer o Pesadelo.' : 'Duelo livre: escolha arena e rival. Quem vencer dois rounds leva a noite.');
+    text('mode-description',$('mode-select') && $('mode-select').value === 'ascent' ? 'Cinco duelos pelas quatro arenas. Uma melhoria por vitória. Volte à arena inicial para enfrentar o Pesadelo na final.' : 'Duelo livre: escolha arena e rival. Quem vencer dois rounds leva a partida.');
     if (mode === 'menu' && scene) { state.arena = arena; scene.setArena(arena); }
+    updateCharacterSelection();
   }
   function startMatch(training, continuing) {
     if (!scene || graphics.status !== 'ready') return;
@@ -145,20 +197,20 @@
     resetInputs(); sound.unlock(); sound.play('click'); clearFeedback(); accumulator = 0;
     if (!continuing) run = !training && $('mode-select') && $('mode-select').value === 'ascent' ? NeonRun.create(selectedArena(),$('difficulty').value) : null;
     const stage = run ? NeonRun.stage(run) : null;
-    state = FightSim.createMatch({difficulty:stage ? stage.difficulty : $('difficulty').value, arena:stage ? stage.arena : selectedArena(), training:!!training, upgrades:run ? run.upgrades : undefined});
-    scene.setArena(state.arena); scene.resetCamera(state); scene.setLockOn(locked); sound.setArena(state.arena);
+    state = FightSim.createMatch({difficulty:stage ? stage.difficulty : $('difficulty').value, arena:stage ? stage.arena : selectedArena(), training:!!training, upgrades:run ? run.upgrades : undefined,characters:selectedCharacters()});
+    locked = true; scene.setArena(state.arena); scene.resetCamera(state); scene.setLockOn(locked); sound.setArena(state.arena);
     mode = 'fight'; stats = freshStats(); resultRecorded = false;
     document.body.classList.remove('in-menu');
     ['menu-screen','pause-screen','result-screen'].forEach(id => show(id,false));
     ['fight-hud','fight-footer','pause-button','camera-button','lock-status','fight-reticle','camera-hint'].forEach(id => show(id,true));
-    show('camera-button',!touchDevice);
+    show('camera-button',mouseDevice);
     show('touch-controls',touchDevice); show('upgrade-choices',false); show('run-progress',!!run);
     text('fight-arena-name',arenaNames[state.arena]);
     text('fight-mode',training ? 'TREINO LIVRE' : run ? 'ASCENSÃO' : 'DUELO');
     text('match-label',training ? 'TREINO LIVRE' : 'MELHOR DE 3');
     text('enemy-energy-label',training ? 'ALVO DE TREINO' : levelNames[state.difficulty]);
-    text('player-name','AZURE'); text('enemy-name','CRIMSON');
-    text('pause-description','A cidade pode esperar um pouco.'); show('restart-button',true); $('rematch-button').disabled = false;
+    text('player-name',fighterName(state.fighters[0])); text('enemy-name',fighterName(state.fighters[1]));
+    text('pause-description','A arena pode esperar um pouco.'); show('restart-button',true); $('rematch-button').disabled = false;
     text('run-progress',stage ? `ASCENSÃO ${stage.index+1}/5 · ${stage.name.toUpperCase()}` : '');
     previous = performance.now(); updateHud(); updateCameraHud();
     if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
@@ -166,7 +218,7 @@
   function menu() {
     disconnectOnline(); previousPose = null;
     mode = 'menu'; run = null; releaseMouse(); resetInputs(); clearFeedback();
-    state = FightSim.createMatch({training:true,arena:selectedArena()}); state.phase = 'menu'; state.events.length = 0;
+    state = FightSim.createMatch({training:true,arena:selectedArena(),characters:selectedCharacters()}); state.phase = 'menu'; state.events.length = 0;
     state.fighters[0].x = -1.5; state.fighters[1].x = 1.5;
     document.body.classList.add('in-menu');
     ['fight-hud','fight-footer','pause-button','camera-button','lock-status','fight-reticle','camera-hint','pause-screen','result-screen','touch-controls','run-progress','threat-indicator'].forEach(id => show(id,false));
@@ -226,8 +278,17 @@
     if (name === 'lock') { toggleLock(); return; }
     if (mode !== 'fight') return;
     sound.unlock();
-    if (name === 'special' && state.phase === 'fight' && state.fighters[playerId].energy < 40) toast('ESPECIAL PRECISA DE 40 ENERGIA',1);
+    const currentMove=FightSim.getMove(state.fighters[playerId],name);
+    if (name === 'special' && state.phase === 'fight' && state.fighters[playerId].energy < currentMove.cost) toast(`ESPECIAL PRECISA DE ${currentMove.cost} ENERGIA`,1);
+    if (name === 'super' && state.phase === 'fight' && state.fighters[playerId].energy < 100) toast('SUPER PRECISA DE 100 ENERGIA',1);
+    if (!online) {
+      // Match the online input-before-action order, including keys pressed
+      // or released since the last simulation frame.
+      const input=readInput(), fighter=state.fighters[playerId];
+      fighter._inputX=input.x;fighter._inputZ=input.z;
+    }
     const accepted = online ? online.action(name) : FightSim.act(state,0,name);
+    if (!online && accepted) updateHud();
     if (accepted && name === 'jump') sound.play(name);
   }
   function toggleLock() {
@@ -236,25 +297,25 @@
   }
   function updateCameraHud() {
     const captured = document.pointerLockElement === $('game-canvas');
-    text('lock-status',locked ? '⊙ ALVO FIXADO · TAB' : '○ CÂMERA LIVRE · TAB');
+    const lockShortcut = mouseDevice ? 'TAB / MEIO' : 'TOQUE';
+    text('lock-status',(locked ? '⊙ ALVO FIXADO · ' : '○ CÂMERA LIVRE · ')+lockShortcut);
     if ($('lock-status')) $('lock-status').setAttribute('aria-pressed',String(locked));
-    text('camera-hint',touchDevice ? 'ARRASTE NA ARENA PARA GIRAR A CÂMERA' : captured ? 'MOUSE CÂMERA · CLIQUE SOCO · DIREITO CHUTE · ESC LIBERA' : 'ARRASTE O MOUSE OU Q/E PARA GIRAR · C RECENTRALIZA');
+    text('camera-hint',captured ? 'MOUSE OLHA · ESQUERDO GOLPE · DIREITO DEFESA · MEIO ALVO · ESC LIBERA' : touchDevice && !mouseDevice ? 'ARRASTE NA ARENA PARA GIRAR · DEFESA NO IMPACTO APARA' : 'CÂMERA AUTOMÁTICA · WASD MOVER · J/K/L GOLPES · I DEFESA · SHIFT ESQUIVA');
     text('camera-button',captured ? 'MOUSE ATIVO' : 'CAPTURAR MOUSE');
   }
   async function captureMouse() {
-    if (mode !== 'fight' || touchDevice) return;
+    if (mode !== 'fight' || !mouseDevice) return;
     try { if (document.pointerLockElement) { releaseMouse(); return; } await $('game-canvas').requestPointerLock(); }
-    catch (_) { toast('ARRASTE NA ARENA OU USE Q/E PARA GIRAR A CÂMERA'); }
+    catch (_) { toast('USE O BOTÃO DO MEIO OU Z/X PARA GIRAR A CÂMERA'); }
   }
-  const actionKeys = {KeyJ:'punch',KeyK:'kick',KeyL:'special',Space:'jump',ShiftLeft:'dodge',ShiftRight:'dodge'};
-  const playKeys = new Set(['KeyW','KeyA','KeyS','KeyD','KeyI','KeyF','KeyQ','KeyE','KeyC','Tab','ArrowUp','ArrowDown','ArrowLeft','ArrowRight',...Object.keys(actionKeys)]);
+  const actionKeys = {KeyJ:'punch',KeyK:'kick',KeyL:'special',KeyQ:'kick',KeyE:'special',KeyR:'super',Space:'jump',ShiftLeft:'dodge',ShiftRight:'dodge'};
+  const playKeys = new Set(['KeyW','KeyA','KeyS','KeyD','KeyI','KeyF','KeyZ','KeyX','KeyC','Tab','ArrowUp','ArrowDown','ArrowLeft','ArrowRight',...Object.keys(actionKeys)]);
   window.addEventListener('keydown',event => {
     if (/^(INPUT|SELECT|TEXTAREA)$/.test(event.target.tagName)) return;
     if (mode === 'fight' && playKeys.has(event.code)) event.preventDefault();
     if (event.repeat) return;
     if (event.code === 'Escape') { if (mode === 'paused') resume(); else pause(); return; }
     if (event.code === 'KeyM') { toggleSound(); return; }
-    if (event.code === 'KeyR' && (mode === 'fight' || mode === 'paused')) { if (!online) startMatch(state.training,!!run); return; }
     if (mode !== 'fight') return;
     keys.add(event.code);
     if (event.code === 'Tab') toggleLock();
@@ -268,37 +329,85 @@
     updateCameraHud();
     if (!document.pointerLockElement && mode === 'fight') pause();
   });
-  document.addEventListener('pointerlockerror',() => toast('USE ARRASTAR OU Q/E PARA CONTROLAR A CÂMERA'));
+  document.addEventListener('pointerlockerror',() => toast('USE O BOTÃO DO MEIO OU Z/X PARA GIRAR A CÂMERA'));
   const canvas = $('game-canvas');
+  // Mouse edges are separate from Pointer Events: pressing/releasing a second
+  // button only generates pointermove, which would lose attacks or stick guard.
+  canvas.addEventListener('mousedown',event => {
+    if (mode !== 'fight' || event.button < 0 || event.button > 2 || event.sourceCapabilities?.firesTouchEvents) return;
+    event.preventDefault();sound.unlock();
+    if (event.button === 0) action('punch');
+    else if (event.button === 2) mouseGuard = true;
+    else if (document.pointerLockElement === canvas) toggleLock();
+    else mouseLook = {x:event.clientX,y:event.clientY,moved:false};
+  });
+  function releaseMouseButton(event) {
+    if (event.button === 2) mouseGuard = false;
+    if (event.button === 1 && mouseLook) {
+      const clicked = !mouseLook.moved;
+      mouseLook = null;
+      if (clicked) toggleLock();
+    }
+  }
+  window.addEventListener('mousemove',event => {
+    if (mode !== 'fight' || event.sourceCapabilities?.firesTouchEvents) return;
+    if (Number.isInteger(event.buttons)) {
+      if (!(event.buttons & 2)) mouseGuard = false;
+      if (!(event.buttons & 4)) mouseLook = null;
+    }
+    const sensitivity = .0035 * settings.sensitivity;
+    if (document.pointerLockElement === canvas) scene.rotateCamera(event.movementX*sensitivity,event.movementY*sensitivity);
+    else if (mouseLook) {
+      const dx=event.clientX-mouseLook.x, dy=event.clientY-mouseLook.y;
+      if (!mouseLook.moved && Math.hypot(dx,dy)<5) return;
+      mouseLook.moved = true;
+      scene.rotateCamera(dx*sensitivity,dy*sensitivity);
+      mouseLook.x = event.clientX; mouseLook.y = event.clientY;
+    }
+  });
+  canvas.addEventListener('mouseup',releaseMouseButton);
+  window.addEventListener('mouseup',releaseMouseButton);
   canvas.addEventListener('pointerdown',event => {
-    if (mode !== 'fight') return;
+    if (mode !== 'fight' || event.pointerType !== 'touch') return;
     sound.unlock();
-    if (document.pointerLockElement === canvas) { if (event.button === 0) action('punch'); else if (event.button === 2) action('kick'); return; }
+    // Suppress touch-generated mouse edges without blocking our camera drag.
+    event.preventDefault();
     if (drag) return;
     drag = {id:event.pointerId,x:event.clientX,y:event.clientY};
     try { canvas.setPointerCapture(event.pointerId); } catch (_) {}
   });
   window.addEventListener('pointermove',event => {
-    if (mode !== 'fight') return;
+    if (mode !== 'fight' || event.pointerType !== 'touch') return;
     const sensitivity = .0035 * settings.sensitivity;
-    if (document.pointerLockElement === canvas) scene.rotateCamera(event.movementX*sensitivity,event.movementY*sensitivity);
-    else if (drag && drag.id === event.pointerId) {
+    if (drag && drag.id === event.pointerId) {
       scene.rotateCamera((event.clientX-drag.x)*sensitivity,(event.clientY-drag.y)*sensitivity);
       drag.x = event.clientX; drag.y = event.clientY;
     }
   });
-  ['pointerup','pointercancel','lostpointercapture'].forEach(name => canvas.addEventListener(name,event => { if (drag && drag.id === event.pointerId) drag = null; }));
+  function releasePointer(event) {
+    if (event.pointerType === 'mouse' && (event.type === 'pointercancel' || event.type === 'lostpointercapture')) { mouseGuard = false; mouseLook = null; }
+    if (drag && drag.id === event.pointerId) drag = null;
+  }
+  ['pointerup','pointercancel','lostpointercapture'].forEach(name => canvas.addEventListener(name,releasePointer));
+  window.addEventListener('pointerup',releasePointer);
   canvas.addEventListener('contextmenu',event => event.preventDefault());
+  canvas.addEventListener('auxclick',event => { if (event.button === 1) event.preventDefault(); });
   canvas.addEventListener('wheel',event => { if (mode === 'fight') { event.preventDefault(); scene.zoomCamera(Math.sign(event.deltaY)*.6); } },{passive:false});
   document.querySelectorAll('[data-control]').forEach(button => {
     const name = button.dataset.control;
     button.addEventListener('pointerdown',event => {
       event.preventDefault(); if (mode !== 'fight') return;
       try { button.setPointerCapture(event.pointerId); } catch (_) {}
-      touches.add(name); button.classList.add('active');
+      if (!touches.has(name)) touches.set(name,new Set());
+      touches.get(name).add(event.pointerId); button.classList.add('active');
       if (!['left','right','up','down','block','sprint'].includes(name)) action(name);
     });
-    const release = event => { event.preventDefault(); touches.delete(name); button.classList.remove('active'); };
+    const release = event => {
+      event.preventDefault();
+      const contacts = touches.get(name);
+      if (contacts) { contacts.delete(event.pointerId); if (!contacts.size) touches.delete(name); }
+      button.classList.toggle('active',touches.has(name));
+    };
     ['pointerup','pointercancel','lostpointercapture'].forEach(name => button.addEventListener(name,release));
     button.addEventListener('contextmenu',event => event.preventDefault());
   });
@@ -306,45 +415,58 @@
     const x = Number(keys.has('KeyD') || keys.has('ArrowRight') || touches.has('right')) - Number(keys.has('KeyA') || keys.has('ArrowLeft') || touches.has('left'));
     const z = Number(keys.has('KeyS') || keys.has('ArrowDown') || touches.has('down')) - Number(keys.has('KeyW') || keys.has('ArrowUp') || touches.has('up'));
     const world = scene.cameraInput(x,z);
-    return {x:world.x,z:world.z,block:keys.has('KeyI') || touches.has('block'),sprint:keys.has('KeyF') || touches.has('sprint')};
+    return {x:world.x,z:world.z,block:mouseGuard || keys.has('KeyI') || touches.has('block'),sprint:keys.has('KeyF') || touches.has('sprint')};
   }
   function events(incoming) {
     for (const event of incoming || state.events.splice(0)) {
       const player = state.fighters[playerId], source = state.fighters[event.attacker ?? event.target ?? playerId];
       const yaw = scene.cameraInfo().yaw;
       const pan = Math.max(-.8,Math.min(.8,-((event.x ?? source.x)-player.x)*Math.cos(yaw)*.13 + ((event.z ?? source.z)-player.z)*Math.sin(yaw)*.13));
-      sound.play(event.type,event.move,pan);
+      sound.play(event.type,event.move,pan,source.character);
       if (event.type === 'attack' && scene.effect) scene.effect('attack',source);
+      if (event.type === 'attack' && event.attacker === playerId) {
+        if ((event.chain || 1) === 1 && player.combo < 2) comboRoute.length = 0;
+        comboRoute.push(({punch:'J',kick:'K',special:'L',super:'R'})[event.move] || '•');
+        if (comboRoute.length > 8) comboRoute.shift();
+        text('combo-route',comboRoute.join(' › '));
+      }
       if (['hit','block','parry','hazardHit'].includes(event.type)) {
-        const color = event.type === 'parry' ? '#ffffff' : event.type === 'block' ? '#dfff80' : event.type === 'hazardHit' ? '#ffad42' : event.attacker === 0 ? '#65edff' : '#ff7459';
-        scene.impact(event.x ?? source.x,event.z ?? source.z,color,event.type === 'parry' ? 1.3 : event.type === 'block' ? .3 : event.move === 'special' ? 1.6 : .7);
+        const feedback = NeonFeedback.impact(event,prefersReduced || !settings.shake);
+        const color = event.type === 'parry' ? '#ffffff' : event.kind === 'oil' ? '#a6843f' : event.type === 'block' ? '#dfff80' : event.type === 'hazardHit' ? '#ffad42' : event.attacker === 0 ? '#65edff' : '#ff7459';
+        scene.impact(event.x ?? source.x,event.z ?? source.z,color,feedback.power,feedback);
         if (event.attacker === playerId) stats.damage += event.damage || 0;
         if (event.target === playerId) stats.taken += event.damage || 0;
-        if (event.type === 'parry') { if (event.target === playerId) stats.parries++; toast(event.target === playerId ? 'DEFESA PERFEITA · CONTRA-ATAQUE!' : 'O RIVAL APAROU SEU GOLPE',1.2); hitStop = prefersReduced ? 0 : .065; }
+        if (event.type === 'parry') { if (event.target === playerId) stats.parries++; toast(event.target === playerId ? 'DEFESA PERFEITA · CONTRA-ATAQUE!' : 'O RIVAL APAROU SEU GOLPE',1.2); hitStop = feedback.pause; }
         if (event.type === 'hit') {
-          hitStop = prefersReduced ? 0 : event.move === 'special' ? .055 : .022;
+          hitStop = feedback.pause;
           if (event.attacker === playerId) stats.combo = Math.max(stats.combo,event.combo || 1);
-          if (event.attacker === playerId && event.combo > 1) { text('combo-count',event.combo); show('combo-display',true); comboTime = 1.5; }
-          if (event.move === 'special') toast(event.attacker === playerId ? 'NEON IMPACT' : 'IMPACTO CRÍTICO',1.1);
+          if (event.attacker === playerId && event.combo > 1) {
+            text('combo-count',event.combo);text('combo-tier',event.combo>=8?'IMPLACÁVEL':event.combo>=5?'DOMÍNIO':event.combo>=3?'PRESSÃO':'RITMO');
+            $('combo-display').classList.toggle('combo-hot',event.combo>=5);show('combo-display',true);comboTime=1.5;
+          }
+          if (event.move === 'special' || event.move === 'super') toast((event.moveName || (event.move === 'super' ? characterInfo(source.character).superName : characterInfo(source.character).specialName) || 'IMPACTO').toUpperCase(),1.1);
         }
         if (event.target === playerId && event.damage > 0) damageTime = .24;
       }
-      if (event.type === 'guardBreak') toast(event.target === playerId ? 'GUARDA QUEBRADA · SAIA DA PRESSÃO' : 'GUARDA ABERTA · ATAQUE!',1.3);
+      if (event.type === 'guardBreak') toast(event.target === playerId ? 'POSTURA QUEBRADA · SAIA DA PRESSÃO' : 'POSTURA QUEBRADA · FINALIZE!',1.3);
+      if (event.type === 'perfectDodge' && event.fighter === playerId) toast('ESQUIVA PERFEITA · +ENERGIA / POSTURA',.85);
       if (event.type === 'hazardWarning') toast('⚠ SOBRECARGA · SAIA DO CÍRCULO',1.6);
       if (event.type === 'roundStart') { comboTime = 0; show('combo-display',false); scene.resetCamera(state); }
       if (event.type === 'matchEnd') result();
     }
   }
   function announcement() {
+    const cinematic = mode === 'fight' && state.phase === 'intro' && FightSim.introKind(state) && state.phaseTime < 5.05;
+    document.body.classList.toggle('in-cutscene',cinematic);
     if (mode !== 'fight') return;
     let title = '', overline = '', subtitle = '';
     if (state.phase === 'intro') {
-      title = state.phaseTime < 1.3 ? state.training ? 'TREINO LIVRE' : `ROUND ${String(state.round).padStart(2,'0')}` : 'LUTE!';
+      title = cinematic ? '' : state.phaseTime < 1.3 ? state.training ? 'TREINO LIVRE' : `ROUND ${String(state.round).padStart(2,'0')}` : 'LUTE!';
       overline = run ? `ASCENSÃO ${run.stage+1}/5 · ${NeonRun.stage(run).name.toUpperCase()}` : `${arenaNames[state.arena]}`;
       subtitle = state.training ? 'ALVO PASSIVO · EXPERIMENTE COMBOS E ESQUIVAS' : online ? 'DUELO ONLINE · VENÇA DOIS ROUNDS' : `${levelNames[state.difficulty]} · VENÇA DOIS ROUNDS`;
     } else if (state.phase === 'roundOver') {
       title = state.roundWinner === 'draw' ? 'EMPATE' : state.fighters.some(f => f.hp <= 0) ? 'K.O.' : 'TEMPO!';
-      overline = 'FIM DO ROUND'; subtitle = state.roundWinner === 'draw' ? 'A LUTA CONTINUA' : state.roundWinner === 0 ? 'ROUND PARA AZURE' : 'ROUND PARA CRIMSON';
+      overline = 'FIM DO ROUND'; subtitle = state.roundWinner === 'draw' ? 'A LUTA CONTINUA' : `ROUND PARA ${fighterName(state.fighters[state.roundWinner])}`;
     }
     if (title !== lastAnnouncement) { lastAnnouncement = title; text('announcement-title',title); text('announcement-overline',overline); text('announcement-subtitle',subtitle); }
     show('announcement',!!title);
@@ -356,9 +478,17 @@
       $(prefix+'-health').style.transform = `scaleX(${hp})`; $(prefix+'-trail').style.transform = `scaleX(${hp})`;
       $(prefix+'-energy').style.transform = `scaleX(${f.energy / f.maxEnergy})`; $(prefix+'-guard').style.transform = `scaleX(${f.guard / 100})`;
       text(prefix+'-hp',Math.ceil(f.hp)); $(prefix+'-health').parentElement.setAttribute('aria-label',`Vida ${Math.ceil(f.hp)} de ${f.maxHp}`);
+      $(prefix+'-guard').parentElement.setAttribute('aria-valuenow',String(Math.round(f.guard)));
+      $(prefix+'-guard').parentElement.setAttribute('aria-label',`Postura ${Math.round(f.guard)} de 100`);
     }
     const player = state.fighters[playerId], enemy = state.fighters[1-playerId];
-    text('player-energy-label',player.energy >= 40 ? 'ESPECIAL PRONTO · L' : 'RECUPERE ENERGIA');
+    if ($('combo-window-fill')) $('combo-window-fill').style.transform = `scaleX(${Math.min(1,Math.max(0,(player._comboTimer||0)/1.2))})`;
+    const currentMove = FightSim.getMove(player);
+    const chainReady = player._contact && currentMove && player.actionTime >= currentMove.windup + .06 && player._chainIndex < (player._contactBlocked?3:8) && !currentMove.channel;
+    text('combo-next',player._buffer ? 'PRÓXIMO GOLPE PREPARADO' : chainReady ? 'J / K / L · CONTINUE' : player.combo>1 ? 'MANTENHA A PRESSÃO' : '');
+    if ($('combo-display')) $('combo-display').classList.toggle('combo-open',!!chainReady);
+    text('player-energy-label',player.energy >= 100 ? 'SUPER PRONTO · R' : player.energy >= FightSim.getMove(player,'special').cost ? 'ESPECIAL PRONTO · E' : 'RECUPERE ENERGIA');
+    if ($('super-indicator')) { $('super-indicator').classList.toggle('ready',player.energy>=100); text('super-indicator',player.energy>=100 ? 'R · '+(characterInfo(player.character).superName || 'SUPER').toUpperCase() : 'R · SUPER '+Math.floor(player.energy)+' / 100'); }
     text('round-time',state.training ? '∞' : Math.ceil(Math.max(0,state.timeLeft)).toString().padStart(2,'0'));
     text('round-label',state.training ? 'TREINO' : `ROUND ${String(state.round).padStart(2,'0')}`);
     document.querySelector('.clock').classList.toggle('urgent',!state.training && state.timeLeft < 15);
@@ -366,7 +496,7 @@
     const hazard = state.hazard;
     show('hazard-warning',mode === 'fight' && !!hazard && (hazard.warning || hazard.active));
     text('hazard-warning',hazard && hazard.active ? '⚠ DESCARGA ATIVA · EVITE O CÍRCULO' : '⚠ REATOR CARREGANDO · SAIA DO CÍRCULO');
-    const attack = FightSim.moves[enemy.action];
+    const attack = FightSim.getMove(enemy);
     const dangerous = mode === 'fight' && state.phase === 'fight' && attack && attack.damage && enemy.actionTime < attack.windup && Math.hypot(enemy.x-player.x,enemy.z-player.z) < 5;
     show('threat-indicator',!!dangerous);
     text('threat-indicator',enemy.action === 'special' ? '⚡ ESPECIAL · ESQUIVE OU APARE' : enemy.action === 'kick' ? '↗ CHUTE CARREGANDO' : '• ATAQUE');
@@ -380,14 +510,27 @@
     text('quality-button',qualityMode === 'auto' ? 'AUTO' : quality === 'high' ? 'HQ' : 'LQ');
     $('quality-button').setAttribute('aria-label',`Qualidade gráfica ${qualityMode === 'auto' ? 'automática' : quality === 'high' ? 'alta' : 'leve'}`);
   }
+  function setResolutionScale(value) {
+    resolutionScale = scene && scene.setResolutionScale ? scene.setResolutionScale(value) : value;
+  }
+  function resetGovernor() {
+    governor.reset({quality,scale:resolutionScale,allowHigh:qualityMode === 'auto'});
+  }
   function chooseQuality() {
     if (graphics.status !== 'ready') return;
     qualityMode = {auto:'high',high:'low',low:'auto'}[qualityMode];
-    qualityManual = qualityMode !== 'auto'; governor.reset();
-    if (scene.setResolutionScale) scene.setResolutionScale(1);
+    settings.quality = qualityMode; persist();
+    // Explicit HQ requests full resolution; AUTO inherits the measured safe scale.
+    if (qualityMode === 'high') setResolutionScale(1);
     setQuality(qualityMode === 'high' ? 'high' : 'low');
+    resetGovernor();
   }
   listen('host-button','click',() => connectOnline());
+  document.querySelectorAll('[data-character]').forEach(button => button.addEventListener('click',() => {
+    if (mode!=='menu' || online) return;
+    settings.character=button.dataset.character;persist();updateCharacterSelection();sound.unlock();sound.play('click');
+  }));
+  listen('opponent-select','change',() => { if (rosterIds.includes($('opponent-select').value)) { settings.opponent=$('opponent-select').value;persist();updateCharacterSelection(); } });
   listen('join-form','submit',event => { event.preventDefault(); connectOnline($('room-code').value.trim().toUpperCase()); });
   listen('leave-room-button','click',() => { disconnectOnline(); text('online-status','Sala encerrada. Crie outra ou entre com um código.'); });
   listen('copy-room-button','click',async () => {
@@ -403,6 +546,9 @@
   ['menu-button','result-menu-button'].forEach(id => listen(id,'click',menu));
   listen('brand-link','click',event => { event.preventDefault(); if (mode === 'fight') pause(); else if (mode === 'result') menu(); });
   listen('sound-button','click',toggleSound); listen('camera-button','click',captureMouse); listen('lock-status','click',toggleLock);
+  listen('preview-left','click',() => {if(mode==='menu'&&scene)scene.rotatePreview(-Math.PI/4);});
+  listen('preview-right','click',() => {if(mode==='menu'&&scene)scene.rotatePreview(Math.PI/4);});
+  listen('fps-toggle','change',() => {settings.showFps=$('fps-toggle').checked;persist();show('performance-readout',settings.showFps);});
   listen('quality-button','click',chooseQuality);
   listen('fullscreen-button','click',async () => { try { if(document.fullscreenElement) await document.exitFullscreen(); else await document.documentElement.requestFullscreen(); } catch (_) { toast('TELA CHEIA INDISPONÍVEL'); } });
   document.querySelectorAll('[data-arena]').forEach(button => button.addEventListener('click',() => { $('arena-select').value = button.dataset.arena; sound.unlock(); sound.play('click'); updateSelection(); }));
@@ -428,7 +574,7 @@
     graphics.status = 'recovering'; graphics.losses++;
     if (scene) scene.prepareContextRecovery();
     // A recovered driver stays in the safe tier until the player explicitly changes it.
-    quality = 'low'; qualityMode = 'low'; qualityManual = true; governor.reset(); accumulator = hitStop = 0; previousPose = null;
+    quality = 'low'; qualityMode = settings.quality = 'low'; persist(); resetGovernor(); accumulator = hitStop = 0; previousPose = null;
     pause(); resetInputs(); sound.tick(state,false);
     text('error-eyebrow','RECONSTRUINDO A ARENA'); text('error-title','UM INSTANTE.');
     text('error-message',online ? 'O navegador reiniciou o gráfico 3D. Seus comandos foram soltos; o duelo continua no servidor enquanto restauramos a arena.' : 'O navegador reiniciou o gráfico 3D. Estamos restaurando a arena; sua partida está preservada.');
@@ -445,8 +591,8 @@
       try {
         if (!scene.restoreContext()) throw new Error('O navegador não conseguiu restaurar o renderizador.');
         if (online && online.state) state = online.state;
-        if (scene.setResolutionScale) scene.setResolutionScale(1);
-        setQuality('low'); scene.update(0,state); scene.render();
+        setResolutionScale(resolutionScale);
+        setQuality('low'); resetGovernor(); scene.update(0,state); scene.render();
         graphics.status = 'ready'; graphics.recoveries++;
         clearTimeout(recoveryTimer); show('error-screen',false); show('error-retry',true);
         previous = performance.now(); accumulator = hudTime = 0;
@@ -467,7 +613,7 @@
     if (online && online.active) {
       state = online.state;
       if (mode === 'fight') {
-        const orbit = Number(keys.has('KeyE')) - Number(keys.has('KeyQ'));
+        const orbit = Number(keys.has('KeyX')) - Number(keys.has('KeyZ'));
         if (orbit) scene.rotateCamera(orbit*dt*1.7*settings.sensitivity,0);
       }
       accumulator = Math.min(.1,accumulator+dt);
@@ -482,7 +628,7 @@
         announcement();
       }
     } else if (mode === 'fight') {
-      const orbit = Number(keys.has('KeyE')) - Number(keys.has('KeyQ'));
+      const orbit = Number(keys.has('KeyX')) - Number(keys.has('KeyZ'));
       if (orbit) scene.rotateCamera(orbit*dt*1.7*settings.sensitivity,0);
       if (hitStop > 0) { hitStop -= dt; accumulator = 0; }
       else {
@@ -498,22 +644,27 @@
         footstep += dt; if (footstep > (p.sprinting ? .25 : .38)) { sound.play('step'); footstep = 0; }
       } else footstep = 0;
     }
-    sound.tick(state,mode === 'fight' && state.phase === 'fight');
+    sound.tick(state,mode === 'fight' && (state.phase === 'fight' || state.phase === 'intro'));
     if (mode !== 'paused' || online && online.active) {
       const renderState = online && online.active ? online.view(dt) : mode === 'fight' ? NeonPerformance.interpolate(previousPose,state,accumulator*60) : state;
       scene.update(dt,renderState || state);
       if(mode === 'menu') for(const f of state.fighters) f.actionTime += dt;
     }
     scene.render(); renderFrames++;
+    fpsElapsed += elapsed; fpsFrames++;
+    if (fpsElapsed >= 1) { text('performance-readout',Math.round(fpsFrames/fpsElapsed)+' FPS'); fpsElapsed=0;fpsFrames=0; }
     hudTime += dt; if(hudTime >= .05) { if(mode !== 'menu') updateHud(); hudTime = 0; }
     if(toastTime > 0) { toastTime -= dt; if(toastTime <= 0) $('combat-toast').classList.remove('show'); }
     if(comboTime > 0) { comboTime -= dt; if(comboTime <= 0) show('combo-display',false); }
     if(damageTime > 0) { damageTime = Math.max(0,damageTime-dt); if($('damage-flash')) $('damage-flash').style.opacity = String(damageTime * (prefersReduced ? .8 : 2)); }
-    if (!qualityManual && mode !== 'paused') {
-      const adjustment = governor.sample(elapsed);
+    if (mode === 'paused' || document.hidden) {
+      governor.sample(0,{allowUpgrade:false});
+    } else if (qualityMode !== 'high') {
+      const adjustment = governor.sample(elapsed,{allowUpgrade:mode === 'fight' && state.phase === 'fight'});
       if (adjustment) {
         if (quality !== adjustment.quality) setQuality(adjustment.quality);
-        if (scene.setResolutionScale) scene.setResolutionScale(adjustment.scale);
+        setResolutionScale(adjustment.scale);
+        if (quality !== adjustment.quality || resolutionScale !== adjustment.scale) resetGovernor();
       }
     }
     scheduleFrame();
@@ -526,9 +677,11 @@
     if($('volume')) $('volume').value = settings.volume;
     if($('shake-toggle')) $('shake-toggle').checked = settings.shake;
     if($('music-toggle')) $('music-toggle').checked = settings.music;
+    if($('fps-toggle')) $('fps-toggle').checked = settings.showFps;
+    show('performance-readout',settings.showFps);
     $('sound-button').setAttribute('aria-pressed',String(settings.sound));
     scene = NeonScene.create(canvas,{quality,reducedMotion:!settings.shake || prefersReduced});
-    scene.setReducedMotion(!settings.shake || prefersReduced); setQuality(quality); menu();
+    scene.setReducedMotion(!settings.shake || prefersReduced); setQuality(quality); resetGovernor(); menu();
     const inviteCode = new URLSearchParams(location.search).get('room');
     if (inviteCode && /^[A-Za-z0-9]{6}$/.test(inviteCode)) { $('room-code').value = inviteCode.toUpperCase(); $('online-panel').open = true; text('online-status','Convite recebido. Clique em ENTRAR para participar.'); }
     // Debug surface for deterministic browser integration checks; never networked.

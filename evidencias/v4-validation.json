@@ -1,0 +1,47 @@
+{
+  "version": "4.0.0",
+  "testedAt": "2026-10-01T02:23:07.165231+00:00",
+  "runtime": "Node.js v26.4.0, Windows x64",
+  "checksPassed": {
+    "combat": 28,
+    "rosterAndFastCombat": 19,
+    "progression": 5,
+    "predictionAndSerialization": 35,
+    "framePacingAndInterpolation": 3,
+    "uiWithSimulatedDom": 15,
+    "httpAndWebSocketServer": 22,
+    "twoRealNetworkClients": 10
+  },
+  "totalLeafScenarios": 137,
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "report": "v4-logic-results.txt"
+    },
+    {
+      "command": "npm run test:online",
+      "exitCode": 0,
+      "report": "v4-online-results.txt"
+    }
+  ],
+  "typescriptCompilation": "passed",
+  "browserOpened": true,
+  "browser": "Chrome, localhost:3000",
+  "visualChecks": [
+    "All five character selections, metadata and 3D models inspected",
+    "Orelha training entered with correct player/rival HUD",
+    "Mare da Protecao produced three hits and visible damage in training",
+    "390x844 menu: no horizontal overflow; launch buttons within viewport",
+    "Desktop menu and all five portraits visible; no console errors observed"
+  ],
+  "gpuBenchmarkCompleted": false,
+  "containerBuilt": false,
+  "publicServerDeployed": false,
+  "limits": [
+    "The captured browser session reported approximately 1 FPS. The cause was not isolated; active-window gameplay performance remains unverified.",
+    "Mobile validation is a viewport layout check, not a physical touchscreen session.",
+    "UI regression tests use simulated DOM/audio/renderer. Network integration uses actual client modules and TCP/WebSocket connections on localhost.",
+    "Historical v2 browser and context-recovery suites were not rerun. No WAN or prolonged multiplayer load validation."
+  ]
+}

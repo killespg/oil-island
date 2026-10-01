@@ -1,0 +1,210 @@
+
+> neon-clash@4.0.0 test
+> node tests/combat-tests.js && node tests/run-tests.cjs && node --test tests/performance-tests.cjs tests/netcode-tests.cjs tests/game-integration-tests.cjs tests/roster-combat-tests.cjs
+
+{
+  "passed": 28,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "Intro gates attacks, then starts fighting",
+      "passed": true
+    },
+    {
+      "name": "Movement is bounded and diagonal speed is normalized",
+      "passed": true
+    },
+    {
+      "name": "Punch connects once during its active window",
+      "passed": true
+    },
+    {
+      "name": "Attacks use true radial reach across the entire arena",
+      "passed": true
+    },
+    {
+      "name": "Special meter is charged atomically and rejects insufficient energy",
+      "passed": true
+    },
+    {
+      "name": "Dodge avoids an active hit and cannot repeat during cooldown",
+      "passed": true
+    },
+    {
+      "name": "Jump rises, can attack in air, and lands",
+      "passed": true
+    },
+    {
+      "name": "Blocking reduces damage and depleted guard breaks",
+      "passed": true
+    },
+    {
+      "name": "Buffered J J K chains without an infinite stun lock",
+      "passed": true
+    },
+    {
+      "name": "Simultaneous lethal attacks resolve as one drawn round",
+      "passed": true
+    },
+    {
+      "name": "Best of three resets fighters and ends exactly once",
+      "passed": true
+    },
+    {
+      "name": "Timeout compares health, including ties",
+      "passed": true
+    },
+    {
+      "name": "Training revives opponent and never ends the match",
+      "passed": true
+    },
+    {
+      "name": "Airborne knockout lands during the round result",
+      "passed": true
+    },
+    {
+      "name": "Hard rival spends dodge meter to escape a completed pressure string",
+      "passed": true
+    },
+    {
+      "name": "Seeded AI is reproducible and a long match keeps valid numbers",
+      "passed": true
+    },
+    {
+      "name": "Every arena has full planar movement and safe fallback metadata",
+      "passed": true
+    },
+    {
+      "name": "Attacks hit at all eight headings and knockback follows the impact",
+      "passed": true
+    },
+    {
+      "name": "Committed strike cannot magnetically rotate to follow a sidestep",
+      "passed": true
+    },
+    {
+      "name": "Timed guard parries for no chip and opens a counter window",
+      "passed": true
+    },
+    {
+      "name": "Holding or repeatedly tapping guard cannot perpetually parry",
+      "passed": true
+    },
+    {
+      "name": "Sprint is isotropic, drains energy and cannot bypass attack commitment",
+      "passed": true
+    },
+    {
+      "name": "CPU reacts to a visible attack only after its difficulty latency",
+      "passed": true
+    },
+    {
+      "name": "Reactor warning fixes its position and deals only one burst per fighter",
+      "passed": true
+    },
+    {
+      "name": "Reactor can be escaped, jumped, and is harmless during training",
+      "passed": true
+    },
+    {
+      "name": "Ascension upgrades apply only to the player and survive round resets",
+      "passed": true
+    },
+    {
+      "name": "Invalid timing and non-finite movement input cannot poison the simulation",
+      "passed": true
+    },
+    {
+      "name": "Difficulty defeats repeated button spam with better decisions, not hidden stats",
+      "passed": true
+    }
+  ]
+}
+PASS Ascent has five stages and ends at nightmare
+PASS Upgrade is applied once and only after a victory
+PASS A loss ends the run without offering an upgrade
+PASS Higher starting difficulty is respected; stage rotation is deterministic
+PASS Rank rewards mastery and damage avoidance
+5 progression tests passed.
+✔ CPU integration: solo pauses simulation, resumes with cleared inputs, and menu releases pointer lock (53.9989ms)
+✔ CPU integration: player 2 owns HUD, score, combat feedback and camera identity (14.0824ms)
+✔ CPU integration: online pause sends neutral input while match and presentation keep running (13.4753ms)
+✔ CPU integration: online rematch resets state and peer departure returns cleanly to solo menu (8.485ms)
+✔ CPU integration: WebGL loss neutralizes online inputs and restores one RAF with the latest state (12.0241ms)
+✔ CPU integration: file mode refuses online without breaking the offline game (5.2765ms)
+✔ CPU integration: online result can finish while paused and a hidden-tab rematch remains neutral (9.1137ms)
+✔ CPU integration: restored graphics stay LOW until the user opts back into automatic quality (60.3049ms)
+✔ roster: choosing Orelha is preserved into training, HUD and the return to menu (5.638ms)
+✔ agile controls: Q/E/R issue kick, special and super without restarting the match (2.5945ms)
+✔ mouse guard: right button defends while held and pause clears the held state (4.8116ms)
+✔ mouse buttons can be chorded without dropped attacks or a stuck guard (5.3259ms)
+✔ solo dodge uses the direction held now, including changes between simulation frames (11.3815ms)
+✔ touch camera gestures suppress compatibility mouse attacks while retaining drag control (5.9193ms)
+✔ energy HUD updates immediately after a solo action and never rounds up super readiness (6.0086ms)
+PASS multiplayer controls both fighters and never invokes AI
+PASS online ignores asymmetric upgrades and training
+PASS snapshot is independent JSON data without events or closures
+PASS restored RNG reproduces reactor hazards and combat bit for bit
+PASS offline AI remains deterministic after serialization
+PASS legacy step still drives offline AI
+PASS bad snapshot is rejected
+PASS host, welcome and first snapshot establish a match
+PASS join normalizes a room code and releases prior socket
+PASS client includes character selections in host and normalized join requests
+PASS client exposes waiting-room selections and clears them when leaving
+PASS client queues super once and retains character identity through prediction
+PASS prediction moves immediately before any server response
+PASS input clamp blocks NaN and out-of-range local controls
+PASS second player predicts fighter one while retaining native IDs
+PASS dodge prediction uses direction from current packet
+PASS reconciliation acknowledges prefix and deterministically replays remaining input
+PASS only authoritative events fire and stale snapshots never repeat effects
+PASS ack regressions and impossible future acknowledgments are ignored
+PASS a rematch clears pending actions and starts sequence from one
+PASS predicted matchOver cannot authorize the result screen
+PASS render correction is smooth and never modifies simulation state
+PASS remote presentation interpolates delayed snapshots instead of jumping
+PASS remote extrapolation has a two-tick bound through a network stall
+PASS latency and jitter reconcile to authoritative result without duplicate events
+PASS neutralize immediately sends a release and drops unsent attacks
+PASS actions are bounded and unknown actions rejected
+PASS backpressure stops prediction instead of growing an unbounded socket queue
+PASS unacknowledged inputs have a hard memory limit
+PASS lost server heartbeat stops the match after timeout
+PASS heartbeat pings report measured round-trip time
+PASS peer departure and explicit leave stop input and clear room state
+PASS malformed messages end connection with a visible error
+PASS socket failure and late callbacks cannot revive an old match
+PASS invalid authoritative data reports error rather than corrupting the simulation
+35 combat serialization and client network tests passed.
+✔ tests\netcode-tests.cjs (305.2448ms)
+✔ Automatic quality warms up, adjusts HQ resolution, and avoids repeated failed promotions (3.7969ms)
+✔ Suspension is ignored, small framerate variations do not oscillate quality (2.3933ms)
+✔ Interpolation wraps angles and never changes authoritative state or interpolates a new round (0.5567ms)
+✔ character selection validates IDs, defaults each slot and supplies presentation metadata (3.7678ms)
+✔ chosen fighters survive serialization, new rounds and training revival (7.2488ms)
+✔ fast movement is normalized and each expanded arena has working collision bounds (19.1789ms)
+✔ roster differences affect actual movement, impact damage and special cost (5.5585ms)
+✔ directional roll moves quickly, never deals damage and cannot chain invulnerability (1.2881ms)
+✔ Orelha rolls forward from neutral and lateral input remains camera-independent (1.1375ms)
+✔ confirmed strike can cancel into a paid roll but whiff startup cannot (0.8168ms)
+✔ guard cancels confirmed recovery responsively while guard taps retain a parry cooldown (1.1179ms)
+✔ Orelha has a low sweep, a distinct air attack and a travelling short wind projectile (3.3398ms)
+✔ wind respects sidesteps and timed guard instead of homing or bypassing defense (2.7086ms)
+✔ short wind cannot hit beyond its maximum range including its collision radius (2.1855ms)
+✔ timeout and knockout clear travelling projectiles before result snapshots are emitted (2.9987ms)
+✔ a grounded sweep misses a real jump while the aerial strike can connect (1.6604ms)
+✔ Mimico echo and Pixel rush provide different spacing and contact behavior (6.2169ms)
+✔ every super spends all 100 energy atomically and never starts below the threshold (0.4203ms)
+✔ Mare da Protecao rushes, lands three moderate hits and pushes toward arena center (4.1649ms)
+✔ a super remains interruptible by a real parry and cannot cancel into an invulnerable roll (1.6753ms)
+✔ three-hit strings grant escape protection and cannot be freely canceled into infinite chains (1.5146ms)
+✔ snapshot replay preserves active projectiles, supers and seeded fights for all characters (36.1911ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 374.7139

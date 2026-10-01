@@ -6,6 +6,7 @@ const { performance } = require('node:perf_hooks');
 const { WebSocket } = require('ws');
 const { createArenaServer } = require('../dist/server/index.js');
 const Net = require('../network.js');
+const FightSim = require('../combat.js');
 const STEP = 1 / 60;
 const neutral = () => ({ x: 0, z: 0, block: false, sprint: false });
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -27,6 +28,115 @@ function observedClient(url) {
   return { client, log, controls: neutral, paused: false, latest: () => log.snapshots.at(-1) };
 }
 
+for (const arena of ['island', 'nightclub', 'seaside', 'helipad']) test(`two real clients keep ${arena} through hosting, snapshots and prediction`, { timeout: 8000 }, async () => {
+  const readyCombat = { ...FightSim, createMatch(options) { const state = FightSim.createMatch(options); state.phase = 'fight'; return state; } };
+  const server = createArenaServer({ host: '127.0.0.1', port: 0 }, readyCombat);
+  const address = await server.listen(), url = `ws://127.0.0.1:${address.port}/ws`;
+  const clients = [observedClient(url), observedClient(url)], [host, guest] = clients;
+  try {
+    host.client.host(arena, 'orelha');
+    await until(() => host.client.status.phase === 'waiting' && host.client.status.code, `${arena} room code`);
+    guest.client.join(host.client.status.code, 'pixel');
+    await until(() => clients.every(client => client.client.active), `${arena} active peers`);
+    for (const peer of clients) {
+      assert.equal(peer.client.state.arena, arena); assert.equal(peer.latest().state.arena, arena);
+      assert.deepEqual(peer.client.state.fighters.map(fighter => fighter.character), ['orelha', 'pixel']);
+    }
+    const start = guest.client.state.fighters[1].z;
+    guest.client.step({ z: 1 });
+    assert.ok(guest.client.state.fighters[1].z > start, 'prediction must respond before a round trip');
+    await until(() => clients.every(peer => peer.latest().ack[1] >= 1), `${arena} movement acknowledged on both peers`);
+    const authoritative = host.latest();
+    await until(() => guest.log.snapshots.some(snapshot => snapshot.tick === authoritative.tick), `${arena} matching snapshot`);
+    assert.deepEqual(authoritative.state, guest.log.snapshots.find(snapshot => snapshot.tick === authoritative.tick).state);
+    assert.equal(authoritative.state.arena, arena);
+    assert.ok(authoritative.state.fighters[1].z > start, 'server must apply movement in the selected arena');
+    assert.deepEqual(clients.flatMap(peer => peer.log.errors), []);
+  } finally { clients.forEach(peer => peer.client.leave()); await server.close(); }
+});
+
+test('Titan oil is predicted once and both real clients receive the complete authoritative stream', { timeout: 9000 }, async () => {
+  const readyCombat = { ...FightSim, createMatch(options) { const s = FightSim.createMatch(options); s.phase = 'fight'; return s; } };
+  const server = createArenaServer({ host: '127.0.0.1', port: 0 }, readyCombat);
+  const address = await server.listen(), url = `ws://127.0.0.1:${address.port}/ws`;
+  const clients = [observedClient(url), observedClient(url)], [host, guest] = clients;
+  try {
+    host.client.host('island', 'titan');
+    await until(() => host.client.status.phase === 'waiting', 'oil room');
+    guest.client.join(host.client.status.code, 'orelha');
+    await until(() => clients.every(peer => peer.client.active), 'oil peers active');
+    assert.equal(host.client.action('special'), true); host.client.step(neutral());
+    assert.equal(host.client.state.fighters[0].action, 'special');
+    assert.ok(host.client.state.fighters[0].energy < 60, 'cost is visible before the network round trip');
+    await until(() => clients.every(peer => peer.log.events.filter(event => event.type === 'projectile' && event.kind === 'oil').length === 20), 'all twenty oil droplets', 6500);
+    for (const peer of clients) {
+      assert.equal(peer.latest().state.fighters[0]._projectileShots, 20);
+      assert.equal(peer.latest().state.fighters[0]._attackSerial, 1);
+      assert.equal(peer.log.events.filter(event => event.type === 'attack' && event.move === 'special').length, 1);
+      assert.equal(peer.latest().ack[0], 1); assert.deepEqual(peer.log.errors, []);
+    }
+    const packet = host.latest();
+    await until(() => guest.log.snapshots.some(snapshot => snapshot.tick === packet.tick), 'matching oil snapshot');
+    assert.deepEqual(packet.state, guest.log.snapshots.find(snapshot => snapshot.tick === packet.tick).state);
+  } finally { clients.forEach(peer => peer.client.leave()); await server.close(); }
+});
+
+test('two real clients preserve different character selections while super is predicted and acknowledged', { timeout: 8000 }, async () => {
+  const chargedCombat = { ...FightSim, createMatch(options) { const state = FightSim.createMatch(options); state.phase = 'fight'; state.fighters.forEach(fighter => { fighter.energy = 100; }); return state; } };
+  const server = createArenaServer({ host: '127.0.0.1', port: 0 }, chargedCombat);
+  const address = await server.listen();
+  const clients = [observedClient(`ws://127.0.0.1:${address.port}/ws`), observedClient(`ws://127.0.0.1:${address.port}/ws`)];
+  const [host, guest] = clients;
+  try {
+    host.client.host('seaside', 'pixel');
+    await until(() => host.client.status.phase === 'waiting' && host.client.status.code, 'selected host waiting');
+    assert.deepEqual(host.client.status.characters, ['pixel', null]);
+    guest.client.join(host.client.status.code, 'orelha');
+    await until(() => clients.every(c => c.client.active), 'selected players active');
+    for (const c of clients) {
+      assert.deepEqual(c.client.state.fighters.map(fighter => fighter.character), ['pixel', 'orelha']);
+      assert.deepEqual(c.client.status.characters, ['pixel', 'orelha']);
+    }
+    assert.equal(guest.client.action('super'), true); guest.client.step(neutral());
+    assert.equal(guest.client.state.fighters[1].action, 'super');
+    await until(() => clients.every(c => c.log.events.some(event => event.type === 'attack' && event.attacker === 1 && event.move === 'super')), 'authoritative super on both clients');
+    assert.equal(guest.latest().ack[1], 1);
+    for (const c of clients) {
+      assert.deepEqual(c.latest().state.fighters.map(fighter => fighter.character), ['pixel', 'orelha']);
+      assert.equal(c.log.events.filter(event => event.type === 'attack' && event.move === 'super').length, 1);
+      assert.deepEqual(c.log.errors, []);
+    }
+  } finally { clients.forEach(c => c.client.leave()); await server.close(); }
+});
+
+test('a real client rematch retains both selections and clears the ready votes', { timeout: 8000 }, async () => {
+  const finishedCombat = { ...FightSim, createMatch(options) { const state = FightSim.createMatch(options); state.phase = 'matchOver'; state.winner = 0; return state; } };
+  const server = createArenaServer({ host: '127.0.0.1', port: 0 }, finishedCombat);
+  const address = await server.listen();
+  const clients = [observedClient(`ws://127.0.0.1:${address.port}/ws`), observedClient(`ws://127.0.0.1:${address.port}/ws`)];
+  const [host, guest] = clients;
+  try {
+    host.client.host('nightclub', 'mimico');
+    await until(() => host.client.status.phase === 'waiting' && host.client.status.code, 'host waiting for rematch test');
+    guest.client.join(host.client.status.code, 'titan');
+    await until(() => clients.every(c => c.client.status.phase === 'result'), 'authoritative result');
+    const first = host.latest().matchId;
+    assert.equal(host.client.rematch(), true);
+    await until(() => guest.client.status.rematchReady[0], 'host ready vote');
+    assert.deepEqual(guest.client.status.rematchReady, [true, false]);
+    assert.equal(guest.client.rematch(), true);
+    await until(() => clients.every(c => c.log.matches.length === 2), 'second match on both clients');
+    assert.notEqual(host.latest().matchId, first); assert.equal(host.latest().matchId, guest.latest().matchId);
+    for (const c of clients) {
+      assert.deepEqual(c.client.state.fighters.map(fighter => fighter.character), ['mimico', 'titan']);
+      assert.deepEqual(c.client.status.characters, ['mimico', 'titan']);
+      assert.deepEqual(c.client.status.rematchReady, [false, false]);
+      assert.deepEqual(c.latest().ack, [0, 0]);
+      assert.deepEqual(c.log.errors, []);
+    }
+  } finally { clients.forEach(c => c.client.leave()); await server.close(); }
+});
+
 test('two real browser-client instances stay synchronized with the authoritative WebSocket server', { timeout: 20000 }, async t => {
   const server = createArenaServer({ host: '127.0.0.1', port: 0, allowNoOriginLoopback: true });
   const address = await server.listen();
@@ -35,13 +145,13 @@ test('two real browser-client instances stay synchronized with the authoritative
   let timer = null;
   try {
     await t.test('host and guest receive stable slots and a shared arena', async () => {
-      host.client.host('void');
+      host.client.host('seaside');
       await until(() => host.client.status.code && host.client.status.phase === 'waiting', 'host room code');
       guest.client.join(host.client.status.code);
       await until(() => clients.every(c => c.client.active), 'both client match callbacks');
       assert.equal(host.client.playerId, 0); assert.equal(guest.client.playerId, 1);
       assert.equal(host.client.state.localPlayer, 0); assert.equal(guest.client.state.localPlayer, 1);
-      assert.equal(host.client.state.arena, 'void'); assert.equal(guest.client.state.arena, 'void');
+      assert.equal(host.client.state.arena, 'seaside'); assert.equal(guest.client.state.arena, 'seaside');
       assert.equal(host.latest().matchId, guest.latest().matchId); assert.equal(host.log.matches.length, 1); assert.equal(guest.log.matches.length, 1);
     });
     let last = performance.now(), accumulator = 0;
@@ -99,7 +209,7 @@ test('two real browser-client instances stay synchronized with the authoritative
         const hits = c.log.events.filter(e => e.type === 'hit' && e.attacker === 1);
         assert.equal(attacks.length, 1); assert.equal(hits.length, 1); assert.equal(hits[0].target, 0);
         assert.equal(c.log.events.length, new Set(c.log.events.map(e => e.id)).size);
-        assert.equal(c.latest().state.fighters[0].hp, 91); assert.equal(c.latest().state.fighters[1].hp, 100);
+        assert.equal(c.latest().state.fighters[0].hp, 289); assert.equal(c.latest().state.fighters[1].hp, 300);
       }
       assert.deepEqual(host.log.events, guest.log.events);
     });

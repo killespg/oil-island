@@ -6,7 +6,7 @@ const DT = 1 / 60;
 let count = 0;
 function test(name, fn) { fn(); count++; console.log('PASS', name); }
 const empty = () => ({ x: 0, z: 0, block: false, sprint: false });
-function match(arena = 'skyline') { const s = Sim.createMatch({ multiplayer: true, seed: 4242, arena }); s.phase = 'fight'; s.events.length = 0; return s; }
+function match(arena = 'island') { const s = Sim.createMatch({ multiplayer: true, seed: 4242, arena }); s.phase = 'fight'; s.events.length = 0; return s; }
 function inputs(state, list) { Sim.stepPlayers(state, DT, list); state.events.length = 0; }
 function fixture(playerId = 0, initial = match()) {
   let time = 10000, interval = null;
@@ -20,7 +20,7 @@ function fixture(playerId = 0, initial = match()) {
   }
   const client = Net.create({ url: 'ws://test/ws', WebSocket: Socket, now: () => time, setInterval: fn => { interval = fn; return 1; }, clearInterval: () => { interval = null; }, onStatus: x => statuses.push(x), onEvents: x => events.push(...x), onMatch: x => matches.push(x) });
   const f = { client, sockets, statuses, events, matches, advance(ms) { time += ms; }, heart() { if (interval) interval(); }, get socket() { return sockets[sockets.length - 1]; }, state(value, tick, ack = [0, 0], id = 'one', fx = []) { f.socket.receive({ type: 'state', matchId: id, tick, ack, state: Sim.snapshot(value), events: fx }); } };
-  client.host('skyline'); f.socket.open(); f.socket.receive({ type: 'welcome', code: 'ABC123', playerId });
+  client.host('island'); f.socket.open(); f.socket.receive({ type: 'welcome', code: 'ABC123', playerId });
   if (initial) f.state(initial, 0);
   return f;
 }
@@ -36,19 +36,19 @@ test('online ignores asymmetric upgrades and training', () => {
   assert.deepEqual(s.upgrades, { power: 0, flow: 0, guard: 0 }); assert.equal(s.training, false);
 });
 test('snapshot is independent JSON data without events or closures', () => {
-  const s = match('reactor'); s.events.push({ type: 'hit' }); s.localPlayer = 1;
+  const s = match('nightclub'); s.events.push({ type: 'hit' }); s.localPlayer = 1;
   const data = Sim.snapshot(s); assert.equal(data._random, undefined); assert.equal(data.localPlayer, undefined); assert.deepEqual(data.events, []);
   data.fighters[0].x = 99; assert.equal(s.fighters[0].x, -2.8); assert.equal(JSON.stringify(data).includes('function'), false);
 });
-test('restored RNG reproduces reactor hazards and combat bit for bit', () => {
-  const a = match('reactor');
+test('restored snapshot reproduces movement and combat bit for bit', () => {
+  const a = match('nightclub');
   for (let i = 0; i < 421; i++) inputs(a, [{ z: -.2 }, { z: .2 }]);
   const b = Sim.restore(JSON.parse(JSON.stringify(Sim.snapshot(a))));
   for (let i = 0; i < 1800; i++) { const list = [{ z: Math.sin(i * .02) }, { x: Math.cos(i * .01) }]; inputs(a, list); inputs(b, list); }
   assert.deepEqual(Sim.snapshot(a), Sim.snapshot(b));
 });
 test('offline AI remains deterministic after serialization', () => {
-  const a = Sim.createMatch({ seed: 888, difficulty: 'nightmare', arena: 'reactor' }); a.phase = 'fight';
+  const a = Sim.createMatch({ seed: 888, difficulty: 'nightmare', arena: 'nightclub' }); a.phase = 'fight';
   for (let i = 0; i < 300; i++) Sim.step(a, DT, { x: .25 });
   const b = Sim.restore(Sim.snapshot(a));
   for (let i = 0; i < 300; i++) { Sim.step(a, DT, { block: i % 60 < 12 }); Sim.step(b, DT, { block: i % 60 < 12 }); }
@@ -61,12 +61,36 @@ test('legacy step still drives offline AI', () => {
 });
 test('bad snapshot is rejected', () => { assert.throws(() => Sim.restore({ fighters: [] }), /snapshot/); });
 test('host, welcome and first snapshot establish a match', () => {
-  const f = fixture(); assert.deepEqual(f.socket.sent[0], { type: 'host', arena: 'skyline' }); assert.equal(f.client.playerId, 0);
+  const f = fixture(); assert.deepEqual(f.socket.sent[0], { type: 'host', arena: 'island' }); assert.equal(f.client.playerId, 0);
   assert.equal(f.client.status.code, 'ABC123'); assert.equal(f.client.status.phase, 'playing'); assert.equal(f.matches.length, 1); assert.equal(f.client.active, true);
 });
 test('join normalizes a room code and releases prior socket', () => {
   const f = fixture(); const old = f.socket; f.client.join(' ab12cd '); f.socket.open();
   assert.equal(old.readyState, 3); assert.deepEqual(f.socket.sent[0], { type: 'join', code: 'AB12CD' }); assert.equal(f.client.active, false);
+});
+
+test('client includes character selections in host and normalized join requests', () => {
+  const f = fixture();
+  f.client.host('nightclub', 'mimico'); f.socket.open();
+  assert.deepEqual(f.socket.sent[0], { type: 'host', arena: 'nightclub', character: 'mimico' });
+  f.client.join(' ab12cd ', 'pixel'); f.socket.open();
+  assert.deepEqual(f.socket.sent[0], { type: 'join', code: 'AB12CD', character: 'pixel' });
+});
+
+test('client exposes waiting-room selections and clears them when leaving', () => {
+  const f = fixture(0, null);
+  f.socket.receive({ type: 'waiting', code: 'ABC123', characters: ['orelha', null] });
+  assert.deepEqual(f.client.status.characters, ['orelha', null]);
+  f.client.leave(); assert.deepEqual(f.client.status.characters, [null, null]);
+});
+
+test('client queues super once and retains character identity through prediction', () => {
+  const s = Sim.createMatch({ multiplayer: true, characters: ['pixel', 'mimico'] }); s.phase = 'fight';
+  const f = fixture(1, s);
+  assert.equal(f.client.action('super'), true); f.client.step({});
+  assert.deepEqual(f.socket.sent.at(-1).actions, ['super']);
+  assert.deepEqual(f.client.state.fighters.map(fighter => fighter.character), ['pixel', 'mimico']);
+  assert.deepEqual(f.client.status.characters, ['pixel', 'mimico']);
 });
 test('prediction moves immediately before any server response', () => {
   const f = fixture(); const start = f.client.state.fighters[0].z;
@@ -141,7 +165,7 @@ test('remote extrapolation has a two-tick bound through a network stall', () => 
   assert.ok(rendered.fighters[1].x <= s.fighters[1].x + 6 * 2 * DT + .00001);
 });
 test('latency and jitter reconcile to authoritative result without duplicate events', () => {
-  const f = fixture(), server = match('skyline'), transit = [];
+  const f = fixture(), server = match('island'), transit = [];
   let sent = 0, consumed = 0;
   for (let tick = 1; tick <= 180; tick++) {
     f.client.step({ z: Math.sin(tick / 30), x: -.2 }); sent++;

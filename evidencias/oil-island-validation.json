@@ -1,0 +1,118 @@
+{
+  "title": "Oil Island (Orelha Edition)",
+  "version": "4.2.0",
+  "testedAt": "2026-10-01T04:46:43.341629+00:00",
+  "runtime": "Node.js v26.4.0, Windows x64",
+  "checksPassed": {
+    "combat": 31,
+    "progression": 6,
+    "predictionAndSerialization": 35,
+    "framePacingAndInterpolation": 13,
+    "uiWithSimulatedDom": 34,
+    "roster": 27,
+    "organicGeometry": 4,
+    "audio": 8,
+    "fastCombat": 12,
+    "defenseAndMobility": 21,
+    "camera": 14,
+    "combatFeedback": 4,
+    "meleeReachAndIntro": 13,
+    "seasideCinematic": 8,
+    "httpAndWebSocketServer": 24,
+    "twoRealNetworkClients": 15,
+    "indexedRendering": 5,
+    "sharedTextures": 4,
+    "arenaPerformanceContracts": 7
+  },
+  "totalLeafScenarios": 285,
+  "countingNote": "Legacy combat31 and progression6 + Node runner175 minus netcode wrapper1 plus nested netcode35 = 246; online24 + client15 leaves = 39. Parent/wrapper tests are excluded.",
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "report": "oil-logic-results.txt"
+    },
+    {
+      "command": "npm run test:online",
+      "exitCode": 0,
+      "report": "oil-online-results.txt"
+    },
+    {
+      "command": "node --check (changed runtime JavaScript)",
+      "exitCode": 0
+    }
+  ],
+  "typescriptCompilation": "passed",
+  "browser": "CUA / Codex in-app browser / http://127.0.0.1:3000/",
+  "browserVisualChecks": [
+    "Epstein broader upright body, navy coat and textured blue jeans; Raulzito broader torso and gamer shirt.",
+    "Keyboard L fires the Diddy oil gun, with projectiles, health reduction and visible nine-hit combo HUD.",
+    "Helipad approach, jumps before collision, landing and cinematic-to-fight transition captured.",
+    "Orla chase: five separated pale-skinned generic young characters holding visible baseball bats; running dog reaches arena; HUD and keyboard target lock return at fight start.",
+    "Posture progress indicators expose current values; 300 HP and 120-second round displayed.",
+    "No browser console errors returned after the final chase inspection.",
+    "Names Epstein, Diddy, Oliver Tree, Orelha and Raulzito visible on current selection cards; stable IDs preserved.",
+    "Two real browser tabs created/joined a private room; Diddy L attack reduced Raulzito to 285 HP in both perspectives; guest action and movement accepted.",
+    "Peer departure returns host to menu. Voluntary return to menu now shows Voce saiu da sala; verified again in two tabs, no console errors."
+  ],
+  "cinematics": {
+    "durationSeconds": 6.2,
+    "firstRoundOnly": true,
+    "trainingBypasses": true,
+    "helipad": "Either roster; leap before collision.",
+    "seaside": "Any Orelha slot, including both; arrival at 4.8s; camera handoff5.05-6.2s.",
+    "clockAndActionsGated": true,
+    "realOnlinePeersTested": [
+      "helipad",
+      "seaside"
+    ]
+  },
+  "meleeReach": {
+    "multiplier": 1.28,
+    "mimicoRadialSpecialAndSuperMultiplier": 1.2,
+    "projectilesUnchanged": true,
+    "visualBodyExtensionCapped": 0.75
+  },
+  "geometryAudits": {
+    "poseReport": "oil-pose-audit.json",
+    "helipadReport": "oil-helipad-audit.json",
+    "note": "CPU geometry/pose checks do not certify visual likeness or GPU performance."
+  },
+  "research": "../docs/research/README.md",
+  "researchAgents": 5,
+  "screenshots": [
+    "oil-orla-chase.png",
+    "oil-orla-fight.png",
+    "oil-veterano-jeans.png",
+    "oil-pixel-proportions.png",
+    "oil-combo-hud.png",
+    "oil-helipad-cinematic.png",
+    "oil-online-host.png",
+    "oil-online-guest.png",
+    "oil-online-leave-fixed.png",
+    "oil-renamed-menu.png"
+  ],
+  "optimizationAgents": 5,
+  "gpuBenchmarkCompleted": true,
+  "gpuReport": "oil-gpu-comparison.json",
+  "weakGpuHardwareTested": false,
+  "onlineGuiTest": {
+    "twoBrowserTabs": true,
+    "separateComputers": false,
+    "publicInternet": false,
+    "localNetworkAddressHttp200FromServerMachine": true,
+    "firewallReachabilityFromPeerConfirmed": false
+  },
+  "physicalMobileDeviceTested": false,
+  "humanBalancePlaytestCompleted": false,
+  "containerBuilt": false,
+  "publicDeploymentConfigured": false,
+  "committedOrPushed": false,
+  "limitations": [
+    "Procedural stylized characters; resemblance was visually inspected, not certified as identical.",
+    "Browser-v2 and forced graphics-context suites were not rerun in this integration.",
+    "Online verification uses localhost clients and two real browser tabs on one computer; it does not confirm access from another computer or internet latency.",
+    "GPU samples are short on RX7600 with other tabs open, not weak-GPU hardware validation or proof of FPS improvement.",
+    "Evidence screenshots span this work session; older scenes retain previous display names and earlier HUD values."
+  ]
+}

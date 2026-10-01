@@ -1,4 +1,4 @@
-# Multiplayer no navegador
+# Oil Island (Orelha Edition) — multiplayer no navegador
 
 O cliente mantém Three.js e Web Audio, sem downloads externos para gráficos ou som. O backend é TypeScript, compilado para Node.js, com WebSocket na mesma origem do jogo. Uma instalação serve a página e as partidas; não precisa de banco de dados para os duelos privados.
 
@@ -14,10 +14,12 @@ npm start
 
 Abra `http://localhost:3000` na máquina servidora, ou `http://IP-DO-SERVIDOR:3000` em outros PCs da mesma rede. Use o endereço da rede também no computador servidor se quiser copiar um convite que funcione no outro PC. Um convite com `localhost` não aponta para a máquina do amigo.
 
-1. Selecione uma arena e abra **DUELO ONLINE**.
+1. Selecione seu personagem e uma arena, e abra **DUELO ONLINE**.
 2. Escolha **CRIAR SALA PRIVADA** e copie o convite.
-3. O amigo abre o link e confirma **ENTRAR**. Também pode digitar o código no mesmo servidor.
-4. A luta começa quando os dois estiverem conectados. São dois rounds vencedores; cada jogador pode aceitar a revanche no resultado.
+3. O amigo abre o link, escolhe seu próprio personagem e confirma **ENTRAR**. Também pode digitar o código no mesmo servidor. A seleção fica bloqueada enquanto estiver na sala; cancele a sala para trocar de personagem.
+4. A luta começa quando os dois estiverem conectados. São dois rounds vencedores; cada jogador pode aceitar a revanche no resultado. Os personagens escolhidos permanecem na revanche. O servidor valida os cinco personagens e as quatro arenas e calcula também projéteis, supers e custos específicos.
+
+Oil Island, After Hours, Orla Brava e Heliponto oferecem ilha tropical, festa de boate, praia urbana e plataforma elevada; quem cria a sala escolhe o cenário. Os limites de combate são compartilhados pela simulação do servidor e pela previsão dos dois clientes. O primeiro round do heliponto usa uma introdução de 6,2 segundos: cada lutador salta de um helicóptero antes da colisão dos veículos. Câmera e efeitos acompanham o tempo de fase enviado pelo servidor; a sequência não altera vida nem posição física durante a introdução.
 
 `Abrir jogo.sh` e `index.html` via `file://` continuam sendo atalhos para o modo solo offline. Para o online, use o endereço HTTP(S) do servidor.
 
@@ -39,11 +41,11 @@ O domínio acima é um exemplo. Configure seu DNS e um proxy com certificado TLS
 O projeto também inclui um container, que compila o servidor e executa com usuário sem privilégios:
 
 ```sh
-docker build -t neon-clash .
-docker run --rm --name neon-clash -p 3000:3000 \
+docker build -t oil-island .
+docker run --rm --name oil-island -p 3000:3000 \
   -e ALLOWED_ORIGIN=https://jogo.seu-dominio.com \
   -e ALLOW_NO_ORIGIN_LOOPBACK=0 \
-  neon-clash
+  oil-island
 ```
 
 Para testar o container diretamente na rede local por HTTP, omita `ALLOWED_ORIGIN`. A configuração de produção acima pressupõe um proxy HTTPS à frente do container. Não há serviço, domínio ou hospedagem contratados por estes comandos de exemplo.
@@ -67,7 +69,7 @@ Hospedagem estática, incluindo GitHub Pages, distribui os arquivos mas não exe
 - Cada jogador envia comandos numerados. O servidor aceita apenas movimentos e ações válidos, calcula recursos, dano, rounds e resultado, e confirma os comandos processados. Vida, posição final, dano e relógio enviados pelo cliente não são usados como autoridade.
 - O cliente executa imediatamente uma previsão do comando. Ao chegar um estado confirmado, restaura a simulação e reaplica os comandos ainda não confirmados. O gerador aleatório faz parte do estado serializável.
 - A apresentação suaviza correções pequenas do jogador local. O adversário aparece interpolado com cerca de 83 ms de buffer e extrapolação limitada a dois ticks. Som e efeitos de acerto são emitidos pelo resultado confirmado, evitando duplicá-los durante a reaplicação.
-- A qualidade AUTO tenta preservar luzes e bloom reduzindo a resolução do 3D. A interface HTML não perde resolução. Um contexto gráfico recuperado permanece em LQ até escolha manual.
+- AUTO começa em LQ e só tenta HQ depois de combate estável. Tanto AUTO quanto LQ podem reduzir a resolução do 3D até 65%; a interface HTML mantém sua resolução. Menu, introdução, pausa e aba oculta não autorizam promoção de qualidade. Um contexto gráfico recuperado conserva a escala e salva a preferência LQ até escolha manual.
 
 Essa primeira versão não faz retrocesso de hitboxes no servidor para compensar ping. Com latência alta, a confirmação do contato ainda demora e pode divergir da previsão. Um servidor próximo dos jogadores ajuda; previsão não corrige distância geográfica, perda de conexão ou falta de desempenho do aparelho.
 
@@ -75,13 +77,15 @@ Essa primeira versão não faz retrocesso de hitboxes no servidor para compensar
 
 São duelos privados de dois jogadores. Não há contas, ranking global, espectadores, reconexão automática ou matchmaking público. O servidor controla o resultado, mas isso não equivale a um sistema completo contra bots ou outras formas de trapaça. O menu de pausa online não interrompe a partida; sair ou desconectar encerra a sala. Recarregar a página também desconecta.
 
-O protocolo limita tamanho/frequência de mensagens, filas de comandos, conexões e salas. Entradas inativas são neutralizadas após 200 ms; salas sem segundo jogador e salas concluídas expiram após cinco minutos. O servidor publica somente uma lista explícita de arquivos do cliente, nunca o diretório do projeto inteiro.
+O protocolo limita tamanho/frequência de mensagens, filas de comandos, conexões e salas. Entradas inativas são neutralizadas após 200 ms; salas sem segundo jogador e salas concluídas expiram após cinco minutos. O servidor publica somente uma lista explícita de arquivos do cliente, incluindo os quatro módulos de arenas, as superfícies dos personagens e as texturas locais. O container copia esses mesmos recursos; o diretório inteiro do projeto não é servido.
 
 ```sh
 npm test
 npm run test:online
 ```
 
-Os testes sem navegador cobrem lógica, previsão/reconciliação, duas conexões reais, validação de comandos, limite de filas, origem HTTP, arquivos privados, desconexão, limpeza e revanche. A integração da interface usa uma VM com DOM/renderizador simulados. Os testes não são uma avaliação visual, medição na RX 7600 ou teste de rede de longa distância. Os relatórios gráficos `evidencias/v2-*` pertencem à versão anterior; nenhuma janela do jogo foi aberta durante esta implementação.
+Os testes sem navegador cobrem lógica, previsão/reconciliação, duas conexões reais, validação de comandos, limite de filas, origem HTTP, arquivos privados, desconexão, limpeza e revanche. Também verificam a entrega dos módulos de cenário e a sincronização das novas arenas entre dois clientes. A integração da interface usa uma VM com DOM/renderizador simulados. Os testes não são uma avaliação visual, medição na RX 7600 ou teste de rede de longa distância. O relatório da versão 4.2 é `evidencias/oil-island-validation.json`; os relatórios `evidencias/v2-*` a `v5-*` são históricos.
 
-As decisões de rede foram conferidas com as referências primárias [ws](https://github.com/websockets/ws) e [previsão/reconciliação do Colyseus](https://docs.colyseus.io/netcode/client-prediction). O código usa `ws` e a simulação compartilhada do Neon Clash; Colyseus não é uma dependência.
+As decisões de rede foram conferidas com as referências primárias [ws](https://github.com/websockets/ws) e [previsão/reconciliação do Colyseus](https://docs.colyseus.io/netcode/client-prediction). O código usa `ws` e a simulação compartilhada de Oil Island; Colyseus não é uma dependência. O repositório e os identificadores internos de armazenamento mantêm seus nomes anteriores para preservar caminhos e preferências existentes.
+
+Na revisão de 1º de outubro de 2026, duas abas reais também criaram e entraram na mesma sala pela interface, com Diddy e Raulzito. Comandos e dano foram refletidos nos dois lados; a saída devolveu o adversário ao menu. Uma indicação que permanecia como “Sala conectada” após a saída voluntária foi corrigida. Isso confirma o fluxo local, mas não é um teste entre máquinas distintas: é necessário verificar a acessibilidade do servidor, a porta e o WebSocket a partir do outro computador. Convites de rede local devem usar o IP do servidor; convites pela internet precisam de um endereço público configurado.

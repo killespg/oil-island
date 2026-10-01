@@ -1,0 +1,112 @@
+[
+  {
+    "asset": "style.css",
+    "status": 200,
+    "bytes": 49615
+  },
+  {
+    "asset": "vendor/three.min.js",
+    "status": 200,
+    "bytes": 669884
+  },
+  {
+    "asset": "combat.js",
+    "status": 200,
+    "bytes": 42736
+  },
+  {
+    "asset": "assets/faces-v5.js",
+    "status": 200,
+    "bytes": 3179450
+  },
+  {
+    "asset": "assets/titan-shirt.js",
+    "status": 200,
+    "bytes": 2550859
+  },
+  {
+    "asset": "assets/materials-v5.js",
+    "status": 200,
+    "bytes": 14729462
+  },
+  {
+    "asset": "fighter-faces.js",
+    "status": 200,
+    "bytes": 21001
+  },
+  {
+    "asset": "organic-mesh.js",
+    "status": 200,
+    "bytes": 6970
+  },
+  {
+    "asset": "fighters-human.js",
+    "status": 200,
+    "bytes": 45271
+  },
+  {
+    "asset": "assets/orelha-face.js",
+    "status": 200,
+    "bytes": 2989556
+  },
+  {
+    "asset": "fighters-dog.js",
+    "status": 200,
+    "bytes": 26388
+  },
+  {
+    "asset": "arena-island.js",
+    "status": 200,
+    "bytes": 20441
+  },
+  {
+    "asset": "arena-nightclub.js",
+    "status": 200,
+    "bytes": 19929
+  },
+  {
+    "asset": "arena-seaside.js",
+    "status": 200,
+    "bytes": 28767
+  },
+  {
+    "asset": "arena-helipad.js",
+    "status": 200,
+    "bytes": 23650
+  },
+  {
+    "asset": "scene.js",
+    "status": 200,
+    "bytes": 80234
+  },
+  {
+    "asset": "audio.js",
+    "status": 200,
+    "bytes": 16192
+  },
+  {
+    "asset": "run.js",
+    "status": 200,
+    "bytes": 2642
+  },
+  {
+    "asset": "network.js",
+    "status": 200,
+    "bytes": 14128
+  },
+  {
+    "asset": "performance.js",
+    "status": 200,
+    "bytes": 2676
+  },
+  {
+    "asset": "combat-feedback.js",
+    "status": 200,
+    "bytes": 1496
+  },
+  {
+    "asset": "game.js",
+    "status": 200,
+    "bytes": 49594
+  }
+]
