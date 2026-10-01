@@ -82,3 +82,22 @@ select {display:block;width:100%;min-width:0;border:1px solid var(--line);border
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 
 .dpad .touch-sprint {grid-row:1;grid-column:3;font-size:7px;letter-spacing:0;color:var(--lime)}
+
+.online-panel {margin-top:14px;padding:0 13px;border:1px solid #65edff45;background:#0b1b28d9}
+.online-panel summary {display:flex;justify-content:space-between;gap:12px;cursor:pointer;list-style:none;padding:14px 0;font:600 10px var(--mono);letter-spacing:1px;color:var(--cyan)}
+.online-panel summary::-webkit-details-marker {display:none}
+.online-panel>p {font-size:11px;line-height:1.6;color:#aebfc9;margin:0 0 12px}
+.online-panel .online-status {color:var(--lime);margin:14px 0;overflow-wrap:anywhere}
+.join-form {margin:14px 0}.join-form label {display:block;font:9px var(--mono);color:#aebfc9;margin-bottom:8px}
+.join-form>div {display:flex;gap:8px}.join-form input {min-width:0;width:100%;background:#060f1a;border:1px solid var(--line);padding:11px;color:var(--ink);font:600 15px var(--mono);letter-spacing:3px;text-transform:uppercase}
+.join-form button,.room-invite button {border:1px solid #65edff55;background:#18333e;color:var(--cyan);padding:10px;font:600 9px var(--mono);white-space:nowrap}
+.room-invite {display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:16px;align-items:center}
+.room-invite>span {font:8px var(--mono);color:#aebfc9;grid-column:1/-1}.room-invite strong {font:700 24px var(--mono);letter-spacing:3px;color:var(--lime)}
+.online-panel>.text-button {margin:6px 0 14px}
+.network-indicator {position:fixed;z-index:5;right:5%;top:178px;padding:7px 10px;max-width:85vw;background:#081420d9;border:1px solid #65edff38;color:var(--cyan);font:9px var(--mono);pointer-events:none}
+.network-indicator.delayed {color:#ffbe75;border-color:#ffbe7555}
+.local-crimson .player .health-fill {background:linear-gradient(90deg,#b44c54,var(--coral))}
+.local-crimson .enemy .health-fill {background:linear-gradient(90deg,var(--cyan),#339daf)}
+.local-crimson .player .fighter-heading i {background:var(--coral)}.local-crimson .enemy .fighter-heading i {background:var(--cyan)}
+@media(max-width:800px){.network-indicator{top:157px;font-size:8px;right:24px}}
+@media(orientation:landscape) and (max-height:520px){.network-indicator{top:126px;right:6%;font-size:7px}}

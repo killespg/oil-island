@@ -1,14 +1,31 @@
 {
   "name": "neon-clash",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "private": true,
-  "description": "Offline third-person neon arena fighting game",
+  "description": "Third-person neon arena combat with authoritative browser multiplayer",
+  "engines": {
+    "node": ">=24 <27"
+  },
   "scripts": {
-    "test": "node tests/combat-tests.js && node tests/run-tests.cjs",
+    "test": "node tests/combat-tests.js && node tests/run-tests.cjs && node --test tests/performance-tests.cjs tests/netcode-tests.cjs tests/game-integration-tests.cjs",
     "test:browser": "node tests/browser-v2.cjs",
-    "test:graphics": "node tests/context-recovery.cjs"
+    "test:graphics": "node tests/context-recovery.cjs",
+    "build:server": "tsc -p tsconfig.server.json",
+    "start": "npm run build:server && node dist/server/index.js",
+    "start:production": "node dist/server/index.js",
+    "test:netcode": "node tests/netcode-tests.cjs",
+    "test:performance": "node --test tests/performance-tests.cjs",
+    "test:online": "npm run build:server && node tests/online-tests.cjs && node --test tests/online-client-tests.cjs",
+    "test:ui": "node --test tests/game-integration-tests.cjs",
+    "test:clients": "npm run build:server && node --test tests/online-client-tests.cjs"
   },
   "devDependencies": {
-    "playwright": "1.57.0"
+    "@types/node": "24.19.0",
+    "@types/ws": "8.18.2",
+    "playwright": "1.57.0",
+    "typescript": "7.0.2"
+  },
+  "dependencies": {
+    "ws": "8.22.0"
   }
 }

@@ -10,6 +10,7 @@
   function create(canvas, options) {
     options = options || {};
     var quality = options.quality === 'high' ? 'high' : 'low';
+    var resolutionScale = Number.isFinite(options.resolutionScale) ? clamp(options.resolutionScale, .65, 1) : 1;
     var recovering = false;
     // The direct path is the safe default. HQ is explicitly selected, has a
     // bounded pixel budget, and never combines floating-point targets with MSAA.
@@ -415,7 +416,7 @@
       var dead=action==='ko'||f.hp<=0;
       rig.root.position.set(f.x||0,(f.y||0)+bob+.032,f.z||0);
       var goal=Number.isFinite(f.yaw)?f.yaw:(f.face|| (index===0?1:-1))===1?PI/2:-PI/2;
-      if(['punch','kick','special'].indexOf(action)>=0&&Number.isFinite(f._attackYaw))goal=f._attackYaw;
+      if((action==='punch'||action==='kick'||action==='special')&&Number.isFinite(f._attackYaw))goal=f._attackYaw;
       var diff=T.MathUtils.euclideanModulo(goal-rig.root.rotation.y+PI,PI*2)-PI;
       rig.root.rotation.y+=diff*Math.min(1,dt*22);
       rig.stance.rotation.set(0,0,0);rig.stance.position.set(0,0,0);
@@ -569,7 +570,7 @@
       // UI remains at native CSS resolution because it is not drawn in WebGL.
       var budget=quality==='high'?1800000:700000;
       var maxDimension=Math.min(2048,renderer.capabilities.maxTextureSize||2048);
-      var ratio=Math.min(window.devicePixelRatio||1,quality==='high'?1.5:1,Math.sqrt(budget/(width*height)),maxDimension/width,maxDimension/height);
+      var ratio=Math.min(window.devicePixelRatio||1,quality==='high'?1.5:1,Math.sqrt(budget/(width*height)),maxDimension/width,maxDimension/height)*resolutionScale;
       // Updating DPR and size together avoids briefly reallocating the previous
       // (possibly much larger) CSS viewport at the new device-pixel ratio.
       renderer.setDrawingBufferSize(width,height,ratio);
@@ -579,6 +580,17 @@
         bloomA.setSize(Math.max(1,Math.floor(width*ratio*.38)),Math.max(1,Math.floor(height*ratio*.38)));
         bloomB.setSize(Math.max(1,Math.floor(width*ratio*.38)),Math.max(1,Math.floor(height*ratio*.38)));
       }
+    }
+    function setResolutionScale(value) {
+      var next=Number(value);
+      if(!Number.isFinite(next))return resolutionScale;
+      next=clamp(next,.65,1);
+      if(next===resolutionScale)return resolutionScale;
+      resolutionScale=next;
+      // Resize only the drawing buffers; HQ lighting and bloom remain enabled.
+      // During context recovery resize safely stores the scale without GL work.
+      resize();
+      return resolutionScale;
     }
     function setQuality(value) {
       if(contextUnavailable()){quality='low';return quality;}
@@ -612,7 +624,7 @@
       return true;
     }
     function graphicsInfo() {
-      return {quality:quality,recovering:recovering,contextLost:context.isContextLost(),
+      return {quality:quality,resolutionScale:resolutionScale,recovering:recovering,contextLost:context.isContextLost(),
         pixelWidth:canvas.width,pixelHeight:canvas.height,postProcessing:!!renderTarget,
         postTargetType:renderTarget?'UnsignedByteType':null,samples:renderTarget?renderTarget.samples:0,
         shadowMapSize:key.shadow.mapSize.x,webglVersion:contextDetails.version,renderer:contextDetails.renderer,
@@ -621,20 +633,27 @@
     // Camera-relative movement and an orbiting shoulder camera share one yaw.
     // Yaw 0 looks along +Z, matching the simulation's fighter orientation.
     var orbit={yaw:PI/2+.45,pitch:.40,distance:8.2,locked:true,manualUntil:0};
-    var cameraInitialized=false,lastPhase='',cameraRight=new T.Vector3(),lookGoal=new T.Vector3();
+    var cameraInitialized=false,cameraPlayer=0,cameraRight=new T.Vector3(),lookGoal=new T.Vector3();
+    var fallbackFighters=[{x:-2,z:0,yaw:PI/2,hp:100},{x:2,z:0,yaw:-PI/2,hp:100}];
     function angleDelta(target,current){return T.MathUtils.euclideanModulo(target-current+PI,PI*2)-PI;}
     function rotateCamera(dx,dy){orbit.yaw-=Number(dx)||0;orbit.pitch=clamp(orbit.pitch+(Number(dy)||0),.10,1.05);orbit.manualUntil=clock+3.5;}
     function zoomCamera(delta){orbit.distance=clamp(orbit.distance+(Number(delta)||0),5.2,15);}
     function setLockOn(value){orbit.locked=!!value;if(orbit.locked)orbit.manualUntil=0;}
-    function cameraInfo(){return {yaw:orbit.yaw,pitch:orbit.pitch,distance:orbit.distance,locked:orbit.locked};}
+    function cameraInfo(){return {yaw:orbit.yaw,pitch:orbit.pitch,distance:orbit.distance,locked:orbit.locked,localPlayer:cameraPlayer};}
     function cameraInput(x,z){return {x:-Math.cos(orbit.yaw)*x-Math.sin(orbit.yaw)*z,z:Math.sin(orbit.yaw)*x-Math.cos(orbit.yaw)*z};}
+    function localPlayerIndex(state){return state&&state.localPlayer===1?1:0;}
     function resetCamera(state){
-      var fs=state&&state.fighters;orbit.yaw=fs&&fs.length>1?Math.atan2(fs[1].x-fs[0].x,fs[1].z-fs[0].z)+.45:PI/2+.45;
+      var fs=state&&state.fighters;
+      cameraPlayer=localPlayerIndex(state);
+      var p=fs&&fs[cameraPlayer],e=fs&&fs[1-cameraPlayer];
+      orbit.yaw=p&&e?Math.atan2(e.x-p.x,e.z-p.z)+.45:(cameraPlayer===1?-PI/2:PI/2)+.45;
       orbit.pitch=.40;orbit.distance=8.2;orbit.manualUntil=0;cameraInitialized=false;
     }
     function setReducedMotion(value){reducedMotion=!!value;if(reducedMotion)shake=0;rain.visible=quality==='high'&&!reducedMotion&&arenaId==='skyline';}
     function updateCamera(dt,state,fs){
-      var p=fs[0],e=fs[1]||p,menu=state.phase==='menu',dx=(e.x||0)-(p.x||0),dz=(e.z||0)-(p.z||0),gap=Math.hypot(dx,dz);
+      var local=localPlayerIndex(state);
+      if(local!==cameraPlayer)resetCamera(state);
+      var p=fs[local]||fs[0],e=fs[1-local]||p,menu=state.phase==='menu',dx=(e.x||0)-(p.x||0),dz=(e.z||0)-(p.z||0),gap=Math.hypot(dx,dz);
       var yaw=orbit.yaw,pitch=orbit.pitch,dist=orbit.distance,alpha=1-Math.exp(-dt*6);
       if(menu){
         yaw=-.80+(reducedMotion?0:Math.sin(clock*.1)*.10);pitch=.22;dist=width>800?11.8:14.2;
@@ -664,15 +683,17 @@
         // Fit both bodies into the usable viewport; short screens reserve space for HUD.
         var tanFov=Math.tan(camera.fov*PI/360),safeTop=height<520?.29:.66,safeBottom=.80,safeSide=.80;
         var sine=Math.sin(yaw),cosine=Math.cos(yaw),sp=Math.sin(pitch),cp=Math.cos(pitch);
-        [p,e].forEach(function(body){
-          [0,3.45].forEach(function(bodyY){
+        for(var bodyIndex=0;bodyIndex<2;bodyIndex++){
+          var body=bodyIndex===0?p:e;
+          for(var endIndex=0;endIndex<2;endIndex++){
+            var bodyY=endIndex===0?0:3.45;
             var bx=(body.x||0)-focus.x,by=(body.y||0)+bodyY-focus.y,bz=(body.z||0)-focus.z;
             var screenX=-cosine*bx+sine*bz,screenY=sine*sp*bx+cp*by+cosine*sp*bz;
             var depth=sine*cp*bx-sp*by+cosine*cp*bz;
             dist=Math.max(dist,Math.abs(screenX)/(tanFov*camera.aspect*safeSide)-depth);
             dist=Math.max(dist,Math.abs(screenY)/(tanFov*(screenY>0?safeTop:safeBottom))-depth);
-          });
-        });
+          }
+        }
       }
       var horizontal=Math.cos(pitch)*dist;
       camTarget.set(focus.x-Math.sin(yaw)*horizontal,focus.y+Math.sin(pitch)*dist,focus.z-Math.cos(yaw)*horizontal);
@@ -680,12 +701,13 @@
       if(!menu&&currentArena){
         var vx=camTarget.x-focus.x,vy=camTarget.y-focus.y,vz=camTarget.z-focus.z;
         var length=Math.hypot(vx,vy,vz),closest=length,nx=vx/length,ny=vy/length,nz=vz/length;
-        currentArena.colliders.forEach(function(c){
+        for(var colliderIndex=0;colliderIndex<currentArena.colliders.length;colliderIndex++){
+          var c=currentArena.colliders[colliderIndex];
           var along=((c.x-focus.x)*nx+(c.z-focus.z)*nz)/(nx*nx+nz*nz);
-          if(along<=1.3||along>closest+c.radius)return;
+          if(along<=1.3||along>closest+c.radius)continue;
           var off=Math.hypot(focus.x+nx*along-c.x,focus.z+nz*along-c.z),atY=focus.y+ny*along;
           if(off<c.radius&&atY>c.bottom-.5&&atY<c.top+.5)closest=Math.min(closest,Math.max(2.8,along-Math.sqrt(c.radius*c.radius-off*off)-.4));
-        });
+        }
         if(closest<length)camTarget.set(focus.x+nx*closest,focus.y+ny*closest,focus.z+nz*closest);
       }
       camera.position.lerp(camTarget,cameraInitialized?1-Math.exp(-dt*(menu?3.5:10)):1);
@@ -695,21 +717,20 @@
       targetMarker.visible=!menu&&orbit.locked&&(e.hp===undefined||e.hp>0);
       targetMarker.position.set(e.x||0,3.37+(e.y||0),e.z||0);targetMarker.material.opacity=.62;
       key.target.position.set((p.x||0)*.3,0,(p.z||0)*.3);
-      lastPhase=state.phase;
     }
     function update(dt,state) {
       dt=Math.min(.05,Math.max(0,dt===undefined?.016:dt));clock+=dt;
       state=state||{};if(state.arena&&state.arena!==arenaId)setArena(state.arena);
-      var fs=state.fighters||[{x:-2,z:0,yaw:PI/2,hp:100},{x:2,z:0,yaw:-PI/2,hp:100}];
+      var fs=state.fighters||fallbackFighters;
       for(var i=0;i<2;i++)pose(fighters[i],fs[i]||fs[0],dt,i);
       updateCamera(dt,state,fs);
       if(currentArena){
-        currentArena.animated.forEach(function(a){
-          if(reducedMotion)return;
+        for(var ai=0;!reducedMotion&&ai<currentArena.animated.length;ai++){
+          var a=currentArena.animated[ai];
           if(a.type==='spin')a.mesh.rotation.y+=dt*a.rate;
           if(a.type==='cosmic'){a.mesh.rotation.z+=dt*a.rate;a.mesh.rotation.y=Math.sin(clock*a.rate)*.28;}
           if(a.type==='float'||a.type==='shard'){a.mesh.position.y=a.base+Math.sin(clock*.55+a.phase)*.55;if(a.type==='shard')a.mesh.rotation.y+=dt*a.rate;}
-        });
+        }
         currentArena.detail.visible=quality==='high';
       }
       skyUniforms.time.value=clock;air.visible=quality==='high';air.material.color.setHex(arenaId==='reactor'?0xffb661:arenaId==='void'?0xc6c1ff:0xb8d2e4);
@@ -728,12 +749,14 @@
         hazardRing.material.opacity=hz.active?.95:reducedMotion?.8:.57+Math.sin(clock*10)*.22;
         hazardGlare.visible=!!hz.active;hazardGlare.material.opacity=hz.active?.4:0;
       }
+      var sparksChanged=false;
       for(var k=0;k<sparks.length;k++) {
-        var s=sparks[k];s.life=Math.max(0,s.life-dt);
+        var s=sparks[k];if(s.life<=0)continue;
+        s.life=Math.max(0,s.life-dt);
         if(s.life>0){s.x+=s.vx*dt;s.y+=s.vy*dt;s.z+=s.vz*dt;s.vy-=12*dt;temp.position.set(s.x,s.y,s.z);temp.rotation.set(clock*9+k,clock*6,0);var sz=s.size*s.life/s.max;temp.scale.set(sz,sz*3.5,sz);}else temp.scale.set(0,0,0);
-        temp.updateMatrix();sparksMesh.setMatrixAt(k,temp.matrix);
+        temp.updateMatrix();sparksMesh.setMatrixAt(k,temp.matrix);sparksChanged=true;
       }
-      sparksMesh.instanceMatrix.needsUpdate=true;
+      if(sparksChanged)sparksMesh.instanceMatrix.needsUpdate=true;
       for(var w=0;w<waves.length;w++) {
         var wave=waves[w];if(wave.life<=0)continue;wave.life=Math.max(0,wave.life-dt);
         wave.mesh.visible=wave.life>0;var progress=1-wave.life/wave.max;wave.mesh.scale.setScalar(.13+progress*(wave.radius||1.35));wave.mesh.material.opacity=(1-progress)*.72;
@@ -752,7 +775,7 @@
     }
     setArena(options.arena||'skyline');camera.position.set(-8,5,0);camera.lookAt(focus);setQuality(quality);
     window.addEventListener('resize',resize);
-    return {update:update,render:render,resize:resize,impact:impact,effect:effect,setQuality:setQuality,prepareContextRecovery:prepareContextRecovery,restoreContext:restoreContext,graphicsInfo:graphicsInfo,setArena:setArena,setReducedMotion:setReducedMotion,rotateCamera:rotateCamera,zoomCamera:zoomCamera,resetCamera:resetCamera,setLockOn:setLockOn,cameraInput:cameraInput,cameraInfo:cameraInfo,renderer:renderer,scene:scene,camera:camera};
+    return {update:update,render:render,resize:resize,impact:impact,effect:effect,setQuality:setQuality,setResolutionScale:setResolutionScale,prepareContextRecovery:prepareContextRecovery,restoreContext:restoreContext,graphicsInfo:graphicsInfo,setArena:setArena,setReducedMotion:setReducedMotion,rotateCamera:rotateCamera,zoomCamera:zoomCamera,resetCamera:resetCamera,setLockOn:setLockOn,cameraInput:cameraInput,cameraInfo:cameraInfo,renderer:renderer,scene:scene,camera:camera};
   }
   window.NeonScene={create:create};
 }());

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#080e17">
-  <meta name="description" content="NEON CLASH — combate 3D em terceira pessoa. Três arenas, quatro dificuldades e uma ascensão até o limite. Jogue offline no navegador.">
+  <meta name="description" content="NEON CLASH — combate 3D em terceira pessoa. Três arenas, quatro dificuldades e uma ascensão até o limite. Jogue solo ou em duelos online no navegador.">
   <title>NEON CLASH — Ascensão</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -15,10 +15,10 @@
   <header class="topbar">
     <a class="wordmark" href="#" id="brand-link" aria-label="Neon Clash, voltar ao início"><span class="brand-icon" aria-hidden="true">N<span>↗</span></span><span>NEON<span class="thin">CLASH</span><small>UNDERGROUND COMBAT SYSTEM</small></span></a>
     <div class="utilities">
-      <span class="live-label"><i></i> SOLO · OFFLINE</span>
+      <span class="live-label"><i></i><span id="connection-label">SOLO · OFFLINE</span></span>
       <button class="camera-button" id="camera-button" hidden title="Capturar mouse para controlar a câmera">CAPTURAR MOUSE <span aria-hidden="true">↗</span></button>
       <button class="utility" id="sound-button" aria-label="Desligar som" title="Som · M" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M11 4 6 8H3v8h3l5 4zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg></button>
-      <button class="utility quality" id="quality-button" title="Alternar qualidade gráfica" aria-label="Qualidade gráfica alta">HQ</button>
+      <button class="utility quality" id="quality-button" title="Qualidade: automática, alta ou leve" aria-label="Qualidade gráfica automática">AUTO</button>
       <button class="utility" id="fullscreen-button" title="Tela cheia" aria-label="Tela cheia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></svg></button>
       <button class="utility" id="pause-button" title="Pausar · Esc" aria-label="Pausar jogo" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button>
     </div>
@@ -49,6 +49,18 @@
       <p class="selection-description mode-description" id="mode-description">Melhor de três. Uma arena. A noite inteira em jogo.</p>
       <button class="primary-button" id="start-button"><span>ENTRAR NA ARENA</span><span class="button-arrow" aria-hidden="true">↗</span></button>
       <button class="secondary-button" id="training-button"><span>LABORATÓRIO DE COMBATE</span><span>TREINAR <b aria-hidden="true">→</b></span></button>
+      <details class="online-panel" id="online-panel">
+        <summary>DUELO ONLINE <span>1 × 1 ↗</span></summary>
+        <p>Crie uma sala na arena escolhida e compartilhe o código com um amigo.</p>
+        <button class="secondary-button" id="host-button">CRIAR SALA PRIVADA <span>↗</span></button>
+        <form id="join-form" class="join-form">
+          <label for="room-code">Código da sala</label>
+          <div><input id="room-code" name="code" type="text" minlength="6" maxlength="6" pattern="[A-Za-z0-9]{6}" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ABC123" required><button type="submit" id="join-button">ENTRAR →</button></div>
+        </form>
+        <div id="room-invite" class="room-invite" hidden><span>SUA SALA</span><strong id="invite-code"></strong><button id="copy-room-button" type="button">COPIAR CONVITE</button></div>
+        <p id="online-status" class="online-status" role="status" aria-live="polite">Dois jogadores. Mesmas regras. Melhor de três.</p>
+        <button id="leave-room-button" class="text-button" hidden>CANCELAR SALA</button>
+      </details>
       <div class="menu-tools">
         <details class="controls-details"><summary>COMO JOGAR <span aria-hidden="true">+</span></summary><div class="control-list"><p><kbd>W A S D</kbd> Mover com a câmera</p><p><kbd>MOUSE</kbd> Arrastar para olhar</p><p><kbd>Q / E</kbd> Girar a câmera</p><p><kbd>SCROLL</kbd> Aproximar / afastar</p><p><kbd>C</kbd> Centralizar câmera</p><p><kbd>TAB</kbd> Travar / soltar alvo</p><p><kbd>J</kbd> Soco / combo</p><p><kbd>K</kbd> Chute</p><p><kbd>L</kbd> Especial · 40 energia</p><p><kbd>I</kbd> Defesa / aparar</p><p><kbd>SHIFT</kbd> Esquiva</p><p><kbd>ESPAÇO</kbd> Pular</p><p><kbd>F</kbd> Segurar para correr</p><p><kbd>ESC</kbd> Pausar / soltar mouse</p></div><p class="control-tip">Encadeie J → J → K. Toque I no instante do impacto para aparar. Com o mouse capturado, clique esquerdo dá soco e direito dá chute.</p><p class="control-tip touch-tip">NO CELULAR · Use os botões e deslize no lado direito da arena para olhar.</p></details>
         <details class="controls-details settings-details"><summary>AJUSTES <span aria-hidden="true">+</span></summary><div class="settings-content"><label for="sensitivity">Sensibilidade da câmera <input id="sensitivity" type="range" min="0.4" max="2" step="0.1" value="1"></label><label for="volume">Volume geral <input id="volume" type="range" min="0" max="100" step="1" value="65"></label><label class="check-setting"><input type="checkbox" id="shake-toggle" checked><span>Impacto da câmera</span></label><label class="check-setting"><input type="checkbox" id="music-toggle" checked><span>Trilha sonora</span></label></div></details>
@@ -60,13 +72,14 @@
   </main>
 
   <section id="fight-hud" class="fight-hud" aria-label="Placar da luta" hidden>
-    <div class="fighter-hud player"><div class="fighter-heading"><span><i></i> AZURE <small>VOCÊ</small></span><div class="round-pips" id="player-rounds"><b></b><b></b></div></div><div class="health-track"><div class="health-trail" id="player-trail"></div><div class="health-fill" id="player-health"></div></div><div class="meter-row"><div class="energy-track"><div id="player-energy"></div><span></span><span></span><span></span><span></span></div><small id="player-energy-label">ESPECIAL PRONTO</small><span class="hp-value" id="player-hp">100</span></div><div class="guard-track"><div id="player-guard"></div></div></div>
+    <div class="fighter-hud player"><div class="fighter-heading"><span><i></i> <b id="player-name">AZURE</b> <small>VOCÊ</small></span><div class="round-pips" id="player-rounds"><b></b><b></b></div></div><div class="health-track"><div class="health-trail" id="player-trail"></div><div class="health-fill" id="player-health"></div></div><div class="meter-row"><div class="energy-track"><div id="player-energy"></div><span></span><span></span><span></span><span></span></div><small id="player-energy-label">ESPECIAL PRONTO</small><span class="hp-value" id="player-hp">100</span></div><div class="guard-track"><div id="player-guard"></div></div></div>
     <div class="clock"><small id="round-label">ROUND 01</small><strong id="round-time">75</strong><span id="match-label">MELHOR DE 3</span></div>
-    <div class="fighter-hud enemy"><div class="fighter-heading"><div class="round-pips" id="enemy-rounds"><b></b><b></b></div><span><small>RIVAL</small> CRIMSON <i></i></span></div><div class="health-track"><div class="health-trail" id="enemy-trail"></div><div class="health-fill" id="enemy-health"></div></div><div class="meter-row"><span class="hp-value" id="enemy-hp">100</span><small id="enemy-energy-label">COMBATENTE</small><div class="energy-track"><div id="enemy-energy"></div><span></span><span></span><span></span><span></span></div></div><div class="guard-track"><div id="enemy-guard"></div></div></div>
+    <div class="fighter-hud enemy"><div class="fighter-heading"><div class="round-pips" id="enemy-rounds"><b></b><b></b></div><span><small>RIVAL</small> <b id="enemy-name">CRIMSON</b> <i></i></span></div><div class="health-track"><div class="health-trail" id="enemy-trail"></div><div class="health-fill" id="enemy-health"></div></div><div class="meter-row"><span class="hp-value" id="enemy-hp">100</span><small id="enemy-energy-label">COMBATENTE</small><div class="energy-track"><div id="enemy-energy"></div><span></span><span></span><span></span><span></span></div></div><div class="guard-track"><div id="enemy-guard"></div></div></div>
     <div class="run-progress" id="run-progress" hidden>ASCENSÃO · 01 / 05</div>
   </section>
   <div id="announcement" class="announcement" hidden><small id="announcement-overline"></small><strong id="announcement-title"></strong><span id="announcement-subtitle"></span></div>
   <div id="combat-toast" class="combat-toast" role="status" aria-live="polite"></div>
+  <div id="network-indicator" class="network-indicator" hidden aria-label="Estado da conexão"></div>
   <div id="combo-display" class="combo-display" hidden><strong id="combo-count">2</strong><span>HITS<br><b>COMBO</b></span></div>
   <div id="fight-reticle" class="fight-reticle" aria-hidden="true" hidden><i></i><i></i><i></i><i></i></div>
   <div id="hazard-warning" class="hazard-warning" role="status" hidden>PERIGO NA ARENA</div>
@@ -82,7 +95,7 @@
     <div class="touch-actions"><button data-control="block" class="touch-small">DEFESA</button><button data-control="dodge" class="touch-small">ESQUIVA</button><button data-control="jump" class="touch-small">PULO</button><button data-control="punch">SOCO</button><button data-control="kick">CHUTE</button><button data-control="special" class="touch-special">ESPECIAL</button></div>
   </div>
 
-  <section class="overlay" id="pause-screen" hidden aria-label="Jogo pausado"><div class="modal"><span class="eyebrow">RESPIRE. VOLTE MAIS FORTE.</span><h2>INTERVALO<span aria-hidden="true">Ⅱ</span></h2><p>A cidade pode esperar um pouco.</p><button class="primary-button" id="resume-button">VOLTAR À LUTA <span aria-hidden="true">→</span></button><button class="secondary-button" id="restart-button">RECOMEÇAR PARTIDA <span aria-hidden="true">↻</span></button><button class="text-button" id="menu-button">VOLTAR AO INÍCIO</button><div class="pause-hint">J / K / L ATACAR · I DEFESA · SHIFT ESQUIVA<br>TAB TRAVAR ALVO · MOUSE / Q / E CÂMERA · F CORRER</div></div></section>
+  <section class="overlay" id="pause-screen" hidden aria-label="Jogo pausado"><div class="modal"><span class="eyebrow">RESPIRE. VOLTE MAIS FORTE.</span><h2>INTERVALO<span aria-hidden="true">Ⅱ</span></h2><p id="pause-description">A cidade pode esperar um pouco.</p><button class="primary-button" id="resume-button">VOLTAR À LUTA <span aria-hidden="true">→</span></button><button class="secondary-button" id="restart-button">RECOMEÇAR PARTIDA <span aria-hidden="true">↻</span></button><button class="text-button" id="menu-button">VOLTAR AO INÍCIO</button><div class="pause-hint">J / K / L ATACAR · I DEFESA · SHIFT ESQUIVA<br>TAB TRAVAR ALVO · MOUSE / Q / E CÂMERA · F CORRER</div></div></section>
   <section class="overlay" id="result-screen" hidden aria-label="Resultado da partida"><div class="modal result-modal"><span class="eyebrow" id="result-eyebrow">A ARENA TEM UM NOVO DONO.</span><div class="result-title-row"><h2 id="result-title">VITÓRIA.</h2><span id="result-rank" class="result-rank" hidden>S</span></div><p id="result-description">A noite é sua.</p><div class="result-stats"><div><strong id="result-score">2—0</strong><span>ROUNDS</span></div><div><strong id="result-combo">0</strong><span>MAIOR COMBO</span></div><div><strong id="result-damage">0</strong><span>DANO CAUSADO</span></div></div><div id="upgrade-choices" class="upgrade-choices" hidden><p>EVOLUA SEU ESTILO <span>ESCOLHA UMA MELHORIA</span></p><button data-upgrade="power"><strong>POTÊNCIA</strong><span>Mais dano em cada abertura.</span><small>NÍVEL 0 → 1</small></button><button data-upgrade="flow"><strong>FLUXO</strong><span>Energia para manter a pressão.</span><small>NÍVEL 0 → 1</small></button><button data-upgrade="guard"><strong>BASTIÃO</strong><span>Resista. Volte ainda mais forte.</span><small>NÍVEL 0 → 1</small></button></div><button class="primary-button" id="rematch-button">MAIS UMA LUTA <span aria-hidden="true">↗</span></button><button class="text-button" id="result-menu-button">VOLTAR AO INÍCIO</button></div></section>
   <div id="error-screen" class="overlay" hidden aria-live="polite"><div class="modal"><span class="eyebrow" id="error-eyebrow">FALHA AO INICIAR A ARENA</span><h2 id="error-title">OPS.</h2><p id="error-message">Não foi possível iniciar o gráfico 3D. Abra este arquivo no Chrome ou Edge com a aceleração gráfica ativada.</p><button class="primary-button" id="error-retry">TENTAR NOVAMENTE ↻</button></div></div>
   <noscript><div class="overlay"><div class="modal"><h2>ATIVA O JAVASCRIPT.</h2><p>O jogo precisa de JavaScript e WebGL para funcionar.</p></div></div></noscript>
@@ -91,6 +104,8 @@
   <script src="scene.js"></script>
   <script src="audio.js"></script>
   <script src="run.js"></script>
+  <script src="network.js"></script>
+  <script src="performance.js"></script>
   <script src="game.js"></script>
 </body>
 </html>

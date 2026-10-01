@@ -58,17 +58,29 @@
     let seed = Number.isFinite(options.seed) ? options.seed >>> 0 : (Date.now() ^ Math.floor(Math.random() * 0xffffffff)) >>> 0;
     if (!seed) seed = 0x91ec10;
     const upgrades = {};
-    for (const key of ['power', 'flow', 'guard']) upgrades[key] = clamp(Math.floor(Number(options.upgrades && options.upgrades[key]) || 0), 0, 10);
+    for (const key of ['power', 'flow', 'guard']) upgrades[key] = options.multiplayer ? 0 : clamp(Math.floor(Number(options.upgrades && options.upgrades[key]) || 0), 0, 10);
     const state = {
       phase: 'intro', phaseTime: 0, round: 1, timeLeft: 75, winner: null, roundWinner: null, wins: [0, 0],
       fighters: [fighter(0), fighter(1)], events: [], shake: 0,
       difficulty: levels[options.difficulty] ? options.difficulty : 'normal',
       arena: arenas[options.arena] ? options.arena : 'skyline', hazard: freshHazard(), upgrades,
-      training: !!options.training, elapsed: 0,
-      _random() { seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; return (seed >>> 0) / 4294967296; }
+      training: !options.multiplayer && !!options.training, multiplayer: !!options.multiplayer, elapsed: 0, _rng: seed
     };
+    attachRandom(state);
     emit(state, 'roundStart', { round: state.round, training: state.training });
     return state;
+  }
+  function attachRandom(state) {
+    // The generator's complete state travels with every authoritative snapshot.
+    state._random = function () { let seed = state._rng >>> 0; seed ^= seed << 13; seed ^= seed >>> 17; seed ^= seed << 5; state._rng = seed >>> 0; return state._rng / 4294967296; };
+    return state;
+  }
+  function snapshot(state) {
+    return JSON.parse(JSON.stringify(state, (key, value) => key === '_random' || key === 'localPlayer' ? undefined : key === 'events' ? [] : value));
+  }
+  function restore(data) {
+    if (!data || !Array.isArray(data.fighters) || data.fighters.length !== 2 || !arenas[data.arena] || !Number.isFinite(data._rng)) throw new TypeError('Invalid combat snapshot');
+    return attachRandom(snapshot(data));
   }
   function setAction(f, name, duration) { f.action = name; f.actionTime = 0; f.actionDuration = duration || 0; }
   function startAction(state, f, name) {
@@ -98,7 +110,7 @@
     return true;
   }
   function act(state, playerIndex, name) {
-    if (!state || state.phase !== 'fight' || !moves[name]) return false;
+    if (!state || state.phase !== 'fight' || !Object.prototype.hasOwnProperty.call(moves, name)) return false;
     const f = state.fighters[playerIndex];
     if (!f || f.hp <= 0 || f.stun > 0 || (state.training && playerIndex === 1)) return false;
     if (moves[f.action] && f.action !== 'jump') {
@@ -349,7 +361,7 @@
     }
     if (h.phaseTime >= h.activeDuration) { h.active = false; h.phaseTime = 0; h._wait = 6.5; }
   }
-  function tick(state, dt, input) {
+  function tick(state, dt, input, otherInput) {
     if (state.phase === 'matchOver') return;
     state.elapsed += dt; state.phaseTime += dt; state.shake *= Math.exp(-9 * dt);
     if (state.phase === 'intro') { if (state.phaseTime >= 2) { state.phase = 'fight'; state.phaseTime = 0; } return; }
@@ -369,7 +381,7 @@
     }
     if (state.phase !== 'fight') return;
     if (!state.training) state.timeLeft = Math.max(0, state.timeLeft - dt);
-    const ai = cpuInput(state, dt);
+    const ai = otherInput === undefined ? cpuInput(state, dt) : otherInput;
     updateFighter(state, state.fighters[0], input, dt); updateFighter(state, state.fighters[1], ai, dt); separate(state);
     for (const f of state.fighters) if (!isStrike(f)) faceTarget(f, state.fighters[1 - f.id]);
     // Snapshot both contacts before applying damage: honest trades and double KOs.
@@ -382,6 +394,12 @@
     while (remaining > .000001) { const slice = Math.min(remaining, 1 / 120); tick(state, slice, input); remaining -= slice; }
     return state;
   }
-  global.FightSim = Object.freeze({ createMatch, step, act, moves, levels, difficulties: levels, arenas });
+  function stepPlayers(state, dt, inputs) {
+    if (!state || state.phase === 'matchOver' || !Number.isFinite(dt) || dt <= 0) return state;
+    let remaining = Math.min(dt, .25); inputs = inputs || [];
+    while (remaining > .000001) { const slice = Math.min(remaining, 1 / 120); tick(state, slice, inputs[0] || {}, inputs[1] || {}); remaining -= slice; }
+    return state;
+  }
+  global.FightSim = Object.freeze({ createMatch, step, stepPlayers, snapshot, restore, act, moves, levels, difficulties: levels, arenas });
   if (typeof module !== 'undefined' && module.exports) module.exports = global.FightSim;
 })(typeof window !== 'undefined' ? window : globalThis);

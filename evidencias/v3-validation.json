@@ -1,0 +1,43 @@
+{
+  "version": "3.0.0",
+  "testedAt": "2026-10-01T01:37:07.658872+00:00",
+  "runtime": "Node.js v24.21.0, Linux x86_64",
+  "checksPassed": {
+    "combat": 28,
+    "progression": 5,
+    "predictionAndSerialization": 32,
+    "framePacingAndInterpolation": 3,
+    "uiWithSimulatedDom": 8,
+    "httpAndWebSocketServer": 19,
+    "twoRealNetworkClients": 8
+  },
+  "totalLeafScenarios": 103,
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "report": "v3-logic-results.txt"
+    },
+    {
+      "command": "npm run test:online",
+      "exitCode": 0,
+      "report": "v3-online-results.txt"
+    },
+    {
+      "command": "npm audit --omit=dev --json",
+      "exitCode": 0,
+      "report": "v3-dependency-audit.json"
+    }
+  ],
+  "typescriptCompilation": "passed",
+  "browserOpened": false,
+  "gpuTestsRun": false,
+  "containerBuilt": false,
+  "publicServerDeployed": false,
+  "limits": [
+    "UI tests use simulated DOM, audio, renderer and connection callbacks.",
+    "Network integration uses real TCP/WebSocket connections with two instances of the actual client module on localhost.",
+    "No visual, RX 7600, WAN latency, prolonged load or Docker execution validation in this change.",
+    "Historical v2 browser/graphics reports were not rerun."
+  ]
+}

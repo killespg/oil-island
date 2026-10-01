@@ -1,6 +1,25 @@
-# NEON CLASH / ASCENSÃO
+# NEON CLASH / ASCENSÃO ONLINE
 
 Jogo de luta em terceira pessoa, feito em HTML, CSS e JavaScript. Controle Azure em duelos contra Crimson, circule livremente pela arena e gire a câmera para acompanhar o combate. Golpes têm alcance, direção, preparação e recuperação: acertar o momento e a distância importa.
+
+A versão 3 adiciona duelos privados **1×1 no navegador**, com servidor em TypeScript/Node.js. O servidor calcula o combate a 60 Hz e envia estados a 20 Hz. O cliente prevê os comandos locais, reconcilia com o servidor e interpola o adversário. A renderização acompanha a taxa da tela, com interpolação também no solo e resolução automática para manter os efeitos quando possível. Isso reduz saltos entre atualizações; não elimina o atraso da internet nem garante 60 FPS em todo aparelho.
+
+## Jogar online
+
+Na máquina que hospedará a partida, instale Node.js 24 LTS, abra a pasta do repositório e execute:
+
+```sh
+npm ci
+npm start
+```
+
+Abra `http://localhost:3000` no navegador. Na seção **DUELO ONLINE**, crie uma sala e compartilhe o convite ou código de seis caracteres. O segundo jogador acessa o mesmo servidor, informa o código e entra. A arena é escolhida por quem cria a sala; o segundo jogador controla Crimson, com sua própria câmera e HUD. A revanche exige a confirmação dos dois.
+
+Em dois PCs na mesma rede, ambos devem abrir `http://IP-DO-SERVIDOR:3000` — `localhost` sempre aponta para o próprio computador. Permita a porta TCP 3000 no firewall da máquina servidora, se necessário. O servidor continua rodando no terminal até ser encerrado.
+
+Para jogar pela internet, hospede este servidor em um serviço que mantenha processos Node e conexões WebSocket, com HTTPS. **GitHub Pages sozinho não executa o servidor.** Os arquivos de produção e instruções estão em [ONLINE.md](ONLINE.md); nenhum serviço pago ou domínio foi provisionado automaticamente.
+
+O menu de pausa online solta os comandos, mas a partida continua. Sair ou perder a conexão encerra a sala para os dois jogadores. Não há reconexão automática, contas, ranking global ou fila pública nesta versão. Os modos contra a CPU e Ascensão continuam offline.
 
 ## Jogar offline
 
@@ -43,7 +62,7 @@ A corrida em andamento não é salva ao fechar ou recarregar a página. Ajustes,
 | Espaço | Pular; permite ataques aéreos |
 | F, segurado | Correr; consome energia |
 | Esc | Pausar / continuar; também libera o mouse capturado |
-| R | Reiniciar o duelo atual, inclusive a etapa atual de Ascensão |
+| R | Reiniciar o duelo solo atual, inclusive a etapa atual de Ascensão |
 | M | Ligar / desligar o som |
 
 **Capturar mouse** ativa o controle contínuo da câmera. Nesse modo, o botão esquerdo soca e o direito chuta. Arrastar e Q/E continuam sendo alternativas quando o navegador não permite a captura. Soltar o mouse capturado pausa a partida.
@@ -82,11 +101,11 @@ A pontuação considera dano causado, combos, defesas perfeitas, dano recebido e
 
 ## Imagem, som e acessibilidade
 
-O jogo começa em **LQ** para inicializar com segurança. O botão **HQ/LQ** alterna qualidade. HQ usa iluminação, sombras, bloom, chuva e detalhes adicionais; LQ reduz o trabalho gráfico. O jogo pode mudar automaticamente para LQ quando detecta desempenho baixo, até que você escolha uma qualidade manualmente. Os buffers de bloom são criados apenas em HQ, em formato RGBA8 sem MSAA; as sombras têm 1024 pixels e a resolução física tem teto em ambos os modos. Desempenho depende da GPU, resolução e navegador; não há promessa de taxa de quadros.
+O botão de qualidade alterna **AUTO → HQ → LQ**. AUTO começa em LQ; após três janelas estáveis de dois segundos, experimenta HQ. Se a taxa cair, reduz a resolução do 3D antes de retirar iluminação, sombras e bloom; a interface permanece nítida. Se o desempenho continuar muito baixo, volta a LQ e não repete a promoção durante aquela sessão automática. HQ/LQ permitem escolha manual. Os buffers de bloom são criados apenas em HQ, em formato RGBA8 sem MSAA; as sombras têm 1024 pixels e a resolução física tem teto em ambos os modos.
 
-Se o navegador perder o contexto WebGL, o jogo para o combate e a renderização, preserva a partida e tenta restaurar o gráfico em LQ. Uma luta recuperada aguarda **VOLTAR À LUTA**. Se o navegador não restaurar o contexto em 12 segundos, surge a opção de reabrir no modo compatível; recarregar abandona a partida atual. Uma restauração tardia ainda permite recuperar a partida antes de recarregar.
+Se o navegador perder o contexto WebGL, o solo para o combate e tenta restaurar o gráfico em LQ. Uma luta recuperada aguarda **VOLTAR À LUTA**. No online, os comandos são soltos imediatamente e a partida continua no servidor; o cliente recebe o estado atual ao recuperar o gráfico. A recuperação mantém LQ até você trocar a qualidade manualmente. Se o navegador não restaurar o contexto em 12 segundos, surge a opção de recarregar, o que abandona a partida atual.
 
-Os ajustes incluem sensibilidade, volume geral, trilha e impacto de câmera. A preferência do sistema por movimento reduzido também é respeitada. Há indicadores visuais para preparação de golpes e perigo do Reactor, além dos sinais sonoros. Trocar de aba ou janela pausa a simulação.
+Os ajustes incluem sensibilidade, volume geral, trilha e impacto de câmera. A preferência do sistema por movimento reduzido também é respeitada. Há indicadores visuais para preparação de golpes e perigo do Reactor, além dos sinais sonoros. Trocar de aba ou janela pausa o solo; online, abre o menu e solta seus comandos.
 
 A trilha procedural muda por arena e ganha camadas conforme a luta se intensifica. Efeitos usam posicionamento estéreo e compressão dinâmica. O jogo não baixa faixas ou texturas, nem envia telemetria.
 
@@ -99,11 +118,25 @@ A trilha procedural muda por arena e ganha camadas conforme a luta se intensific
 - `DESIGN.md`: pesquisa aplicada, fontes primárias e decisões de design.
 - `audio.js`: trilha e efeitos sintetizados com Web Audio.
 - `scene.js`: modelos, ambientes, materiais, animação, câmera e efeitos WebGL.
+- `network.js`: salas, previsão local, reconciliação, suavização e desconexão.
+- `performance.js`: interpolação visual e política de qualidade automática.
+- `server/`: servidor autoritativo TypeScript, protocolo validado e entrega dos arquivos.
+- `ONLINE.md` / `Dockerfile`: execução e hospedagem do multiplayer.
 - `vendor/three.min.js`: Three.js r160; licença MIT em `vendor/THREE-LICENSE.txt`.
 - `tests/`: verificações automatizadas de combate, progressão e integração.
 - `evidencias/v2-*`: relatórios e capturas desta versão. Arquivos de evidência sem o prefixo `v2-` são históricos.
 
 ## Desenvolvimento e verificação
+
+Para verificar a versão online sem abrir navegador:
+
+```sh
+npm ci
+npm test
+npm run test:online
+```
+
+Os testes de combate, progressão, serialização, previsão e qualidade rodam em Node. A integração do servidor usa conexões WebSocket reais; testes da interface em VM usam DOM e renderizador simulados. Esses testes não medem FPS de uma GPU nem qualidade visual. As capturas e resultados `v2-*` abaixo são da versão anterior; não representam uma nova execução gráfica da versão 3.
 
 Não há compilação para executar o jogo. Com Node.js e npm instalados, as verificações de lógica podem ser executadas com:
 
