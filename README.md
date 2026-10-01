@@ -1,4 +1,4 @@
-# NEON CLASH / ASCENSÃO ONLINE
+# OIL ISLAND / ORELHA EDITION
 
 Jogo de luta em terceira pessoa, feito em HTML, CSS e JavaScript. Controle Azure em duelos contra Crimson, circule livremente pela arena e gire a câmera para acompanhar o combate. Golpes têm alcance, direção, preparação e recuperação: acertar o momento e a distância importa.
 
